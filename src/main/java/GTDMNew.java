@@ -1,9 +1,9 @@
 import java.io.FileNotFoundException;
 import java.io.UnsupportedEncodingException;
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.Map;
 
-public class GTDM {
+public class GTDMNew {
     /**
      * neighbourhood size
      */
@@ -16,11 +16,11 @@ public class GTDM {
     /**
      * valuee of grey tone difference matrix
      */
-    private Map<Double, Double> s;
+    private ArrayList<Double> s;
     /**
      * probabilty of occurence of value
      */
-    private Map<Double, Double> p;
+    private ArrayList<Double> p;
 
     private double n2;
 
@@ -29,7 +29,7 @@ public class GTDM {
     }
 
     public static void setD(int d) {
-        GTDM.d = d;
+        GTDMNew.d = d;
     }
 
     public Matrix getInputDataMatrix() {
@@ -48,19 +48,19 @@ public class GTDM {
         this.matrixA = matrixA;
     }
 
-    public Map<Double, Double> getS() {
+    public ArrayList<Double> getS() {
         return s;
     }
 
-    public void setS(Map<Double, Double> s) {
+    public void setS(ArrayList<Double> s) {
         this.s = s;
     }
 
-    public Map<Double, Double> getP() {
+    public ArrayList<Double> getP() {
         return p;
     }
 
-    public void setP(Map<Double, Double> p) {
+    public void setP(ArrayList<Double> p) {
         this.p = p;
     }
 
@@ -101,10 +101,11 @@ public class GTDM {
     }
 
 
-    public GTDM(Matrix inputData) throws FileNotFoundException, UnsupportedEncodingException {
+    public GTDMNew(Matrix inputData) throws FileNotFoundException, UnsupportedEncodingException {
         this.matrixA = new MatrixCommon(inputData.getHeight(), inputData.getWidth());
-        this.s = new HashMap<Double, Double>();
-        this.p = new HashMap<Double, Double>();
+        this.s = new ArrayList<Double>(255);
+        this.p = new ArrayList<Double>(255);
+
         this.inputDataMatrix = inputData;
         n2 = (double) (inputDataMatrix.getHeight() - 2 * d) * (inputDataMatrix.getWidth() - 2 * d);
         inputDataMatrix.printf();
@@ -117,13 +118,12 @@ public class GTDM {
         printfS();
         computeP();
         printfP();
-
     }
 
     private void printfP() {
         System.out.println("Tablica z p");
-        for (Map.Entry<Double, Double> pp : p.entrySet()) {
-            System.out.print(pp.getKey() + ": " + pp.getValue() + "    ");
+        for (int i = 0; i<p.size(); i++) {
+            System.out.println( i +":  " + p.get(i));
         }
     }
 
@@ -132,19 +132,19 @@ public class GTDM {
         for (int k = d; k < inputDataMatrix.getHeight() - d; k++) {
             for (int l = d; l < inputDataMatrix.getWidth() - d; l++) {
                 i=inputDataMatrix.get(k, l);
-                Double partSum = s.get(i);
+                Double partSum = s.get(i.intValue());
                 if (partSum == null)
                     partSum = 0.0;
                 partSum += Math.abs(i - matrixA.get(k, l));// |i-A|
-                s.put(inputDataMatrix.get(k, l), partSum);//s(i)= SIGMA |i-A|
+                s.add(i.intValue(), partSum);//s(i)= SIGMA |i-A|
             }
         }
     }
 
     private void printfS() {
         System.out.println("S(i)");
-        for (Map.Entry<Double, Double> ss : s.entrySet()) {
-            System.out.println(ss.getKey() + "  " + ss.getValue());
+        for (int i = 0; i<s.size(); i++) {
+            System.out.println( i +":  " + s.get(i));
         }
         System.out.println();
     }
@@ -152,16 +152,15 @@ public class GTDM {
     public void computeP() {
         for (int k = d; k < inputDataMatrix.getHeight() - d; k++) {
             for (int l = d; l < inputDataMatrix.getWidth() - d; l++) {
-                Double iNumber = p.get(inputDataMatrix.get(k, l));//i
+                Double iNumber = p.get((int) inputDataMatrix.get(k, l));//i
                 if (iNumber == null)
                     iNumber = 0.0;
                 iNumber += 1;
-                p.put(inputDataMatrix.get(k, l), iNumber);//s(i)= SIGMA |i-A|
+                p.add((int) inputDataMatrix.get(k, l), iNumber);
             }
         }
-        for (Map.Entry<Double, Double> pp : p.entrySet()) {
-            double Ni = pp.getValue();
-            pp.setValue(Ni / n2);
+        for (int i = 0 ; i< 255 ; i++) {
+            p.add( i ,p.get(i) / n2);
         }
     }
 //

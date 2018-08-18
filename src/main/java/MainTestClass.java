@@ -57,6 +57,8 @@ public class MainTestClass {
         try {
             GTDM gdtm = new GTDM(daneTestowe);
             TexturalProperties texturalProperties = new TexturalProperties(gdtm);
+            //GTDMNew gdtmnew = new GTDMNew(daneTestowe);
+            //TexturalProperties texturalProperties = new TexturalProperties(gdtm);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (UnsupportedEncodingException e) {
