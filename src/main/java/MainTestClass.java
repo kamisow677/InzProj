@@ -11,9 +11,50 @@ public class MainTestClass {
     public static void main(String[] args) {
 //    public  static  void start(){
         System.out.println("TESTOWA KLASA DO BUFOROW");
-        File img = new File("ork.jpg");
-        int WIELKSC_MACIRZY = 10;
 
+        int WIELKSC_MACIRZY = 1000;
+
+
+        File img = new File("ork.jpg");
+        MatrixData matrixData = null;
+        BufferedImage buffImage = null;
+        try { buffImage = ImageIO.read(img); }
+        catch (IOException e) { e.printStackTrace(); }
+        matrixData = new MatrixData(buffImage, MatrixData.COLOR.GREY);
+
+        Random rand = new Random();
+        double[][] dane = new double[WIELKSC_MACIRZY][WIELKSC_MACIRZY];
+        for (int i = 0; i < WIELKSC_MACIRZY; i++) {
+            for (int j = 0; j < WIELKSC_MACIRZY; j++) {
+                dane[i][j] = Math.abs(rand.nextInt() % 10000);
+            }
+        }
+
+        Matrix daneTestowe = new MatrixCommon(dane, WIELKSC_MACIRZY, WIELKSC_MACIRZY);
+
+        try {
+            GTDM gdtm = new GTDM(matrixData);
+            TexturalProperties texturalProperties = new TexturalProperties(gdtm);
+
+            matrixData.setColor(MatrixData.COLOR.RED);
+            gdtm = new GTDM(matrixData);
+            texturalProperties = new TexturalProperties(gdtm);
+
+            matrixData.setColor(MatrixData.COLOR.BLUE);
+            gdtm = new GTDM(matrixData);
+            texturalProperties = new TexturalProperties(gdtm);
+
+
+            //GTDMNew gdtmnew = new GTDMNew(daneTestowe);
+            //TexturalProperties texturalProperties = new TexturalProperties(gdtm);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+    }
+    public static void newPicture(){
+        File img = new File("ork.jpg");
         MatrixData matrixData = null;
         try {
             BufferedImage buffImage = ImageIO.read(img);
@@ -43,27 +84,6 @@ public class MainTestClass {
             e.printStackTrace();
         }
 
-
-        Random rand = new Random();
-        double[][] dane = new double[WIELKSC_MACIRZY][WIELKSC_MACIRZY];
-        for (int i = 0; i < WIELKSC_MACIRZY; i++) {
-            for (int j = 0; j < WIELKSC_MACIRZY; j++) {
-                dane[i][j] = Math.abs(rand.nextInt() % 30);
-            }
-        }
-
-        Matrix daneTestowe = new MatrixCommon(dane, WIELKSC_MACIRZY, WIELKSC_MACIRZY);
-
-        try {
-            GTDM gdtm = new GTDM(daneTestowe);
-            TexturalProperties texturalProperties = new TexturalProperties(gdtm);
-            //GTDMNew gdtmnew = new GTDMNew(daneTestowe);
-            //TexturalProperties texturalProperties = new TexturalProperties(gdtm);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
     }
 
 }

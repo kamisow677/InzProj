@@ -107,16 +107,16 @@ public class GTDM {
         this.p = new HashMap<Double, Double>();
         this.inputDataMatrix = inputData;
         n2 = (double) (inputDataMatrix.getHeight() - 2 * d) * (inputDataMatrix.getWidth() - 2 * d);
-        inputDataMatrix.printf();
+        //inputDataMatrix.printf();
 
         findAverageToneMatrix();
-        System.out.println("Matrix A");
-        matrixA.printf();
+        //System.out.println("Matrix A");
+        //matrixA.printf();
 
         calculateS();
-        printfS();
+        //printfS();
         computeP();
-        printfP();
+        //printfP();
 
     }
 

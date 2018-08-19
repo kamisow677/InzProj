@@ -19,14 +19,25 @@ public class TexturalProperties {
         this.p = toneMatrix.getP();
         this.n2 = toneMatrix.getN2();
 
-        System.out.println("\n\nCoarness:  " + computeCoarness());
+        System.out.println("\n\nCOLOR "+ toneMatrix.getInputDataMatrix().getColor());
+        System.out.println("Coarness:  " + computeCoarness());
         System.out.println("Coarness Parallel:  " + computeCoarnessParallel());
         System.out.println("Contrast:  " + computeContrast());
         System.out.println("Busyness:  " + computeBusyness());
         System.out.println("Complexity:  " + computeComplexity());
         System.out.println("Strength:  " + computeStrength());
 
-        computeCoarnessContrastBusynessComplexity();
+//        long startTime = System.currentTimeMillis();
+//        computeCoarnessContrastBusynessComplexity();
+//        long stopTime = System.currentTimeMillis();
+//        long elapsedTime = stopTime - startTime;
+//        System.out.println(elapsedTime);
+//
+//        startTime = System.currentTimeMillis();
+//        computeCoarnessContrastBusynessComplexityParallel();
+//        stopTime = System.currentTimeMillis();
+//        elapsedTime = stopTime - startTime;
+//        System.out.println(elapsedTime);
     }
 
     public Double computeCoarness() {
@@ -193,10 +204,6 @@ public class TexturalProperties {
 
         Double psiLicznikBusyness = 0.0;
 
-//        for (Map.Entry<Double, Double> ss : s.entrySet()) {
-//            psiLicznikBusyness += ss.getValue() * p.get(ss.getKey());
-//        }
-
         psiLicznikBusyness = s.entrySet()
                             .parallelStream()
                             .mapToDouble((ss)->ss.getValue()*p.get(ss.getKey()))
@@ -206,25 +213,34 @@ public class TexturalProperties {
         Double j = 0.0;
         Double firstPartContrast = 0.0;
         Double mianownikBusyness = 0.0;
-        Double partComplexity = 0.0;
         Double Complexity = 0.0;
-        Double partStrength = 0.0;
         Double Strength = 0.0;
         for (Map.Entry<Double, Double> pp : p.entrySet()) {
             mianownikBusyness += i * pp.getValue();
-            for (Map.Entry<Double, Double> pp1 : p1.entrySet()) {
-                i = pp.getKey();
-                j = pp1.getKey();
-                firstPartContrast += pp.getValue() * pp1.getValue() * Math.pow((i - j), 2);
-                mianownikBusyness -= j * pp1.getValue();
-                partComplexity = Math.abs(i - j) / (n2 * (pp.getValue() + pp1.getValue()));
-                partComplexity *= (pp.getValue() * s.get(i)) - (pp1.getValue() * s.get(j));
-                Complexity += partComplexity;
-                partStrength = Math.pow((i - j), 2) * (pp.getValue() + pp1.getValue());
-                Strength += partStrength;
+            i = pp.getKey();
+            firstPartContrast += p1.entrySet()
+                    .parallelStream()
+                    .mapToDouble( (pp1) -> pp.getValue() * pp1.getValue() * Math.pow((pp.getKey() - pp1.getKey()), 2))
+                    .sum();
 
-            }
+            mianownikBusyness -= p1.entrySet()
+                    .parallelStream()
+                    .mapToDouble( (pp1) ->  pp1.getKey() * pp1.getValue())
+                    .sum();
+
+            Complexity += p1.entrySet()
+                    .parallelStream()
+                    .mapToDouble((pp1) ->
+                            (Math.abs(pp.getKey() - pp1.getKey()) / (n2 * (pp.getValue() + pp1.getValue())))
+                                * ((pp.getValue() * s.get(pp.getKey())) - (pp1.getValue() * s.get(pp1.getKey())))
+                    ).sum();
+
+            Strength +=  p1.entrySet()
+                    .parallelStream()
+                    .mapToDouble( (pp1) ->  Math.pow((pp.getKey() - pp1.getKey()), 2) * (pp.getValue() + pp1.getValue()) )
+                    .sum();
         }
+
         firstPartContrast = 1 / Ng / (Ng - 1) * firstPartContrast;
         Double suma_si = 0.0;
         for (Map.Entry<Double, Double> ss : s.entrySet()) {
@@ -236,8 +252,8 @@ public class TexturalProperties {
         Double Busyness = psiLicznikBusyness / mianownikBusyness;
         Strength /= suma_si;
 
-
-        System.out.println("\n\nCoarness:  " + Coarness);
+        System.out.println("\n\n Parallel");
+        System.out.println("Coarness:  " + Coarness);
         System.out.println("Contrast:  " + Contrast);
         System.out.println("Busyness:  " + Busyness);
         System.out.println("Complexity:  " + Complexity);

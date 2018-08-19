@@ -61,4 +61,9 @@ public class MatrixCommon implements Matrix {
         System.out.println();
     }
 
+    @Override
+    public String getColor() {
+        return "GREY";
+    }
+
 }

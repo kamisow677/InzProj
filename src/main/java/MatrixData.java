@@ -17,7 +17,7 @@ public class MatrixData implements Matrix {
 
     @Override
     public double get(int j, int i) {
-        int argb = bufferedImage.getRGB(j, i);
+        int argb = bufferedImage.getRGB(i, j);
         switch (color) {
             case GREY:
             case BLUE: {
@@ -32,6 +32,28 @@ public class MatrixData implements Matrix {
 
         }
         return (argb) & 0xFF;
+    }
+
+    public String getColor() {
+        switch (color) {
+            case GREY: {
+                return "GREY";
+            }
+            case BLUE: {
+                return  "BLUE";
+            }
+            case GREEN: {
+                return "GREEN";
+            }
+            case RED: {
+                return "RED";
+            }
+        }
+        return "???";
+    }
+
+    public void setColor(COLOR color) {
+        this.color = color;
     }
 
     @Override
