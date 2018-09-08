@@ -14,11 +14,11 @@ public class GTDM {
      */
     private MatrixCommon matrixA;
     /**
-     * valuee of grey tone difference matrix
+     * value of grey tone difference matrix
      */
     private Map<Double, Double> s;
     /**
-     * probabilty of occurence of value
+     * probabilty of ocurence of value
      */
     private Map<Double, Double> p;
 
@@ -116,15 +116,16 @@ public class GTDM {
         calculateS();
         //printfS();
         computeP();
-        //printfP();
+       // printfP();
 
     }
 
     private void printfP() {
         System.out.println("Tablica z p");
         for (Map.Entry<Double, Double> pp : p.entrySet()) {
-            System.out.print(pp.getKey() + ": " + pp.getValue() + "    ");
+            System.out.println(pp.getKey() + ": " + pp.getValue() + "    ");
         }
+        System.out.println("Tablica z p");
     }
 
     private void calculateS() {

@@ -9,12 +9,13 @@ public class GTDMNew {
      */
     private static int d = 1;
     private Matrix inputDataMatrix;
+    private static int PIXELS_NUMBER = 256;
     /**
      * average grey tone matrix
      */
     private MatrixCommon matrixA;
     /**
-     * valuee of grey tone difference matrix
+     * value of grey tone difference matrix
      */
     private ArrayList<Double> s;
     /**
@@ -93,6 +94,7 @@ public class GTDMNew {
     }
 
     public void findAverageToneMatrix() {
+
         for (int k = d; k < inputDataMatrix.getHeight() - d; k++) {
             for (int l = d; l < inputDataMatrix.getWidth() - d; l++) {
                 matrixA.set(k, l, calculateA(k, l));
@@ -108,36 +110,44 @@ public class GTDMNew {
 
         this.inputDataMatrix = inputData;
         n2 = (double) (inputDataMatrix.getHeight() - 2 * d) * (inputDataMatrix.getWidth() - 2 * d);
-        inputDataMatrix.printf();
+        //inputDataMatrix.printf();
 
         findAverageToneMatrix();
-        System.out.println("Matrix A");
-        matrixA.printf();
+//        System.out.println("Matrix A");
+//        matrixA.printf();
 
+        initializaS();
         calculateS();
-        printfS();
+        //printfS();
+
+        initializaP();
         computeP();
-        printfP();
+       // printfP();
     }
 
-    private void printfP() {
-        System.out.println("Tablica z p");
-        for (int i = 0; i<p.size(); i++) {
-            System.out.println( i +":  " + p.get(i));
+    private void initializaS() {
+        for (int i = 0; i<PIXELS_NUMBER; i++) {
+            s.add(0.0);
         }
     }
 
     private void calculateS() {
         Double i=0.0;
-        for (int k = d; k < inputDataMatrix.getHeight() - d; k++) {
-            for (int l = d; l < inputDataMatrix.getWidth() - d; l++) {
-                i=inputDataMatrix.get(k, l);
-                Double partSum = s.get(i.intValue());
-                if (partSum == null)
-                    partSum = 0.0;
-                partSum += Math.abs(i - matrixA.get(k, l));// |i-A|
-                s.add(i.intValue(), partSum);//s(i)= SIGMA |i-A|
+        try {
+
+            for (int k = d; k < inputDataMatrix.getHeight() - d; k++) {
+                for (int l = d; l < inputDataMatrix.getWidth() - d; l++) {
+                    i = inputDataMatrix.get(k, l);
+                    Double partSum = s.get(i.intValue());
+                    if (partSum == null)
+                        partSum = 0.0;
+                    partSum += Math.abs(i - matrixA.get(k, l));// |i-A|
+                    s.set(i.intValue(), partSum);//s(i)= SIGMA |i-A|
+                }
             }
+        }
+        catch (Exception ex){
+            System.out.println(ex);
         }
     }
 
@@ -149,6 +159,19 @@ public class GTDMNew {
         System.out.println();
     }
 
+    private void initializaP() {
+        for (int i = 0; i<PIXELS_NUMBER; i++) {
+            p.add(0.0);
+        }
+    }
+
+    private void printfP() {
+        System.out.println("Tablica z p");
+        for (int i = 0; i<p.size(); i++) {
+            System.out.println( i +":  " + p.get(i));
+        }
+    }
+
     public void computeP() {
         for (int k = d; k < inputDataMatrix.getHeight() - d; k++) {
             for (int l = d; l < inputDataMatrix.getWidth() - d; l++) {
@@ -156,107 +179,12 @@ public class GTDMNew {
                 if (iNumber == null)
                     iNumber = 0.0;
                 iNumber += 1;
-                p.add((int) inputDataMatrix.get(k, l), iNumber);
+                p.set((int) inputDataMatrix.get(k, l), iNumber);
             }
         }
-        for (int i = 0 ; i< 255 ; i++) {
-            p.add( i ,p.get(i) / n2);
+        for (int i = 0 ; i< PIXELS_NUMBER ; i++) {
+            p.set( i ,p.get(i) / n2);
         }
     }
-//
-//    public Double computeCoarness() {
-//        Double fcos = 0.001;
-//        for (Map.Entry<Double, Double> ss : s.entrySet()) {
-//            fcos += ss.getValue() * p.get(ss.getKey());
-//        }
-//        return Math.pow(fcos, -1);
-//    }
-//
-//    public Double computeContrast() {
-//        Double Ng = new Double(s.size());
-//
-//        Map<Double, Double> p1 = new HashMap<>(p);
-//
-//        Double i = 0.0;
-//        Double j = 0.0;
-//        Double firstPart = 0.0;
-//        for (Map.Entry<Double, Double> pp : p.entrySet()) {
-//            for (Map.Entry<Double, Double> pp1 : p1.entrySet()) {
-//                i = pp.getKey();
-//                j = pp1.getKey();
-//                firstPart += pp.getValue() * pp1.getValue() * Math.pow((i - j), 2);
-//            }
-//        }
-//        firstPart = 1 / Ng / (Ng - 1) * firstPart;
-//
-//        Double secondPart = 0.0;
-//        for (Map.Entry<Double, Double> ss : s.entrySet()) {
-//            secondPart += ss.getValue();
-//        }
-//        return firstPart * secondPart * 1 / n2;
-//    }
-//
-//    public Double computeBusyness() {
-//        Double licznik = 0.0;
-//        for (Map.Entry<Double, Double> ss : s.entrySet()) {
-//            licznik += ss.getValue() * p.get(ss.getKey());
-//        }
-//        Double i = 0.0;
-//        Double j = 0.0;
-//        Double mianownik = 0.0;
-//        Map<Double, Double> p1 = new HashMap<>(p);
-//        for (Map.Entry<Double, Double> pp : p.entrySet()) {
-//            for (Map.Entry<Double, Double> pp1 : p1.entrySet()) {
-//                i = pp.getKey();
-//                j = pp1.getKey();
-//                mianownik += i * pp.getValue() - j * pp1.getValue();
-//            }
-//        }
-//        return licznik / mianownik;
-//    }
-//
-//    public Double computeComplexity() {
-//        Double i = 0.0;
-//        Double j = 0.0;
-//        Double part = 0.0;
-//        Double part2 = 0.0;
-//        Double suma = 0.0;
-//        Map<Double, Double> p1 = new HashMap<>(p);
-//        for (Map.Entry<Double, Double> pp : p.entrySet()) {
-//            for (Map.Entry<Double, Double> pp1 : p1.entrySet()) {
-//                i = pp.getKey();
-//                j = pp1.getKey();
-//                part = Math.abs(i - j);
-//                part /= n2 * (pp.getValue() + pp1.getValue());
-//                part2 = pp.getValue() * s.get(pp.getKey());
-//                part2 -= pp1.getValue() * s.get(pp1.getKey());
-//                part *= part2;
-//                suma += part;
-//            }
-//        }
-//        return suma;
-//    }
-//
-//    public Double computeStrength() {
-//        Double i = 0.0;
-//        Double j = 0.0;
-//        Double part = 0.0;
-//        Double part2 = 0.0;
-//        Double suma = 0.0;
-//        Map<Double, Double> p1 = new HashMap<>(p);
-//        for (Map.Entry<Double, Double> pp : p.entrySet()) {
-//            for (Map.Entry<Double, Double> pp1 : p1.entrySet()) {
-//                i = pp.getKey();
-//                j = pp1.getKey();
-//                part = Math.pow((i - j), 2);
-//                part *= (pp.getValue() + pp1.getValue());
-//                suma += part;
-//            }
-//        }
-//        Double fcos = 0.001;
-//        for (Map.Entry<Double, Double> ss : s.entrySet()) {
-//            fcos += ss.getValue();
-//        }
-//        return suma / fcos;
-//    }
+
 }

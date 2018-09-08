@@ -19,25 +19,25 @@ public class TexturalProperties {
         this.p = toneMatrix.getP();
         this.n2 = toneMatrix.getN2();
 
-        System.out.println("\n\nCOLOR "+ toneMatrix.getInputDataMatrix().getColor());
-        System.out.println("Coarness:  " + computeCoarness());
-        System.out.println("Coarness Parallel:  " + computeCoarnessParallel());
-        System.out.println("Contrast:  " + computeContrast());
-        System.out.println("Busyness:  " + computeBusyness());
-        System.out.println("Complexity:  " + computeComplexity());
-        System.out.println("Strength:  " + computeStrength());
+//        System.out.println("\n\nCOLOR "+ toneMatrix.getInputDataMatrix().getColor());
+//        System.out.println("Coarness:  " + computeCoarness());
+//        System.out.println("Coarness Parallel:  " + computeCoarnessParallel());
+//        System.out.println("Contrast:  " + computeContrast());
+//        System.out.println("Busyness:  " + computeBusyness());
+//        System.out.println("Complexity:  " + computeComplexity());
+//        System.out.println("Strength:  " + computeStrength());
 
-//        long startTime = System.currentTimeMillis();
-//        computeCoarnessContrastBusynessComplexity();
-//        long stopTime = System.currentTimeMillis();
-//        long elapsedTime = stopTime - startTime;
-//        System.out.println(elapsedTime);
-//
-//        startTime = System.currentTimeMillis();
-//        computeCoarnessContrastBusynessComplexityParallel();
-//        stopTime = System.currentTimeMillis();
-//        elapsedTime = stopTime - startTime;
-//        System.out.println(elapsedTime);
+        long startTime = System.currentTimeMillis();
+        computeCoarnessContrastBusynessComplexity();
+        long stopTime = System.currentTimeMillis();
+        long elapsedTime = stopTime - startTime;
+        System.out.println(elapsedTime);
+
+        startTime = System.currentTimeMillis();
+        computeCoarnessContrastBusynessComplexityParallel();
+        stopTime = System.currentTimeMillis();
+        elapsedTime = stopTime - startTime;
+        System.out.println(elapsedTime);
     }
 
     public Double computeCoarness() {
@@ -175,8 +175,8 @@ public class TexturalProperties {
                 Complexity += partComplexity;
                 partStrength = Math.pow((i - j), 2) * (pp.getValue() + pp1.getValue());
                 Strength += partStrength;
-
             }
+           // System.out.println(Strength);
         }
         firstPartContrast = 1 / Ng / (Ng - 1) * firstPartContrast;
         Double suma_si = 0.0;
@@ -188,7 +188,6 @@ public class TexturalProperties {
         Double Contrast = firstPartContrast * suma_si * 1 / n2;
         Double Busyness = psiLicznikBusyness / mianownikBusyness;
         Strength /= suma_si;
-
 
         System.out.println("\n\nCoarness:  " + Coarness);
         System.out.println("Contrast:  " + Contrast);
@@ -258,8 +257,5 @@ public class TexturalProperties {
         System.out.println("Busyness:  " + Busyness);
         System.out.println("Complexity:  " + Complexity);
         System.out.println("Strength:  " + Strength);
-
     }
-
-
 }
