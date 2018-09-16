@@ -92,7 +92,7 @@ public class GTDMNew {
             for (int n = -d; n <= d; n++) {
                 if (m == 0 && n == 0)
                     continue;
-                if (k + m < 0 || k + m >= inputDataMatrix.getHeight())
+                if (k + m < 0 || k + m >= inputDataHeight)
                     continue;
                 if (l + n < 0 || l + n >= inputDataMatrix.getWidth())
                     continue;
@@ -104,8 +104,8 @@ public class GTDMNew {
 
     public void calculateMatrixA() {
 
-        for (int k = d; k < inputDataMatrix.getHeight() - d; k++) {
-            for (int l = d; l < inputDataMatrix.getWidth() - d; l++) {
+        for (int k = d; k < inputDataHeight - d; k++) {
+            for (int l = d; l < inputDataWidth - d; l++) {
                 matrixA.set(k, l, calculateA(k, l));
             }
         }
@@ -115,8 +115,8 @@ public class GTDMNew {
         this.s = new ArrayList<Double>(256);
         this.p = new ArrayList<Double>(256);
         inputDataHeight =inputDataMatrix.getHeight();
-        inputDataWidth =inputDataMatrix.getWidth();
-        n2 = (double) (inputDataMatrix.getHeight() - 2 * d) * (inputDataMatrix.getWidth() - 2 * d);
+        inputDataWidth = inputDataMatrix.getWidth();
+        n2 = (double) (inputDataHeight - 2 * d) * (inputDataWidth - 2 * d);
 
         this.inputDataMatrix = inputData;
         calculateS();

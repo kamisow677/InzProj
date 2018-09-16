@@ -121,17 +121,23 @@ public class Tester {
         int height = matrixData.getHeight();
         int weight = matrixData.getWidth();
         ArrayList<TexturalPropertiesNew> tex = new ArrayList<>();
-        for (int i=0; i< height/measure; i++){
-            for (int j=0; j< weight/measure; j++){
+        for (int i=0; i< height/measure + 1 ; i++){
+            for (int j=0; j< weight/measure + 1; j++){
                 MatrixData m = new MatrixData(matrixData);
                 m.setStartHeight(measure*i);
                 m.setStartWidth(measure*j);
-                m.setHeight(measure);
-                m.setWidth(measure);
+                if (i == height/measure)
+                    m.setHeight(height - (height/measure)*measure);
+                else
+                    m.setHeight(measure);
+                if (j == weight/measure)
+                    m.setWidth(weight - (weight/measure)*measure);
+                else
+                    m.setWidth(measure);
                 GTDMNew gdtmNowe = new GTDMNew(m);
                 gdtmNowe.startCalcualtions(true);
                 TexturalPropertiesNew texturalPropertiesNew = new TexturalPropertiesNew(gdtmNowe);
-                String str = Integer.toString (i*(height/measure)+j);
+                String str = Integer.toString (i*(weight/measure +1)+j);
                 texturalPropertiesNew.saveToCsv(str);
                 tex.add(texturalPropertiesNew);
             }
