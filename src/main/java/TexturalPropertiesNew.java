@@ -10,6 +10,11 @@ public class TexturalPropertiesNew {
     private ArrayList<Double> s;
     private ArrayList<Double> p;
     private Double n2;
+    private Double Coarness;
+    private Double Contrast;
+    private Double Busyness;
+    private Double Complexity;
+    private Double Strength;
 
     public TexturalPropertiesNew(GTDMNew toneMatrix) throws FileNotFoundException, UnsupportedEncodingException {
         this.toneMatrix = toneMatrix;
@@ -137,9 +142,9 @@ public class TexturalPropertiesNew {
         Double firstPartContrast = 0.0;
         Double mianownikBusyness = 0.0;
         Double partComplexity = 0.0;
-        Double Complexity = 0.0;
+        Complexity = 0.0;
         Double partStrength = 0.0;
-        Double Strength = 0.0;
+        Strength = 0.0;
 
         for (int i = 0; i< p.size(); i++){
             mianownikBusyness += i * p.get(i);
@@ -160,9 +165,9 @@ public class TexturalPropertiesNew {
             suma_si += s.get(i);
         }
 
-        Double Coarness = Math.pow(psiLicznikBusyness, -1);
-        Double Contrast = firstPartContrast * suma_si * 1 / n2;
-        Double Busyness = psiLicznikBusyness / mianownikBusyness;
+        Coarness = Math.pow(psiLicznikBusyness, -1);
+        Contrast = firstPartContrast * suma_si * 1 / n2;
+        Busyness = psiLicznikBusyness / mianownikBusyness;
         Strength /= suma_si;
 
 
@@ -173,6 +178,32 @@ public class TexturalPropertiesNew {
 //        System.out.println("Strength:  " + Strength);
 
     }
+    @Override
+    public String toString(){
+        return "\n\nCoarness:  " + Coarness +
+        "\nContrast:  " + Contrast +
+        "\nBusyness:  " + Busyness +
+        "\nComplexity:  " + Complexity +
+        "\nStrength:  " + Strength;
+    }
 
+    public Double getCoarness() {
+        return Coarness;
+    }
 
+    public Double getContrast() {
+        return Contrast;
+    }
+
+    public Double getBusyness() {
+        return Busyness;
+    }
+
+    public Double getComplexity() {
+        return Complexity;
+    }
+
+    public Double getStrength() {
+        return Strength;
+    }
 }

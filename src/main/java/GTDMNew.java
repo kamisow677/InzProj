@@ -1,7 +1,6 @@
 import java.io.FileNotFoundException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
-import java.util.Map;
 
 public class GTDMNew {
     /**
@@ -9,6 +8,8 @@ public class GTDMNew {
      */
     private static int d = 1;
     private Matrix inputDataMatrix;
+    private int inputDataHeight;
+    private int inputDataWidth;
     private static int PIXELS_NUMBER = 256;
     /**
      * average grey tone matrix
@@ -93,7 +94,7 @@ public class GTDMNew {
         return suma / (Math.pow(2 * d + 1, 2) - 1);
     }
 
-    public void findAverageToneMatrix() {
+    public void calculateMatrixA() {
 
         for (int k = d; k < inputDataMatrix.getHeight() - d; k++) {
             for (int l = d; l < inputDataMatrix.getWidth() - d; l++) {
@@ -103,26 +104,40 @@ public class GTDMNew {
     }
 
 
-    public GTDMNew(Matrix inputData) throws FileNotFoundException, UnsupportedEncodingException {
-        this.matrixA = new MatrixCommon(inputData.getHeight(), inputData.getWidth());
-        this.s = new ArrayList<Double>(255);
-        this.p = new ArrayList<Double>(255);
+    public void GTDMNew(Matrix inputData) throws FileNotFoundException, UnsupportedEncodingException {
+        this.s = new ArrayList<Double>(256);
+        this.p = new ArrayList<Double>(256);
+        inputDataHeight =inputDataMatrix.getHeight();
+        inputDataWidth =inputDataMatrix.getWidth();
+        n2 = (double) (inputDataMatrix.getHeight() - 2 * d) * (inputDataMatrix.getWidth() - 2 * d);
 
         this.inputDataMatrix = inputData;
-        n2 = (double) (inputDataMatrix.getHeight() - 2 * d) * (inputDataMatrix.getWidth() - 2 * d);
+        calculateS();
+        computeP();
+    }
+
+    public GTDMNew(Matrix inputData) throws FileNotFoundException, UnsupportedEncodingException {
+        this.matrixA = new MatrixCommon(inputData.getHeight(), inputData.getWidth());
+        this.s = new ArrayList<Double>(256);
+        this.p = new ArrayList<Double>(256);
+        inputDataHeight =inputData.getHeight();
+        inputDataWidth = inputData.getWidth();
+
+        this.inputDataMatrix = inputData;
+        n2 = (double) (inputDataHeight - 2 * d) * (inputDataWidth - 2 * d);
         //inputDataMatrix.printf();
 
-        findAverageToneMatrix();
+        calculateMatrixA();
 //        System.out.println("Matrix A");
 //        matrixA.printf();
 
         initializaS();
         calculateS();
-        //printfS();
+      //  printfS();
 
         initializaP();
         computeP();
-       // printfP();
+      //  printfP();
     }
 
     private void initializaS() {
@@ -135,8 +150,8 @@ public class GTDMNew {
         Double i=0.0;
         try {
 
-            for (int k = d; k < inputDataMatrix.getHeight() - d; k++) {
-                for (int l = d; l < inputDataMatrix.getWidth() - d; l++) {
+            for (int k = d; k < inputDataHeight - d; k++) {
+                for (int l = d; l < inputDataWidth - d; l++) {
                     i = inputDataMatrix.get(k, l);
                     Double partSum = s.get(i.intValue());
                     if (partSum == null)
@@ -148,6 +163,12 @@ public class GTDMNew {
         }
         catch (Exception ex){
             System.out.println(ex);
+        }
+    }
+    private void calculateS(ArrayList<Double> s1, ArrayList<Double> s2, ArrayList<Double> s3) {
+        int i=0;
+        for (i = 0; i < 255 ; i++){
+            s.set(i, (s1.get(i)+s2.get(i)+s3.get(i))/3.0);//s(i)= SIGMA |i-A|
         }
     }
 
@@ -173,8 +194,8 @@ public class GTDMNew {
     }
 
     public void computeP() {
-        for (int k = d; k < inputDataMatrix.getHeight() - d; k++) {
-            for (int l = d; l < inputDataMatrix.getWidth() - d; l++) {
+        for (int k = d; k < inputDataHeight - d; k++) {
+            for (int l = d; l < inputDataWidth - d; l++) {
                 Double iNumber = p.get((int) inputDataMatrix.get(k, l));//i
                 if (iNumber == null)
                     iNumber = 0.0;

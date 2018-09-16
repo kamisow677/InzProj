@@ -5,7 +5,7 @@ import java.awt.image.Raster;
 public class MatrixData implements Matrix {
     BufferedImage bufferedImage;
 
-    public enum COLOR {RED, GREEN, BLUE, GREY}
+    public enum COLOR {RED, GREEN, BLUE, GREY, ALL}
 
     ;
     private COLOR color;
@@ -28,6 +28,9 @@ public class MatrixData implements Matrix {
             }
             case RED: {
                 return (argb >> 16) & 0xFF;
+            }
+            case ALL:{
+                return ((argb) & 0xFF + (argb >> 8) & 0xFF + (argb >> 16) & 0xFF)/3.0;
             }
 
         }
@@ -75,4 +78,5 @@ public class MatrixData implements Matrix {
         }
         System.out.println();
     }
+
 }

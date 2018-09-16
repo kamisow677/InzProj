@@ -10,7 +10,7 @@ public class Tester {
 
     ArrayList<String> listOfPathsToImage = new ArrayList<>();
     ArrayList<MatrixData> listOfMatrixData = new ArrayList<>();
-    String FOLDER_PATH = "C:\\Users\\Kamil Sowa\\Desktop\\obrazki2\\";
+    String FOLDER_PATH = "C:\\Users\\Kamil Sowa\\Desktop\\obrazki21\\";
     int WIELKSC_MACIRZY = 5;
 
 
@@ -40,34 +40,48 @@ public class Tester {
             final File folder = new File(FOLDER_PATH);
             listFilesForFolder(folder);
             imagePathToMatrix();
+            ArrayList<TexturalPropertiesNew> tex = new ArrayList<>();
 
             long startTime = System.currentTimeMillis();
             for (MatrixData matrix : listOfMatrixData){
                 GTDMNew gdtmNowe = new GTDMNew(matrix);
                 TexturalPropertiesNew texturalPropertiesNew = new TexturalPropertiesNew(gdtmNowe);
+                tex.add(texturalPropertiesNew);
             }
+            System.out.println(tex.get(0));
+            System.out.println(tex.get(1));
+            System.out.println(tex.get(2));
+            Transformer.averageMatrix(tex.get(0), tex.get(1), tex.get(2));
+
+
             long stopTime = System.currentTimeMillis();
             long elapsedTime = stopTime - startTime;
             System.out.println("Elapsed time" + elapsedTime);
 
 
-            startTime = System.currentTimeMillis();
-            Consumer<? super MatrixData> consumer = (m) -> {
-                try {
-                    GTDMNew gdtmNowe = new GTDMNew(m);
-                    TexturalPropertiesNew texturalPropertiesNew = new TexturalPropertiesNew(gdtmNowe);
-                }
-                catch (Exception ex){
+//            startTime = System.currentTimeMillis();
+//            Consumer<? super MatrixData> consumer = (m) -> {
+//                try {
+//                    GTDMNew gdtmNowe = new GTDMNew(m);
+//                    TexturalPropertiesNew texturalPropertiesNew = new TexturalPropertiesNew(gdtmNowe);
+//                }
+//                catch (Exception ex){
+//
+//                }
+//            };
+//            listOfMatrixData
+//                    .parallelStream()
+//                    .forEach(consumer);
+//
+//            stopTime = System.currentTimeMillis();
+//            elapsedTime = stopTime - startTime;
+//            System.out.println(elapsedTime);
 
-                }
-            };
-            listOfMatrixData
-                    .parallelStream()
-                    .forEach(consumer);
 
-            stopTime = System.currentTimeMillis();
-            elapsedTime = stopTime - startTime;
-            System.out.println(elapsedTime);
+
+
+
+
 
 
 //            GTDM gdtm = new GTDM(listOfMatrixData.get(0));
@@ -105,7 +119,10 @@ public class Tester {
             BufferedImage buffImage = null;
             try { buffImage = ImageIO.read(img); }
             catch (IOException e) { e.printStackTrace(); }
-            listOfMatrixData.add(new MatrixData(buffImage, MatrixData.COLOR.GREY));
+            listOfMatrixData.add(new MatrixData(buffImage, MatrixData.COLOR.BLUE));
+            listOfMatrixData.add(new MatrixData(buffImage, MatrixData.COLOR.RED));
+            listOfMatrixData.add(new MatrixData(buffImage, MatrixData.COLOR.GREEN));
+            listOfMatrixData.add(new MatrixData(buffImage, MatrixData.COLOR.ALL));
         }
     }
 
