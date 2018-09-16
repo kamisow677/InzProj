@@ -9,4 +9,6 @@ public interface Matrix {
     public void printf();
 
     public String getColor();
+
+    public String getImageName();
 }

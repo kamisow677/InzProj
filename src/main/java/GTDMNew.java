@@ -1,6 +1,9 @@
 import java.io.FileNotFoundException;
+import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
+import java.io.Writer;
 import java.util.ArrayList;
+import java.util.List;
 
 public class GTDMNew {
     /**
@@ -8,6 +11,7 @@ public class GTDMNew {
      */
     private static int d = 1;
     private Matrix inputDataMatrix;
+    private  String imageName;
     private int inputDataHeight;
     private int inputDataWidth;
     private static int PIXELS_NUMBER = 256;
@@ -74,6 +78,10 @@ public class GTDMNew {
         this.n2 = n2;
     }
 
+    public void setImageName(String imageName) {
+        this.imageName = imageName;
+    }
+
     /**
      * average gray-tone over a neighborhood centered at, but excluding ( k , I )
      */
@@ -103,7 +111,6 @@ public class GTDMNew {
         }
     }
 
-
     public void GTDMNew(Matrix inputData) throws FileNotFoundException, UnsupportedEncodingException {
         this.s = new ArrayList<Double>(256);
         this.p = new ArrayList<Double>(256);
@@ -116,28 +123,55 @@ public class GTDMNew {
         computeP();
     }
 
-    public GTDMNew(Matrix inputData) throws FileNotFoundException, UnsupportedEncodingException {
+    public GTDMNew(Matrix inputData){
         this.matrixA = new MatrixCommon(inputData.getHeight(), inputData.getWidth());
         this.s = new ArrayList<Double>(256);
         this.p = new ArrayList<Double>(256);
-        inputDataHeight =inputData.getHeight();
+        this.imageName = imageName;
+        inputDataHeight = inputData.getHeight();
         inputDataWidth = inputData.getWidth();
 
         this.inputDataMatrix = inputData;
         n2 = (double) (inputDataHeight - 2 * d) * (inputDataWidth - 2 * d);
         //inputDataMatrix.printf();
+    }
 
+    public void startCalcualtions(Boolean calculateP){
         calculateMatrixA();
 //        System.out.println("Matrix A");
 //        matrixA.printf();
 
         initializaS();
         calculateS();
-      //  printfS();
+        //  printfS();
+
+        if (calculateP) {
+            initializaP();
+            computeP();
+            //  printfP();
+        }
+    }
+
+
+    public GTDMNew(GTDMNew matrix1, GTDMNew matrix2, GTDMNew matrix3) throws FileNotFoundException, UnsupportedEncodingException {
+        this.s = new ArrayList<Double>(256);
+        this.p = new ArrayList<Double>(256);
+        inputDataHeight = matrix1.getInputDataMatrix().getHeight();
+        inputDataWidth = matrix2.getInputDataMatrix().getWidth();
+        this.imageName = imageName;
+
+        this.inputDataMatrix = matrix1.getInputDataMatrix();
+        n2 = (double) (inputDataHeight - 2 * d) * (inputDataWidth - 2 * d);
+        //inputDataMatrix.printf();
+
+        initializaS();
+        calculateS(matrix1.getS(),matrix2.getS(),matrix3.getS());
+        //  printfS();
 
         initializaP();
-        computeP();
-      //  printfP();
+        computeP(matrix1.getInputDataMatrix(),matrix2.getInputDataMatrix(),matrix3.getInputDataMatrix());
+        //  printfP();
+
     }
 
     private void initializaS() {
@@ -149,7 +183,6 @@ public class GTDMNew {
     private void calculateS() {
         Double i=0.0;
         try {
-
             for (int k = d; k < inputDataHeight - d; k++) {
                 for (int l = d; l < inputDataWidth - d; l++) {
                     i = inputDataMatrix.get(k, l);
@@ -207,5 +240,63 @@ public class GTDMNew {
             p.set( i ,p.get(i) / n2);
         }
     }
+    public void computeP(Matrix inputDataMatrix1, Matrix inputDataMatrix2, Matrix inputDataMatrix3) {
+        for (int k = d; k < inputDataHeight - d; k++) {
+            for (int l = d; l < inputDataWidth - d; l++) {
+                Double iNumber = p.get((int) inputDataMatrix1.get(k, l));//i
+                if (iNumber == null)
+                    iNumber = 0.0;
+                iNumber += 1;
+                p.set((int) inputDataMatrix1.get(k, l), iNumber);
 
+                iNumber = p.get((int) inputDataMatrix2.get(k, l));//i
+                if (iNumber == null)
+                    iNumber = 0.0;
+                iNumber += 1;
+                p.set((int) inputDataMatrix1.get(k, l), iNumber);
+
+                iNumber = p.get((int) inputDataMatrix3.get(k, l));//i
+                if (iNumber == null)
+                    iNumber = 0.0;
+                iNumber += 1;
+                p.set((int) inputDataMatrix3.get(k, l), iNumber);
+            }
+        }
+        for (int i = 0 ; i< PIXELS_NUMBER ; i++) {
+            p.set( i ,p.get(i) / n2/3.0);
+        }
+    }
+    public  void saveToCSV(String part)
+    {
+        PrintWriter w = null;
+        try {
+            w = new PrintWriter(inputDataMatrix.getImageName() + " " + inputDataMatrix.getColor()+"X" + part +".csv", "UTF-8");
+            //w = new PrintWriter(inputDataMatrix.getImageName() + " " + inputDataMatrix.getColor()+".csv", "UTF-8");
+            boolean firstVal = true;
+            for (Double val : s)  {
+                if (!firstVal) {
+                    w.write(";");
+                }
+                w.write("\"");
+                String val2 = val.toString();
+                for (int i=0; i<val2.length(); i++) {
+                    char ch = val2.charAt(i);
+                    if (ch=='\"') {
+                        w.write("\"");  //extra quote
+                    }
+                    w.write(ch);
+                }
+
+                w.write("\"");
+                firstVal = false;
+                w.write("\n");
+            }
+            w.write("\n");
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        w.close();
+    }
 }

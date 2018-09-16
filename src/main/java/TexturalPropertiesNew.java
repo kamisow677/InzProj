@@ -16,20 +16,18 @@ public class TexturalPropertiesNew {
     private Double Complexity;
     private Double Strength;
 
-    public TexturalPropertiesNew(GTDMNew toneMatrix) throws FileNotFoundException, UnsupportedEncodingException {
+    public TexturalPropertiesNew(GTDMNew toneMatrix)  {
         this.toneMatrix = toneMatrix;
         this.s = toneMatrix.getS();
         this.p = toneMatrix.getP();
         this.n2 = toneMatrix.getN2();
 
-//        System.out.println("\n\nCoarness:  " + computeCoarness());
-//        System.out.println("Contrast:  " + computeContrast());
-//        System.out.println("Busyness:  " + computeBusyness());
-//        System.out.println("Complexity:  " + computeComplexity());
-//        System.out.println("Strength:  " + computeStrength());
-
         computeCoarnessContrastBusynessComplexity();
     }
+    public void saveToCsv(String part){
+        toneMatrix.saveToCSV(part);
+    }
+
 
 //    public Double computeCoarness() {
 //        Double fcos = 0.001;
@@ -154,7 +152,6 @@ public class TexturalPropertiesNew {
                 partComplexity = Math.abs(i - j) / (n2 * (p.get(i) + p1.get(j)));
                 partComplexity *= (p.get(i) * s.get(i)) - (p1.get(j) * s.get(j));
                 Complexity += partComplexity;
-
                 partStrength = Math.pow((i - j), 2) * (p.get(i) + p1.get(j));
                 Strength += partStrength;
             }
@@ -170,17 +167,11 @@ public class TexturalPropertiesNew {
         Busyness = psiLicznikBusyness / mianownikBusyness;
         Strength /= suma_si;
 
-
-//        System.out.println("\n\nCoarness:  " + Coarness);
-//        System.out.println("Contrast:  " + Contrast);
-//        System.out.println("Busyness:  " + Busyness);
-//        System.out.println("Complexity:  " + Complexity);
-//        System.out.println("Strength:  " + Strength);
-
     }
     @Override
     public String toString(){
-        return "\n\nCoarness:  " + Coarness +
+        return "\n\nCOLOR:  " + toneMatrix.getInputDataMatrix().getColor() +
+        "\nCoarness:  " + Coarness +
         "\nContrast:  " + Contrast +
         "\nBusyness:  " + Busyness +
         "\nComplexity:  " + Complexity +

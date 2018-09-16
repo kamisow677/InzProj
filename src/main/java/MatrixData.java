@@ -4,22 +4,47 @@ import java.awt.image.Raster;
 
 public class MatrixData implements Matrix {
     BufferedImage bufferedImage;
+    String imageName;
+    int width = 0;
+    int height = 0;
+    int startWidth = 0;
+    int startHeight = 0;
 
     public enum COLOR {RED, GREEN, BLUE, GREY, ALL}
 
     ;
     private COLOR color;
 
-    public MatrixData(BufferedImage bufferedImage, COLOR color) {
+    public MatrixData(BufferedImage bufferedImage, COLOR color, String imageName) {
         this.bufferedImage = bufferedImage;
         this.color = color;
+        this.imageName = imageName;
+        width = bufferedImage.getWidth();
+        height = bufferedImage.getHeight();
+        startWidth = 0;
+        startHeight = 0;
+    }
+    public MatrixData(MatrixData m) {
+        this.bufferedImage = m.bufferedImage;
+        this.color = m.color;
+        this.imageName = m.imageName;
+        width = m.bufferedImage.getWidth();
+        height = m.bufferedImage.getHeight();
+        startWidth = 0;
+        startHeight = 0;
+    }
+
+    public String getImageName() {
+        return imageName;
     }
 
     @Override
     public double get(int j, int i) {
-        int argb = bufferedImage.getRGB(i, j);
+        int argb = bufferedImage.getRGB(i+startWidth, j+startHeight);
         switch (color) {
-            case GREY:
+            case GREY: {
+                return ((argb) & 0xFF + (argb >> 8) & 0xFF + (argb >> 16) & 0xFF)/3.0;
+            }
             case BLUE: {
                 return (argb) & 0xFF;
             }
@@ -51,6 +76,9 @@ public class MatrixData implements Matrix {
             case RED: {
                 return "RED";
             }
+            case ALL: {
+                return "ALL";
+            }
         }
         return "???";
     }
@@ -61,12 +89,12 @@ public class MatrixData implements Matrix {
 
     @Override
     public int getHeight() {
-        return bufferedImage.getHeight();
+        return height;
     }
 
     @Override
     public int getWidth() {
-        return bufferedImage.getWidth();
+        return width;
     }
 
     public void printf() {
@@ -79,4 +107,27 @@ public class MatrixData implements Matrix {
         System.out.println();
     }
 
+    public void setBufferedImage(BufferedImage bufferedImage) {
+        this.bufferedImage = bufferedImage;
+    }
+
+    public void setImageName(String imageName) {
+        this.imageName = imageName;
+    }
+
+    public void setWidth(int width) {
+        this.width = width;
+    }
+
+    public void setHeight(int height) {
+        this.height = height;
+    }
+
+    public void setStartWidth(int startWidth) {
+        this.startWidth = startWidth;
+    }
+
+    public void setStartHeight(int startHeight) {
+        this.startHeight = startHeight;
+    }
 }

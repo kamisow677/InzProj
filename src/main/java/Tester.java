@@ -36,27 +36,32 @@ public class Tester {
 
         try {
 
-
             final File folder = new File(FOLDER_PATH);
             listFilesForFolder(folder);
             imagePathToMatrix();
             ArrayList<TexturalPropertiesNew> tex = new ArrayList<>();
 
             long startTime = System.currentTimeMillis();
-            for (MatrixData matrix : listOfMatrixData){
-                GTDMNew gdtmNowe = new GTDMNew(matrix);
-                TexturalPropertiesNew texturalPropertiesNew = new TexturalPropertiesNew(gdtmNowe);
-                tex.add(texturalPropertiesNew);
-            }
-            System.out.println(tex.get(0));
-            System.out.println(tex.get(1));
-            System.out.println(tex.get(2));
-            Transformer.averageMatrix(tex.get(0), tex.get(1), tex.get(2));
+//            for (MatrixData matrix : listOfMatrixData){
+//                GTDMNew gdtmNowe = new GTDMNew(matrix);
+//                gdtmNowe.startCalcualtions(true);
+//                TexturalPropertiesNew texturalPropertiesNew = new TexturalPropertiesNew(gdtmNowe);
+//                texturalPropertiesNew.saveToCsv("partNONE");
+//                tex.add(texturalPropertiesNew);
+//            }
 
+//            System.out.println(tex.get(0));
+//            System.out.println(tex.get(1));
+//            System.out.println(tex.get(2));
+//            System.out.println(tex.get(3));
+//            Transformer.averageProperties(tex.get(0), tex.get(1), tex.get(2));
 
             long stopTime = System.currentTimeMillis();
             long elapsedTime = stopTime - startTime;
             System.out.println("Elapsed time" + elapsedTime);
+
+
+            calculationsBasedOnSquareSize(listOfMatrixData.get(0), 100);
 
 
 //            startTime = System.currentTimeMillis();
@@ -112,17 +117,39 @@ public class Tester {
 //        }
     }
 
+    private void calculationsBasedOnSquareSize(MatrixData matrixData, int measure) {
+        int height = matrixData.getHeight();
+        int weight = matrixData.getWidth();
+        ArrayList<TexturalPropertiesNew> tex = new ArrayList<>();
+        for (int i=0; i< height/measure; i++){
+            for (int j=0; j< weight/measure; j++){
+                MatrixData m = new MatrixData(matrixData);
+                m.setStartHeight(measure*i);
+                m.setStartWidth(measure*j);
+                m.setHeight(measure);
+                m.setWidth(measure);
+                GTDMNew gdtmNowe = new GTDMNew(m);
+                gdtmNowe.startCalcualtions(true);
+                TexturalPropertiesNew texturalPropertiesNew = new TexturalPropertiesNew(gdtmNowe);
+                String str = Integer.toString (i*(height/measure)+j);
+                texturalPropertiesNew.saveToCsv(str);
+                tex.add(texturalPropertiesNew);
+            }
+        }
+        Transformer.averageProperties(tex);
+
+    }
+
     private void imagePathToMatrix() {
         for (String path : listOfPathsToImage){
             File img = new File(path);
-            MatrixData matrixData = null;
             BufferedImage buffImage = null;
             try { buffImage = ImageIO.read(img); }
             catch (IOException e) { e.printStackTrace(); }
-            listOfMatrixData.add(new MatrixData(buffImage, MatrixData.COLOR.BLUE));
-            listOfMatrixData.add(new MatrixData(buffImage, MatrixData.COLOR.RED));
-            listOfMatrixData.add(new MatrixData(buffImage, MatrixData.COLOR.GREEN));
-            listOfMatrixData.add(new MatrixData(buffImage, MatrixData.COLOR.ALL));
+            listOfMatrixData.add(new MatrixData(buffImage, MatrixData.COLOR.BLUE, path));
+            listOfMatrixData.add(new MatrixData(buffImage, MatrixData.COLOR.RED, path));
+            listOfMatrixData.add(new MatrixData(buffImage, MatrixData.COLOR.GREEN, path));
+            listOfMatrixData.add(new MatrixData(buffImage, MatrixData.COLOR.ALL, path));
         }
     }
 
@@ -148,7 +175,7 @@ public class Tester {
             File f = new File("MyFile.png");
             ImageIO.write(buffImage, "PNG", f);
 
-            matrixData = new MatrixData(buffImage, MatrixData.COLOR.GREY);
+            matrixData = new MatrixData(buffImage, MatrixData.COLOR.GREY, "ImageName");
             System.out.println("Height: " + matrixData.getHeight());
             System.out.println("Width: " + matrixData.getWidth());
 

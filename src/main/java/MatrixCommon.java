@@ -66,4 +66,9 @@ public class MatrixCommon implements Matrix {
         return "GREY";
     }
 
+    @Override
+    public String getImageName() {
+        return null;
+    }
+
 }
