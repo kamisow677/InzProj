@@ -9,7 +9,7 @@ import java.util.function.Consumer;
 public class Tester {
 
     ArrayList<String> listOfPathsToImage = new ArrayList<>();
-    ArrayList<MatrixData> listOfMatrixData = new ArrayList<>();
+    ArrayList<ArrayList<MatrixData>> listOfMatrixData = new ArrayList<>();
     String FOLDER_PATH = "C:\\Users\\Kamil Sowa\\Desktop\\obrazki21\\";
     int WIELKSC_MACIRZY = 5;
 
@@ -42,26 +42,32 @@ public class Tester {
             ArrayList<TexturalPropertiesNew> tex = new ArrayList<>();
 
             long startTime = System.currentTimeMillis();
-//            for (MatrixData matrix : listOfMatrixData){
-//                GTDMNew gdtmNowe = new GTDMNew(matrix);
-//                gdtmNowe.startCalcualtions(true);
-//                TexturalPropertiesNew texturalPropertiesNew = new TexturalPropertiesNew(gdtmNowe);
-//                texturalPropertiesNew.saveToCsv("partNONE");
-//                tex.add(texturalPropertiesNew);
-//            }
+            for (ArrayList<MatrixData> list : listOfMatrixData){
+                tex = new ArrayList<>();
+                for (MatrixData matrix : list) {
+
+                    TexturalPropertiesNew texturalPropertiesNew = calculationsBasedOnSquareSize(matrix,100);
+//                    GTDMNew gdtmNowe = new GTDMNew(matrix);
+//                    gdtmNowe.startCalcualtions(true);
+//                    TexturalPropertiesNew texturalPropertiesNew = new TexturalPropertiesNew(gdtmNowe);
+                    //texturalPropertiesNew.saveToCsv("partNONE");
+                    tex.add(texturalPropertiesNew);
+                }
+                Transformer.averageProperties(tex.get(0), tex.get(1), tex.get(2));
+            }
 
 //            System.out.println(tex.get(0));
 //            System.out.println(tex.get(1));
 //            System.out.println(tex.get(2));
 //            System.out.println(tex.get(3));
-//            Transformer.averageProperties(tex.get(0), tex.get(1), tex.get(2));
+           // Transformer.averageProperties(tex.get(0), tex.get(1), tex.get(2));
 
             long stopTime = System.currentTimeMillis();
             long elapsedTime = stopTime - startTime;
             System.out.println("Elapsed time" + elapsedTime);
 
 
-            calculationsBasedOnSquareSize(listOfMatrixData.get(0), 100);
+        //    calculationsBasedOnSquareSize(listOfMatrixData.get(0), 200);
 
 
 //            startTime = System.currentTimeMillis();
@@ -117,7 +123,7 @@ public class Tester {
 //        }
     }
 
-    private void calculationsBasedOnSquareSize(MatrixData matrixData, int measure) {
+    private TexturalPropertiesNew calculationsBasedOnSquareSize(MatrixData matrixData, int measure) {
         int height = matrixData.getHeight();
         int weight = matrixData.getWidth();
         ArrayList<TexturalPropertiesNew> tex = new ArrayList<>();
@@ -142,8 +148,7 @@ public class Tester {
                 tex.add(texturalPropertiesNew);
             }
         }
-        Transformer.averageProperties(tex);
-
+        return Transformer.averageProperties(tex,tex.get(0).getColor());
     }
 
     private void imagePathToMatrix() {
@@ -152,10 +157,11 @@ public class Tester {
             BufferedImage buffImage = null;
             try { buffImage = ImageIO.read(img); }
             catch (IOException e) { e.printStackTrace(); }
-            listOfMatrixData.add(new MatrixData(buffImage, MatrixData.COLOR.BLUE, path));
-            listOfMatrixData.add(new MatrixData(buffImage, MatrixData.COLOR.RED, path));
-            listOfMatrixData.add(new MatrixData(buffImage, MatrixData.COLOR.GREEN, path));
-            listOfMatrixData.add(new MatrixData(buffImage, MatrixData.COLOR.ALL, path));
+            ArrayList<MatrixData> listOfSingleColorImage = new ArrayList<>();
+            listOfSingleColorImage.add(new MatrixData(buffImage, MatrixData.COLOR.BLUE, path));
+            listOfSingleColorImage.add(new MatrixData(buffImage, MatrixData.COLOR.RED, path));
+            listOfSingleColorImage.add(new MatrixData(buffImage, MatrixData.COLOR.GREEN, path));
+            listOfMatrixData.add(listOfSingleColorImage);
         }
     }
 

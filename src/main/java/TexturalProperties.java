@@ -258,4 +258,5 @@ public class TexturalProperties {
         System.out.println("Complexity:  " + Complexity);
         System.out.println("Strength:  " + Strength);
     }
+
 }

@@ -15,14 +15,24 @@ public class TexturalPropertiesNew {
     private Double Busyness;
     private Double Complexity;
     private Double Strength;
+    private String Color;
 
     public TexturalPropertiesNew(GTDMNew toneMatrix)  {
         this.toneMatrix = toneMatrix;
         this.s = toneMatrix.getS();
         this.p = toneMatrix.getP();
         this.n2 = toneMatrix.getN2();
+        this.Color = toneMatrix.getInputDataMatrix().getColor();
 
         computeCoarnessContrastBusynessComplexity();
+    }
+    public TexturalPropertiesNew(Double coarness, Double contrast, Double busyness, Double complexity, Double strength, String color)  {
+        this.Coarness = coarness;
+        this.Contrast = contrast;
+        this.Busyness = busyness;
+        this.Complexity = complexity;
+        this.Strength = strength;
+        this.Color = color;
     }
     public void saveToCsv(String part){
         toneMatrix.saveToCSV(part);
@@ -170,7 +180,7 @@ public class TexturalPropertiesNew {
     }
     @Override
     public String toString(){
-        return "\n\nCOLOR:  " + toneMatrix.getInputDataMatrix().getColor() +
+        return "\n\nCOLOR:  " + Color +
         "\nCoarness:  " + Coarness +
         "\nContrast:  " + Contrast +
         "\nBusyness:  " + Busyness +
@@ -196,5 +206,9 @@ public class TexturalPropertiesNew {
 
     public Double getStrength() {
         return Strength;
+    }
+
+    public String getColor(){
+        return Color;
     }
 }
