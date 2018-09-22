@@ -173,6 +173,27 @@ public class GTDMNew {
         //  printfP();
 
     }
+    public GTDMNew( ArrayList<GTDMNew> matrixes, int heigth , int width) {
+        this.s = new ArrayList<Double>(256);
+        this.p = new ArrayList<Double>(256);
+        inputDataHeight = heigth;
+        inputDataWidth = width;
+        this.imageName = imageName;
+
+        this.inputDataMatrix = matrixes.get(0).getInputDataMatrix();
+        n2 = (double) (inputDataHeight - 2 * d) * (inputDataWidth - 2 * d);
+        //inputDataMatrix.printf();
+
+        initializaS();
+        calculateS(matrixes);
+        //  printfS();
+
+        initializaP();
+        computeP();
+        //  printfP();
+
+    }
+
 
     private void initializaS() {
         for (int i = 0; i<PIXELS_NUMBER; i++) {
@@ -202,6 +223,19 @@ public class GTDMNew {
         int i=0;
         for (i = 0; i < 255 ; i++){
             s.set(i, (s1.get(i)+s2.get(i)+s3.get(i))/3.0);//s(i)= SIGMA |i-A|
+        }
+    }
+
+    private void calculateS(ArrayList<GTDMNew> matrixes) {
+        int i=0;
+        for (i = 0; i < 255 ; i++){
+            final int il = i;
+            s.set(i,matrixes
+                    .stream()
+                    .map(matrix -> matrix.getS())
+                    .mapToDouble(s -> s.get(il))
+                    .sum()/matrixes.size()
+            );
         }
     }
 
@@ -266,6 +300,40 @@ public class GTDMNew {
             p.set( i ,p.get(i) / n2/3.0);
         }
     }
+
+
+//    private void computeP(ArrayList<GTDMNew> matrixes) {
+//        Double iNumber;
+//        for (int k = d; k < inputDataHeight - d; k++) {
+//            for (int l = d; l < inputDataWidth - d; l++) {
+//                for (GTDMNew gtdm: matrixes) {
+//
+//                }
+//                Double iNumber = p.get((int) inputDataMatrix1.get(k, l));//i
+//                if (iNumber == null)
+//                    iNumber = 0.0;
+//                iNumber += 1;
+//                p.set((int) inputDataMatrix1.get(k, l), iNumber);
+//
+//                iNumber = p.get((int) inputDataMatrix2.get(k, l));//i
+//                if (iNumber == null)
+//                    iNumber = 0.0;
+//                iNumber += 1;
+//                p.set((int) inputDataMatrix1.get(k, l), iNumber);
+//
+//                iNumber = p.get((int) inputDataMatrix3.get(k, l));//i
+//                if (iNumber == null)
+//                    iNumber = 0.0;
+//                iNumber += 1;
+//                p.set((int) inputDataMatrix3.get(k, l), iNumber);
+//            }
+//        }
+//        for (int i = 0 ; i< PIXELS_NUMBER ; i++) {
+//            p.set( i ,p.get(i) / n2/3.0);
+//        }
+//    }
+
+
     public  void saveToCSV(String part)
     {
         PrintWriter w = null;

@@ -151,6 +151,31 @@ public class Tester {
         return Transformer.averageProperties(tex,tex.get(0).getColor());
     }
 
+    private TexturalPropertiesNew calculationsBasedOnSquareSize2(MatrixData matrixData, int measure) {
+        int height = matrixData.getHeight();
+        int weight = matrixData.getWidth();
+        ArrayList<GTDMNew> tex = new ArrayList<>();
+        for (int i=0; i< height/measure + 1 ; i++){
+            for (int j=0; j< weight/measure + 1; j++){
+                MatrixData m = new MatrixData(matrixData);
+                m.setStartHeight(measure*i);
+                m.setStartWidth(measure*j);
+                if (i == height/measure)
+                    m.setHeight(height - (height/measure)*measure);
+                else
+                    m.setHeight(measure);
+                if (j == weight/measure)
+                    m.setWidth(weight - (weight/measure)*measure);
+                else
+                    m.setWidth(measure);
+                GTDMNew gdtmNowe = new GTDMNew(m);
+                gdtmNowe.startCalcualtions(false);
+                tex.add(gdtmNowe);
+            }
+        }
+        return new TexturalPropertiesNew(new GTDMNew(tex,matrixData.getHeight(),matrixData.getWidth()));
+    }
+
     private void imagePathToMatrix() {
         for (String path : listOfPathsToImage){
             File img = new File(path);
@@ -202,8 +227,11 @@ public class Tester {
             if (fileEntry.isDirectory()) {
                 listFilesForFolder(fileEntry);
             } else {
-                listOfPathsToImage.add(FOLDER_PATH+fileEntry.getName());
-                System.out.println(FOLDER_PATH+fileEntry.getName());
+                String path = FOLDER_PATH+fileEntry.getName();
+                if (path.endsWith(".jpg")){
+                    listOfPathsToImage.add(FOLDER_PATH+fileEntry.getName());
+                    System.out.println(FOLDER_PATH+fileEntry.getName());
+                }
             }
         }
     }
