@@ -68,11 +68,19 @@ public class ZADANIE implements Command {
      * "UI agnostic": it does not need to know the specific user interface
      * currently active.
      */
-    @Parameter
+
+    @Parameter (label="Path to folder with images")
+    private File imageF;
+
+    @Parameter(min = "1" , max = "5")
+    private int neighbourhoodSize = 1;
+
+    @Parameter(label="Choose folder to which everything should be saved")
     private File imageFile;
 
-    @Parameter
-    private File imageF;
+    @Parameter(label="Average matrixes ?",choices={"YES","NO"})
+    private String Wybor = "asd";
+
 
 
     /*
@@ -80,14 +88,12 @@ public class ZADANIE implements Command {
      * the framework. Again, this command is "UI agnostic": how the image is
      * shown is not specified here.
      */
-    @Parameter(type = ItemIO.OUTPUT)
-    private Dataset image;
-
-    @Parameter(type = ItemIO.OUTPUT)
+//    @Parameter(type = ItemIO.OUTPUT)
+//    private Dataset image;
+//
+    @Parameter(type = ItemIO.OUTPUT )
     private String greeting;
 
-    @Parameter(min = "1")
-    private int blueParam = 512;
 
     List<RealLUTConverter<? extends RealType>> converters;
 
@@ -101,8 +107,10 @@ public class ZADANIE implements Command {
         //ImagePlus ij=new ImagePlus(imageFile.getAbsolutePath());
 
         //ImagePlus imagePlus = convertService.convert(image, ImagePlus.class);
+
         ImagePlus imagePlus = new ImagePlus(imageFile.getAbsolutePath());
         BufferedImage buffImage = imagePlus.getBufferedImage();
+        greeting = "neighbourhoodSize: " + neighbourhoodSize;
 
         //ImageProcessor improc =imagePlus.getProcessor();
         //imagePlus.show();
@@ -110,7 +118,7 @@ public class ZADANIE implements Command {
 //            File img = new File("jedi.png");
 //            buffImage= ImageIO.read(img );
 
-        //folderOpener=new FolderOpener();
+//        FolderOpener folderOpener = new FolderOpener();
 //        ImagePlus imagePlus2 = folderOpener.openFolder(imageFile.getAbsolutePath());
 //        imagePlus2.show();
 
@@ -121,7 +129,7 @@ public class ZADANIE implements Command {
             writer.printf("Number og bytes per pixel %d \n", imagePlus.getBytesPerPixel());
             writer.printf("Height %d \n", buffImage.getHeight());
             writer.printf("Height %d \n", buffImage.getWidth());
-            writer.printf("BLUE PARAM %d \n", blueParam);
+            //writer.printf("BLUE PARAM %d \n", blueParam);
 
             for (int i = 0; i < buffImage.getHeight(); i++) {
                 for (int j = 0; j < buffImage.getWidth(); j++) {
@@ -165,8 +173,8 @@ public class ZADANIE implements Command {
             writer.close();
         }
 
-        imagePlus = new ImagePlus("tytul", buffImage);
-        imagePlus.show();
+//        imagePlus = new ImagePlus("tytul", buffImage);
+//        imagePlus.show();
 
         //  MainTestClass.start();
 

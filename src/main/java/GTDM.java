@@ -14,11 +14,11 @@ public class GTDM {
      */
     private MatrixCommon matrixA;
     /**
-     * valuee of grey tone difference matrix
+     * value of grey tone difference matrix
      */
     private Map<Double, Double> s;
     /**
-     * probabilty of occurence of value
+     * probabilty of ocurence of value
      */
     private Map<Double, Double> p;
 
@@ -107,24 +107,25 @@ public class GTDM {
         this.p = new HashMap<Double, Double>();
         this.inputDataMatrix = inputData;
         n2 = (double) (inputDataMatrix.getHeight() - 2 * d) * (inputDataMatrix.getWidth() - 2 * d);
-        inputDataMatrix.printf();
+        //inputDataMatrix.printf();
 
         findAverageToneMatrix();
-        System.out.println("Matrix A");
-        matrixA.printf();
+        //System.out.println("Matrix A");
+        //matrixA.printf();
 
         calculateS();
-        printfS();
+        //printfS();
         computeP();
-        printfP();
+       // printfP();
 
     }
 
     private void printfP() {
         System.out.println("Tablica z p");
         for (Map.Entry<Double, Double> pp : p.entrySet()) {
-            System.out.print(pp.getKey() + ": " + pp.getValue() + "    ");
+            System.out.println(pp.getKey() + ": " + pp.getValue() + "    ");
         }
+        System.out.println("Tablica z p");
     }
 
     private void calculateS() {

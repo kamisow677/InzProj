@@ -1,8 +1,9 @@
 import java.io.FileNotFoundException;
 import java.io.UnsupportedEncodingException;
-import java.util.AbstractMap;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class TexturalProperties {
@@ -18,13 +19,25 @@ public class TexturalProperties {
         this.p = toneMatrix.getP();
         this.n2 = toneMatrix.getN2();
 
-        System.out.println("\n\nCoarness:  " + computeCoarness());
-        System.out.println("Contrast:  " + computeContrast());
-        System.out.println("Busyness:  " + computeBusyness());
-        System.out.println("Complexity:  " + computeComplexity());
-        System.out.println("Strength:  " + computeStrength());
+//        System.out.println("\n\nCOLOR "+ toneMatrix.getInputDataMatrix().getColor());
+//        System.out.println("Coarness:  " + computeCoarness());
+//        System.out.println("Coarness Parallel:  " + computeCoarnessParallel());
+//        System.out.println("Contrast:  " + computeContrast());
+//        System.out.println("Busyness:  " + computeBusyness());
+//        System.out.println("Complexity:  " + computeComplexity());
+//        System.out.println("Strength:  " + computeStrength());
 
+        long startTime = System.currentTimeMillis();
         computeCoarnessContrastBusynessComplexity();
+        long stopTime = System.currentTimeMillis();
+        long elapsedTime = stopTime - startTime;
+        System.out.println(elapsedTime);
+
+        startTime = System.currentTimeMillis();
+        computeCoarnessContrastBusynessComplexityParallel();
+        stopTime = System.currentTimeMillis();
+        elapsedTime = stopTime - startTime;
+        System.out.println(elapsedTime);
     }
 
     public Double computeCoarness() {
@@ -33,6 +46,15 @@ public class TexturalProperties {
             fcos += ss.getValue() * p.get(ss.getKey());
         }
         return Math.pow(fcos, -1);
+    }
+
+    public Double computeCoarnessParallel() {
+        Double fcos = 0.001;
+        return Math.pow( s.entrySet()
+                .parallelStream()
+                .mapToDouble((ss)->ss.getValue()*p.get(ss.getKey()))
+                .sum()
+                , -1);
     }
 
     public Double computeContrast() {
@@ -128,10 +150,7 @@ public class TexturalProperties {
         Map<Double, Double> p1 = new HashMap<>(p);
 
         Double psiLicznikBusyness = 0.0;
-//        s.entrySet()
-//                .parallelStream()
-//                .map((ss)->ss.getValue()*p.get(ss.getKey()))
-//                .collect(Collectors.toCollection())
+
         for (Map.Entry<Double, Double> ss : s.entrySet()) {
             psiLicznikBusyness += ss.getValue() * p.get(ss.getKey());
         }
@@ -156,8 +175,8 @@ public class TexturalProperties {
                 Complexity += partComplexity;
                 partStrength = Math.pow((i - j), 2) * (pp.getValue() + pp1.getValue());
                 Strength += partStrength;
-
             }
+           // System.out.println(Strength);
         }
         firstPartContrast = 1 / Ng / (Ng - 1) * firstPartContrast;
         Double suma_si = 0.0;
@@ -170,7 +189,6 @@ public class TexturalProperties {
         Double Busyness = psiLicznikBusyness / mianownikBusyness;
         Strength /= suma_si;
 
-
         System.out.println("\n\nCoarness:  " + Coarness);
         System.out.println("Contrast:  " + Contrast);
         System.out.println("Busyness:  " + Busyness);
@@ -179,5 +197,66 @@ public class TexturalProperties {
 
     }
 
+    public void computeCoarnessContrastBusynessComplexityParallel() {
+        Double Ng = new Double(s.size());
+        Map<Double, Double> p1 = new HashMap<>(p);
+
+        Double psiLicznikBusyness = 0.0;
+
+        psiLicznikBusyness = s.entrySet()
+                            .parallelStream()
+                            .mapToDouble((ss)->ss.getValue()*p.get(ss.getKey()))
+                            .sum();
+
+        Double i = 0.0;
+        Double j = 0.0;
+        Double firstPartContrast = 0.0;
+        Double mianownikBusyness = 0.0;
+        Double Complexity = 0.0;
+        Double Strength = 0.0;
+        for (Map.Entry<Double, Double> pp : p.entrySet()) {
+            mianownikBusyness += i * pp.getValue();
+            i = pp.getKey();
+            firstPartContrast += p1.entrySet()
+                    .parallelStream()
+                    .mapToDouble( (pp1) -> pp.getValue() * pp1.getValue() * Math.pow((pp.getKey() - pp1.getKey()), 2))
+                    .sum();
+
+            mianownikBusyness -= p1.entrySet()
+                    .parallelStream()
+                    .mapToDouble( (pp1) ->  pp1.getKey() * pp1.getValue())
+                    .sum();
+
+            Complexity += p1.entrySet()
+                    .parallelStream()
+                    .mapToDouble((pp1) ->
+                            (Math.abs(pp.getKey() - pp1.getKey()) / (n2 * (pp.getValue() + pp1.getValue())))
+                                * ((pp.getValue() * s.get(pp.getKey())) - (pp1.getValue() * s.get(pp1.getKey())))
+                    ).sum();
+
+            Strength +=  p1.entrySet()
+                    .parallelStream()
+                    .mapToDouble( (pp1) ->  Math.pow((pp.getKey() - pp1.getKey()), 2) * (pp.getValue() + pp1.getValue()) )
+                    .sum();
+        }
+
+        firstPartContrast = 1 / Ng / (Ng - 1) * firstPartContrast;
+        Double suma_si = 0.0;
+        for (Map.Entry<Double, Double> ss : s.entrySet()) {
+            suma_si += ss.getValue();
+        }
+
+        Double Coarness = Math.pow(psiLicznikBusyness, -1);
+        Double Contrast = firstPartContrast * suma_si * 1 / n2;
+        Double Busyness = psiLicznikBusyness / mianownikBusyness;
+        Strength /= suma_si;
+
+        System.out.println("\n\n Parallel");
+        System.out.println("Coarness:  " + Coarness);
+        System.out.println("Contrast:  " + Contrast);
+        System.out.println("Busyness:  " + Busyness);
+        System.out.println("Complexity:  " + Complexity);
+        System.out.println("Strength:  " + Strength);
+    }
 
 }

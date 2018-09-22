@@ -7,4 +7,8 @@ public interface Matrix {
     public int getWidth();
 
     public void printf();
+
+    public String getColor();
+
+    public String getImageName();
 }
