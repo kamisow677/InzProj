@@ -9,7 +9,7 @@ public class Tester {
 
     ArrayList<String> listOfPathsToImagePlusName = new ArrayList<>();
     ArrayList<ArrayList<MatrixData>> listOfMatrixData = new ArrayList<>();
-    String FOLDER_PATH = "C:\\Users\\Kamil Sowa\\Desktop\\obrazki2\\";
+    String FOLDER_PATH = "C:\\Users\\Kamil Sowa\\Desktop\\obrazki21\\";
 
 
     public void run(){
@@ -42,7 +42,7 @@ public class Tester {
             imagePathToMatrix();
             ArrayList<TexturalPropertiesNew> tex = new ArrayList<>();
             long startTime;
-            boolean concurrent = true;
+            boolean concurrent = false;
             if (!concurrent) {
 
                  startTime = System.currentTimeMillis();

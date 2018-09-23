@@ -156,9 +156,13 @@ public class TexturalPropertiesNew {
 
         for (int i = 0; i< p.size(); i++){
             denominatorBusyness += i * p.get(i);
+            if (p.get(i)==0.0)
+                continue;
             for (int j = 0; j< p1.size(); j++){
-                firstPartContrast += p.get(i) * p1.get(j) * Math.pow((i - j), 2);
                 denominatorBusyness -= j * p1.get(j);
+                if (p1.get(j)==0.0)
+                    continue;
+                firstPartContrast += p.get(i) * p1.get(j) * Math.pow((i - j), 2);
                 partComplexity = Math.abs(i - j) / (n2 * (p.get(i) + p1.get(j)));
                 partComplexity *= (p.get(i) * s.get(i)) + (p1.get(j) * s.get(j));
                 Complexity += partComplexity;
