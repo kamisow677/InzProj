@@ -10,9 +10,6 @@ public class Tester {
     ArrayList<String> listOfPathsToImagePlusName = new ArrayList<>();
     ArrayList<ArrayList<MatrixData>> listOfMatrixData = new ArrayList<>();
     String FOLDER_PATH = "C:\\Users\\Kamil Sowa\\Desktop\\obrazki2\\";
-    int MATRIX_SIZE = 5;
-    int QUADRATIC_SIZE = 100;
-    int D = 2;
 
 
     public void run(){
@@ -35,6 +32,10 @@ public class Tester {
 //
 //        Matrix daneTestowe = new MatrixCommon(dane, WIELKSC_MACIRZY, WIELKSC_MACIRZY);
 
+        System.out.println("D: "+Constans.getD());
+        System.out.println("Quadratic: "+Constans.getQuadraticSize());
+        System.out.println("average MAtrixes?: "+Constans.isAverageMatrixes());
+
         try {
             final File folder = new File(FOLDER_PATH);
             listFilesForFolder(folder);
@@ -48,8 +49,11 @@ public class Tester {
                 for (ArrayList<MatrixData> list : listOfMatrixData) {
                     tex = new ArrayList<>();
                     for (MatrixData matrix : list) {
-
-                        TexturalPropertiesNew texturalPropertiesNew = calculationsBasedOnSquareSize(matrix, QUADRATIC_SIZE);
+                        TexturalPropertiesNew texturalPropertiesNew;
+                        if (Constans.isAverageMatrixes())
+                            texturalPropertiesNew = calculationsBasedOnSquareSize2(matrix, Constans.getQuadraticSize());
+                        else
+                            texturalPropertiesNew = calculationsBasedOnSquareSize(matrix, Constans.getQuadraticSize());
 //                    GTDMNew gdtmNowe = new GTDMNew(matrix);
 //                    gdtmNowe.startCalcualtions(true);
 //                    TexturalPropertiesNew texturalPropertiesNew = new TexturalPropertiesNew(gdtmNowe);
@@ -68,7 +72,11 @@ public class Tester {
                 Consumer<? super ArrayList<MatrixData>> consumer = (array) -> {
                     final ArrayList<TexturalPropertiesNew> finalTex = new ArrayList<>();
                     for (MatrixData matrix : array) {
-                        TexturalPropertiesNew texturalPropertiesNew = calculationsBasedOnSquareSize(matrix, QUADRATIC_SIZE);
+                        TexturalPropertiesNew texturalPropertiesNew;
+                        if (Constans.isAverageMatrixes())
+                            texturalPropertiesNew = calculationsBasedOnSquareSize2(matrix, Constans.getQuadraticSize());
+                        else
+                            texturalPropertiesNew = calculationsBasedOnSquareSize(matrix, Constans.getQuadraticSize());
                         finalTex.add(texturalPropertiesNew);
                     }
                     Transformer.averageProperties(finalTex.get(0), finalTex.get(1), finalTex.get(2));

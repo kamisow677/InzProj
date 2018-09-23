@@ -84,8 +84,6 @@ public class ZADANIE implements Command {
     @Parameter(label="Average matrixes or average properties?",choices={"YES","NO"})
     private String averageMatrixes = "YES";
 
-
-
     /*
      * This command will produce an image that will automatically be shown by
      * the framework. Again, this command is "UI agnostic": how the image is
@@ -106,6 +104,23 @@ public class ZADANIE implements Command {
      */
     @Override
     public void run() {
+        Tester tester = new Tester();
+        if (averageMatrixes.equals("YES"))
+            Constans.setAverageMatrixes(true);
+        else
+            Constans.setAverageMatrixes(false);
+        Constans.setD(neighbourhood);
+        Constans.setQuadraticSize(quadraticRegionSize);
+        tester.run();
+
+
+
+
+
+
+
+
+
         // image = datasetIOService.open(imageFile.getAbsolutePath());
         //ImagePlus ij=new ImagePlus(imageFile.getAbsolutePath());
 
