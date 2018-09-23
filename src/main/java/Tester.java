@@ -3,15 +3,16 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Random;
 import java.util.function.Consumer;
 
 public class Tester {
 
-    ArrayList<String> listOfPathsToImage = new ArrayList<>();
+    ArrayList<String> listOfPathsToImagePlusName = new ArrayList<>();
     ArrayList<ArrayList<MatrixData>> listOfMatrixData = new ArrayList<>();
-    String FOLDER_PATH = "C:\\Users\\Kamil Sowa\\Desktop\\obrazki21\\";
-    int WIELKSC_MACIRZY = 5;
+    String FOLDER_PATH = "C:\\Users\\Kamil Sowa\\Desktop\\obrazki2\\";
+    int MATRIX_SIZE = 5;
+    int QUADRATIC_SIZE = 100;
+    int D = 2;
 
 
     public void run(){
@@ -35,92 +36,56 @@ public class Tester {
 //        Matrix daneTestowe = new MatrixCommon(dane, WIELKSC_MACIRZY, WIELKSC_MACIRZY);
 
         try {
-
             final File folder = new File(FOLDER_PATH);
             listFilesForFolder(folder);
             imagePathToMatrix();
             ArrayList<TexturalPropertiesNew> tex = new ArrayList<>();
+            long startTime;
+            boolean concurrent = true;
+            if (!concurrent) {
 
-            long startTime = System.currentTimeMillis();
-            for (ArrayList<MatrixData> list : listOfMatrixData){
-                tex = new ArrayList<>();
-                for (MatrixData matrix : list) {
+                 startTime = System.currentTimeMillis();
+                for (ArrayList<MatrixData> list : listOfMatrixData) {
+                    tex = new ArrayList<>();
+                    for (MatrixData matrix : list) {
 
-                    TexturalPropertiesNew texturalPropertiesNew = calculationsBasedOnSquareSize(matrix,100);
+                        TexturalPropertiesNew texturalPropertiesNew = calculationsBasedOnSquareSize(matrix, QUADRATIC_SIZE);
 //                    GTDMNew gdtmNowe = new GTDMNew(matrix);
 //                    gdtmNowe.startCalcualtions(true);
 //                    TexturalPropertiesNew texturalPropertiesNew = new TexturalPropertiesNew(gdtmNowe);
-                    //texturalPropertiesNew.saveToCsv("partNONE");
-                    tex.add(texturalPropertiesNew);
+                        //texturalPropertiesNew.saveToCsv("partNONE");
+                        tex.add(texturalPropertiesNew);
+                    }
+                    Transformer.averageProperties(tex.get(0), tex.get(1), tex.get(2));
                 }
-                Transformer.averageProperties(tex.get(0), tex.get(1), tex.get(2));
+                long stopTime = System.currentTimeMillis();
+                long elapsedTime = stopTime - startTime;
+                System.out.println("Elapsed time" + elapsedTime);
+
             }
+            else {
+                startTime = System.currentTimeMillis();
+                Consumer<? super ArrayList<MatrixData>> consumer = (array) -> {
+                    final ArrayList<TexturalPropertiesNew> finalTex = new ArrayList<>();
+                    for (MatrixData matrix : array) {
+                        TexturalPropertiesNew texturalPropertiesNew = calculationsBasedOnSquareSize(matrix, QUADRATIC_SIZE);
+                        finalTex.add(texturalPropertiesNew);
+                    }
+                    Transformer.averageProperties(finalTex.get(0), finalTex.get(1), finalTex.get(2));
+                };
 
-//            System.out.println(tex.get(0));
-//            System.out.println(tex.get(1));
-//            System.out.println(tex.get(2));
-//            System.out.println(tex.get(3));
-           // Transformer.averageProperties(tex.get(0), tex.get(1), tex.get(2));
+                listOfMatrixData
+                        .parallelStream()
+                        .forEach(consumer);
 
-            long stopTime = System.currentTimeMillis();
-            long elapsedTime = stopTime - startTime;
-            System.out.println("Elapsed time" + elapsedTime);
-
-
-        //    calculationsBasedOnSquareSize(listOfMatrixData.get(0), 200);
-
-
-//            startTime = System.currentTimeMillis();
-//            Consumer<? super MatrixData> consumer = (m) -> {
-//                try {
-//                    GTDMNew gdtmNowe = new GTDMNew(m);
-//                    TexturalPropertiesNew texturalPropertiesNew = new TexturalPropertiesNew(gdtmNowe);
-//                }
-//                catch (Exception ex){
-//
-//                }
-//            };
-//            listOfMatrixData
-//                    .parallelStream()
-//                    .forEach(consumer);
-//
-//            stopTime = System.currentTimeMillis();
-//            elapsedTime = stopTime - startTime;
-//            System.out.println(elapsedTime);
-
-
-
-
-
-
-
-
-//            GTDM gdtm = new GTDM(listOfMatrixData.get(0));
-//            TexturalProperties texturalProperties = new TexturalProperties(gdtm);
-
-//            GTDMNew gdtmNowe = new GTDMNew(listOfMatrixData.get(0));
-//            TexturalPropertiesNew texturalPropertiesNew = new TexturalPropertiesNew(gdtmNowe);
-
-
-//            matrixData.setColor(MatrixData.COLOR.RED);
-//            gdtm = new GTDM(matrixData);
-//            texturalProperties = new TexturalProperties(gdtm);
-//
-//            matrixData.setColor(MatrixData.COLOR.BLUE);
-//            gdtm = new GTDM(matrixData);
-//            texturalProperties = new TexturalProperties(gdtm);
-//
-//            GTDMNew gdtmnew = new GTDMNew(daneTestowe);
-//            TexturalProperties texturalProperties = new TexturalProperties(gdtm);
+                long stopTime = System.currentTimeMillis();
+                long elapsedTime = stopTime - startTime;
+                System.out.println(elapsedTime);
+            }
         }
         catch (Exception ex){
 
         }
-//        catch (FileNotFoundException e) {
-//            e.printStackTrace();
-//        } catch (UnsupportedEncodingException e) {
-//            e.printStackTrace();
-//        }
     }
 
     private TexturalPropertiesNew calculationsBasedOnSquareSize(MatrixData matrixData, int measure) {
@@ -177,15 +142,15 @@ public class Tester {
     }
 
     private void imagePathToMatrix() {
-        for (String path : listOfPathsToImage){
-            File img = new File(path);
+        for (String pathToImagePlusName : listOfPathsToImagePlusName){
+            File img = new File(pathToImagePlusName);
             BufferedImage buffImage = null;
             try { buffImage = ImageIO.read(img); }
             catch (IOException e) { e.printStackTrace(); }
             ArrayList<MatrixData> listOfSingleColorImage = new ArrayList<>();
-            listOfSingleColorImage.add(new MatrixData(buffImage, MatrixData.COLOR.BLUE, path));
-            listOfSingleColorImage.add(new MatrixData(buffImage, MatrixData.COLOR.RED, path));
-            listOfSingleColorImage.add(new MatrixData(buffImage, MatrixData.COLOR.GREEN, path));
+            listOfSingleColorImage.add(new MatrixData(buffImage, MatrixData.COLOR.BLUE, pathToImagePlusName));
+            listOfSingleColorImage.add(new MatrixData(buffImage, MatrixData.COLOR.RED, pathToImagePlusName));
+            listOfSingleColorImage.add(new MatrixData(buffImage, MatrixData.COLOR.GREEN, pathToImagePlusName));
             listOfMatrixData.add(listOfSingleColorImage);
         }
     }
@@ -227,9 +192,9 @@ public class Tester {
             if (fileEntry.isDirectory()) {
                 listFilesForFolder(fileEntry);
             } else {
-                String path = FOLDER_PATH+fileEntry.getName();
-                if (path.endsWith(".jpg")){
-                    listOfPathsToImage.add(FOLDER_PATH+fileEntry.getName());
+                String fullPathWithNameOfImage = FOLDER_PATH+fileEntry.getName();
+                if (fullPathWithNameOfImage.endsWith(".jpg")){
+                    listOfPathsToImagePlusName.add(FOLDER_PATH+fileEntry.getName());
                     System.out.println(FOLDER_PATH+fileEntry.getName());
                 }
             }

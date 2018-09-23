@@ -1,7 +1,4 @@
-import java.io.FileNotFoundException;
-import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
-import java.io.Writer;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -86,7 +83,6 @@ public class GTDMNew {
      * average gray-tone over a neighborhood centered at, but excluding ( k , I )
      */
     public double calculateA(int k, int l) {
-
         double suma = 0;
         for (int m = -d; m <= d; m++) {
             for (int n = -d; n <= d; n++) {
@@ -103,7 +99,6 @@ public class GTDMNew {
     }
 
     public void calculateMatrixA() {
-
         for (int k = d; k < inputDataHeight - d; k++) {
             for (int l = d; l < inputDataWidth - d; l++) {
                 matrixA.set(k, l, calculateA(k, l));
@@ -111,29 +106,16 @@ public class GTDMNew {
         }
     }
 
-    public void GTDMNew(Matrix inputData) throws FileNotFoundException, UnsupportedEncodingException {
-        this.s = new ArrayList<Double>(256);
-        this.p = new ArrayList<Double>(256);
-        inputDataHeight =inputDataMatrix.getHeight();
-        inputDataWidth = inputDataMatrix.getWidth();
-        n2 = (double) (inputDataHeight - 2 * d) * (inputDataWidth - 2 * d);
-
-        this.inputDataMatrix = inputData;
-        calculateS();
-        computeP();
-    }
-
     public GTDMNew(Matrix inputData){
         this.matrixA = new MatrixCommon(inputData.getHeight(), inputData.getWidth());
-        this.s = new ArrayList<Double>(256);
-        this.p = new ArrayList<Double>(256);
+        this.s = new ArrayList<Double>(PIXELS_NUMBER);
+        this.p = new ArrayList<Double>(PIXELS_NUMBER);
         this.imageName = imageName;
         inputDataHeight = inputData.getHeight();
         inputDataWidth = inputData.getWidth();
 
         this.inputDataMatrix = inputData;
         n2 = (double) (inputDataHeight - 2 * d) * (inputDataWidth - 2 * d);
-        //inputDataMatrix.printf();
     }
 
     public void startCalcualtions(Boolean calculateP){
@@ -152,10 +134,9 @@ public class GTDMNew {
         }
     }
 
-
-    public GTDMNew(GTDMNew matrix1, GTDMNew matrix2, GTDMNew matrix3) throws FileNotFoundException, UnsupportedEncodingException {
-        this.s = new ArrayList<Double>(256);
-        this.p = new ArrayList<Double>(256);
+    public GTDMNew(GTDMNew matrix1, GTDMNew matrix2, GTDMNew matrix3){
+        this.s = new ArrayList<Double>(PIXELS_NUMBER);
+        this.p = new ArrayList<Double>(PIXELS_NUMBER);
         inputDataHeight = matrix1.getInputDataMatrix().getHeight();
         inputDataWidth = matrix2.getInputDataMatrix().getWidth();
         this.imageName = imageName;
@@ -171,11 +152,11 @@ public class GTDMNew {
         initializaP();
         computeP(matrix1.getInputDataMatrix(),matrix2.getInputDataMatrix(),matrix3.getInputDataMatrix());
         //  printfP();
-
     }
+
     public GTDMNew( ArrayList<GTDMNew> matrixes, int heigth , int width) {
-        this.s = new ArrayList<Double>(256);
-        this.p = new ArrayList<Double>(256);
+        this.s = new ArrayList<Double>(PIXELS_NUMBER);
+        this.p = new ArrayList<Double>(PIXELS_NUMBER);
         inputDataHeight = heigth;
         inputDataWidth = width;
         this.imageName = imageName;
@@ -191,9 +172,7 @@ public class GTDMNew {
         initializaP();
         computeP();
         //  printfP();
-
     }
-
 
     private void initializaS() {
         for (int i = 0; i<PIXELS_NUMBER; i++) {
@@ -219,6 +198,7 @@ public class GTDMNew {
             System.out.println(ex);
         }
     }
+
     private void calculateS(ArrayList<Double> s1, ArrayList<Double> s2, ArrayList<Double> s3) {
         int i=0;
         for (i = 0; i < 255 ; i++){
@@ -334,28 +314,32 @@ public class GTDMNew {
 //    }
 
 
-    public  void saveToCSV(String part)
-    {
+    public  void saveToCSV(String part) {
         PrintWriter w = null;
+        File fileForCsv = new File(inputDataMatrix.getImageName() + "CsvFiles\\");
+        boolean success = (fileForCsv).mkdirs();
         try {
-            w = new PrintWriter(inputDataMatrix.getImageName() + " " + inputDataMatrix.getColor()+"X" + part +".csv", "UTF-8");
-            //w = new PrintWriter(inputDataMatrix.getImageName() + " " + inputDataMatrix.getColor()+".csv", "UTF-8");
+            w = new PrintWriter(fileForCsv.getAbsolutePath()+ "\\" + inputDataMatrix.getColor() + "X" + part + ".csv", "UTF-8");
             boolean firstVal = true;
-            for (Double val : s)  {
+            Integer i = 0;
+            for (Double val : s) {
                 if (!firstVal) {
                     w.write(";");
                 }
-                w.write("\"");
-                String val2 = val.toString();
-                for (int i=0; i<val2.length(); i++) {
-                    char ch = val2.charAt(i);
-                    if (ch=='\"') {
-                        w.write("\"");  //extra quote
-                    }
-                    w.write(ch);
-                }
-
-                w.write("\"");
+                w.write(i.toString());
+                w.write(";");
+               // w.write("\"");
+                w.write(val.toString());
+//                String val2 = val.toString();
+//                for (int j = 0; j < val2.length(); j++) {
+//                    char ch = val2.charAt(j);
+//                    if (ch == '\"') {
+//                        w.write("\"");
+//                    }
+//                    w.write(ch);
+//                }
+                i++;
+               // w.write("\"");
                 firstVal = false;
                 w.write("\n");
             }
@@ -367,4 +351,5 @@ public class GTDMNew {
         }
         w.close();
     }
+
 }

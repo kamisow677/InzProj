@@ -73,13 +73,16 @@ public class ZADANIE implements Command {
     private File imageF;
 
     @Parameter(min = "1" , max = "5")
-    private int neighbourhoodSize = 1;
+    private int neighbourhood = 2;
+
+    @Parameter(min = "100" , max = "200")
+    private int quadraticRegionSize = 150;
 
     @Parameter(label="Choose folder to which everything should be saved")
     private File imageFile;
 
-    @Parameter(label="Average matrixes ?",choices={"YES","NO"})
-    private String Wybor = "asd";
+    @Parameter(label="Average matrixes or average properties?",choices={"YES","NO"})
+    private String averageMatrixes = "YES";
 
 
 
@@ -110,7 +113,7 @@ public class ZADANIE implements Command {
 
         ImagePlus imagePlus = new ImagePlus(imageFile.getAbsolutePath());
         BufferedImage buffImage = imagePlus.getBufferedImage();
-        greeting = "neighbourhoodSize: " + neighbourhoodSize;
+        greeting = "neighbourhoodSize: " + neighbourhood;
 
         //ImageProcessor improc =imagePlus.getProcessor();
         //imagePlus.show();
