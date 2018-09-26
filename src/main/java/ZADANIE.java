@@ -73,15 +73,16 @@ public class ZADANIE implements Command {
     private File imageF;
 
     @Parameter(min = "1" , max = "5")
-    private int neighbourhoodSize = 1;
+    private int neighbourhood = 2;
+
+    @Parameter(min = "100" , max = "200")
+    private int quadraticRegionSize = 150;
 
     @Parameter(label="Choose folder to which everything should be saved")
     private File imageFile;
 
-    @Parameter(label="Average matrixes ?",choices={"YES","NO"})
-    private String Wybor = "asd";
-
-
+    @Parameter(label="Average matrixes or average properties?",choices={"YES","NO"})
+    private String averageMatrixes = "YES";
 
     /*
      * This command will produce an image that will automatically be shown by
@@ -103,6 +104,23 @@ public class ZADANIE implements Command {
      */
     @Override
     public void run() {
+        Tester tester = new Tester();
+        if (averageMatrixes.equals("YES"))
+            Constans.setAverageMatrixes(true);
+        else
+            Constans.setAverageMatrixes(false);
+        Constans.setD(neighbourhood);
+        Constans.setQuadraticSize(quadraticRegionSize);
+        tester.run();
+
+
+
+
+
+
+
+
+
         // image = datasetIOService.open(imageFile.getAbsolutePath());
         //ImagePlus ij=new ImagePlus(imageFile.getAbsolutePath());
 
@@ -110,7 +128,7 @@ public class ZADANIE implements Command {
 
         ImagePlus imagePlus = new ImagePlus(imageFile.getAbsolutePath());
         BufferedImage buffImage = imagePlus.getBufferedImage();
-        greeting = "neighbourhoodSize: " + neighbourhoodSize;
+        greeting = "neighbourhoodSize: " + neighbourhood;
 
         //ImageProcessor improc =imagePlus.getProcessor();
         //imagePlus.show();

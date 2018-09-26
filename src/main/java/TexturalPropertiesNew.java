@@ -16,6 +16,7 @@ public class TexturalPropertiesNew {
     private Double Complexity;
     private Double Strength;
     private String Color;
+    private Double Epsilon = 0.00001;
 
     public TexturalPropertiesNew(GTDMNew toneMatrix)  {
         this.toneMatrix = toneMatrix;
@@ -140,42 +141,46 @@ public class TexturalPropertiesNew {
         Double Ng = new Double(s.size());
         ArrayList<Double> p1 = new ArrayList<>(p);
 
-        Double psiLicznikBusyness = 0.0;
+        Double psiNumeratorBusyness = 0.0;
 
         for (int i = 0; i<s.size(); i++){
-            psiLicznikBusyness += s.get(i)* p.get(i);
+            psiNumeratorBusyness += s.get(i)* p.get(i);
         }
 
-
         Double firstPartContrast = 0.0;
-        Double mianownikBusyness = 0.0;
+        Double denominatorBusyness = 0.0;
         Double partComplexity = 0.0;
         Complexity = 0.0;
         Double partStrength = 0.0;
         Strength = 0.0;
 
         for (int i = 0; i< p.size(); i++){
-            mianownikBusyness += i * p.get(i);
+            denominatorBusyness += i * p.get(i);
+            if (p.get(i)==0.0)
+                continue;
             for (int j = 0; j< p1.size(); j++){
+                denominatorBusyness -= j * p1.get(j);
+                if (p1.get(j)==0.0)
+                    continue;
                 firstPartContrast += p.get(i) * p1.get(j) * Math.pow((i - j), 2);
-                mianownikBusyness -= j * p1.get(j);
                 partComplexity = Math.abs(i - j) / (n2 * (p.get(i) + p1.get(j)));
-                partComplexity *= (p.get(i) * s.get(i)) - (p1.get(j) * s.get(j));
+                partComplexity *= (p.get(i) * s.get(i)) + (p1.get(j) * s.get(j));
                 Complexity += partComplexity;
                 partStrength = Math.pow((i - j), 2) * (p.get(i) + p1.get(j));
                 Strength += partStrength;
             }
         }
-        firstPartContrast = 1 / Ng / (Ng - 1) * firstPartContrast;
-        Double suma_si = 0.0;
-        for (int i = 0; i<s.size(); i++){
-            suma_si += s.get(i);
-        }
 
-        Coarness = Math.pow(psiLicznikBusyness, -1);
-        Contrast = firstPartContrast * suma_si * 1 / n2;
-        Busyness = psiLicznikBusyness / mianownikBusyness;
-        Strength /= suma_si;
+        firstPartContrast = 1 / Ng / (Ng - 1) * firstPartContrast;
+        Double siSum = s
+                .stream()
+                .mapToDouble(s -> s)
+                .sum();
+
+        Coarness = Math.pow(Epsilon + psiNumeratorBusyness, -1);
+        Contrast = firstPartContrast * siSum * 1 / n2;
+        Busyness = psiNumeratorBusyness / denominatorBusyness;
+        Strength /= siSum;
 
     }
     @Override

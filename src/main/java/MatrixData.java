@@ -4,7 +4,7 @@ import java.awt.image.Raster;
 
 public class MatrixData implements Matrix {
     BufferedImage bufferedImage;
-    String imageName;
+    String imageNameWithPathName;
     int width = 0;
     int height = 0;
     int startWidth = 0;
@@ -15,10 +15,10 @@ public class MatrixData implements Matrix {
     ;
     private COLOR color;
 
-    public MatrixData(BufferedImage bufferedImage, COLOR color, String imageName) {
+    public MatrixData(BufferedImage bufferedImage, COLOR color, String imageNameWithPathName) {
         this.bufferedImage = bufferedImage;
         this.color = color;
-        this.imageName = imageName;
+        this.imageNameWithPathName = imageNameWithPathName;
         width = bufferedImage.getWidth();
         height = bufferedImage.getHeight();
         startWidth = 0;
@@ -27,7 +27,7 @@ public class MatrixData implements Matrix {
     public MatrixData(MatrixData m) {
         this.bufferedImage = m.bufferedImage;
         this.color = m.color;
-        this.imageName = m.imageName;
+        this.imageNameWithPathName = m.imageNameWithPathName;
         width = m.bufferedImage.getWidth();
         height = m.bufferedImage.getHeight();
         startWidth = 0;
@@ -35,7 +35,7 @@ public class MatrixData implements Matrix {
     }
 
     public String getImageName() {
-        return imageName;
+        return imageNameWithPathName;
     }
 
     @Override
@@ -112,7 +112,7 @@ public class MatrixData implements Matrix {
     }
 
     public void setImageName(String imageName) {
-        this.imageName = imageName;
+        this.imageNameWithPathName = imageName;
     }
 
     public void setWidth(int width) {
