@@ -1,21 +1,19 @@
-import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.awt.image.Raster;
 
-public class MatrixData implements Matrix {
+public class ImageMatrix implements Matrix {
     BufferedImage bufferedImage;
     String imageNameWithPathName;
     int width = 0;
     int height = 0;
     int startWidth = 0;
     int startHeight = 0;
+    int d;
 
     public enum COLOR {RED, GREEN, BLUE, GREY, ALL}
 
-    ;
     private COLOR color;
 
-    public MatrixData(BufferedImage bufferedImage, COLOR color, String imageNameWithPathName) {
+    public ImageMatrix(BufferedImage bufferedImage, COLOR color, String imageNameWithPathName) {
         this.bufferedImage = bufferedImage;
         this.color = color;
         this.imageNameWithPathName = imageNameWithPathName;
@@ -24,7 +22,7 @@ public class MatrixData implements Matrix {
         startWidth = 0;
         startHeight = 0;
     }
-    public MatrixData(MatrixData m) {
+    public ImageMatrix(ImageMatrix m) {
         this.bufferedImage = m.bufferedImage;
         this.color = m.color;
         this.imageNameWithPathName = m.imageNameWithPathName;
@@ -130,4 +128,14 @@ public class MatrixData implements Matrix {
     public void setStartHeight(int startHeight) {
         this.startHeight = startHeight;
     }
+
+    public int getStartWidth() {
+        return startWidth;
+    }
+
+    public int getStartHeight() {
+        return startHeight;
+    }
+
+
 }

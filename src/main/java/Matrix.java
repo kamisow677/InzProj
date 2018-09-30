@@ -11,4 +11,17 @@ public interface Matrix {
     public String getColor();
 
     public String getImageName();
+
+    public int getStartWidth();
+
+    public int getStartHeight();
+
+    public void setStartWidth(int width);
+
+    public void setStartHeight(int height);
+
+    public void setWidth(int width);
+
+    public void setHeight(int height);
+
 }
