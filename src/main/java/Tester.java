@@ -56,17 +56,33 @@ public class Tester {
              */
             int startPointX=q/2;
             int startPointY=q/2;
-            matrix.setStartHeight(70);
-            matrix.setStartWidth(70);
+            matrix.setStartHeight(0);
+            matrix.setStartWidth(0);
 
 
-            //Matrix daneTestowe = new MatrixCommon(dane, WIELKSC_MACIRZY, WIELKSC_MACIRZY, 0,0 );
+
             GTDMNew gdtmNowe = new GTDMNew(matrix);
             MatrixCommon matrixA = gdtmNowe.getMatrixA();
 
             GTDMNew gdtmFirst;
             GTDMNew gdtmNext = null;
             Matrix squareMAtrixData;
+            matrix.setHeight(100);
+            matrix.setWidth(100);
+
+
+//            for (int i=q/2; i<h-q/2;i++ ) {
+//                for (int j = q / 2; j < w - q / 2; j++) {
+//                    gdtmNext = new GTDMNew(matrix);
+//                    gdtmNext.startCalcualtions(true);
+//                    TexturalPropertiesNew texturalPropertiesNew = new TexturalPropertiesNew(gdtmNext);
+//                    System.out.println(texturalPropertiesNew);
+//                    System.out.println("i:" + i + " j:"+j);
+//                }
+//            }
+
+            TexturalPropertiesNew texturalPropertiesNew;
+
             for (int i=q/2; i<h-q/2;i++ ){
                 for (int j=q/2; j<w-q/2;j++ ){
                     if (i==q/2 && j==q/2){
@@ -75,13 +91,15 @@ public class Tester {
                          */
                         gdtmNext = new GTDMNew(matrix,matrixA);
                         gdtmNext.startFirstCalcualtions(true, false);
-                    }else{
+                    }else if (j==q/2){
                         gdtmNext = new GTDMNew(gdtmNext, false);
                         gdtmNext.startNextRowCalcualtions(true, false);
+                    } else {
+                        gdtmNext = new GTDMNew(gdtmNext, true);
+                        gdtmNext.startNextColumnCalcualtions(true, false);
+                        texturalPropertiesNew = new TexturalPropertiesNew(gdtmNext);
+                        System.out.println(texturalPropertiesNew);
                     }
-                    gdtmNext = new GTDMNew(gdtmNext, false);
-                    gdtmNext.startNextRowCalcualtions(true, false);
-
                     System.out.println("i:" + i + " j:"+j);
                 }
             }

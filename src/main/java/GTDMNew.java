@@ -103,6 +103,7 @@ public class GTDMNew {
         this.inputDataMatrix = inputData;
         n2 = (double) (height - 2 * d) * (width - 2 * d);
         calculateMatrixA();
+        System.out.println("obliczylem A");
     }
 
     /**
@@ -302,7 +303,7 @@ public class GTDMNew {
 
         initializaS();
         calculateS();
-        //  printfS();
+          //printfS();
 
         if (calculateP) {
             initializaP();
