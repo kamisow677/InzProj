@@ -39,7 +39,7 @@ public class GDTMtest {
          *Wpierw to obliczyc normalnie
          */
         gdtmNowe = new GTDMNew(daneTestowe);
-        gdtmNowe.startFirstCalcualtions(true, true);
+        gdtmNowe.startFirstCalcualtions(true, false);
         MatrixCommon matrixACalculated = gdtmNowe.getMatrixA();
         int d = gdtmNowe.getD();
         for (int i = d; i < WIELKSC_MACIRZY - d; i++) {
@@ -118,7 +118,7 @@ public class GDTMtest {
          */
         MatrixCommon matrixANextCalculated;
         gdtmNext = new GTDMNew(gdtmFirst, true);
-        gdtmNext.startNextCalcualtions(true, false);
+        gdtmNext.startNextColumnCalcualtions(true, false);
         matrixANextCalculated = gdtmNext.getMatrixA();
         d = gdtmNext.getD();
         int startY = gdtmNext.getInputDataMatrix().getStartHeight();
@@ -145,7 +145,7 @@ public class GDTMtest {
          */
 
         gdtmNext = new GTDMNew(gdtmNext, true);
-        gdtmNext.startNextCalcualtions(true, false);
+        gdtmNext.startNextColumnCalcualtions(true, false);
         matrixANextCalculated = gdtmNext.getMatrixA();
         d = gdtmNext.getD();
         startY = gdtmNext.getInputDataMatrix().getStartHeight();
@@ -167,13 +167,11 @@ public class GDTMtest {
         }
 
 
-
-
         /**
          * GOING DOWN 1,0
          */
         gdtmNext = new GTDMNew(gdtmNext, false);
-        gdtmNext.startFirstCalcualtions(true, false);
+        gdtmNext.startNextRowCalcualtions(true, false);
         matrixANextCalculated = gdtmNext.getMatrixA();
         d = gdtmNext.getD();
          startY = gdtmNext.getInputDataMatrix().getStartHeight();
@@ -193,5 +191,33 @@ public class GDTMtest {
         for (int i = 0; i < expectedP.length; i++){
             assertEquals(pCalculated.get(i), expectedP[i], 0.01);
         }
+
+        /**
+         * GOING DOWN 1,1
+         */
+        gdtmNext = new GTDMNew(gdtmNext, true);
+        gdtmNext.startNextColumnCalcualtions(true, false);
+        matrixANextCalculated = gdtmNext.getMatrixA();
+        d = gdtmNext.getD();
+        startY = gdtmNext.getInputDataMatrix().getStartHeight();
+        startX = gdtmNext.getInputDataMatrix().getStartWidth();
+        for (int i = d; i < SQUARE_SIZE - d; i++) {
+            for (int j = d; j < SQUARE_SIZE - d; j++) {
+                assertEquals(matrixANextCalculated.get(i, j), expectedMatrixAdate[i][j], 0.01);
+            }
+        }
+        sCalculated = gdtmNext.getS();
+        expectedS = new Double[]{0.0,3.25,0.0,1.0,0.0};
+        for (int i = 0; i < expectedS.length; i++){
+            assertEquals(sCalculated.get(i), expectedS[i], 0.01);
+        }
+        pCalculated = gdtmNext.getP();
+        expectedP = new Double[]{0.0,0.75,0.0,0.25,0.0};
+        for (int i = 0; i < expectedP.length; i++){
+            assertEquals(pCalculated.get(i), expectedP[i], 0.01);
+        }
+
+
+
     }
 }

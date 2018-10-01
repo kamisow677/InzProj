@@ -52,28 +52,48 @@ public class Tester {
             int w = matrix.getWidth();
             int h = matrix.getHeight();
             /**
-             * W tych petlach licze ta mape dla kazdego piksela z kwadratowego regionu na razie to pomijam ale to tu bedzie
-             */
-            for (int i=q/2; i<h-q/2;i++ ){
-                for (int j=q/2; j<w-q/2;j++ ){
-
-                }
-            }
-
-
-            /**
              * Tu jest wylicznie punktu startowego czyli pierwszego srodka z kwadratwego regionu
              */
             int startPointX=q/2;
             int startPointY=q/2;
-            matrix.setStartHeight(startPointY);
-            matrix.setStartWidth(startPointX);
+            matrix.setStartHeight(70);
+            matrix.setStartWidth(70);
+
+
+            //Matrix daneTestowe = new MatrixCommon(dane, WIELKSC_MACIRZY, WIELKSC_MACIRZY, 0,0 );
+            GTDMNew gdtmNowe = new GTDMNew(matrix);
+            MatrixCommon matrixA = gdtmNowe.getMatrixA();
+
+            GTDMNew gdtmFirst;
+            GTDMNew gdtmNext = null;
+            Matrix squareMAtrixData;
+            for (int i=q/2; i<h-q/2;i++ ){
+                for (int j=q/2; j<w-q/2;j++ ){
+                    if (i==q/2 && j==q/2){
+                        /**
+                         * TO JEST TEN FIRST Z TESTU
+                         */
+                        gdtmNext = new GTDMNew(matrix,matrixA);
+                        gdtmNext.startFirstCalcualtions(true, false);
+                    }else{
+                        gdtmNext = new GTDMNew(gdtmNext, false);
+                        gdtmNext.startNextRowCalcualtions(true, false);
+                    }
+                    gdtmNext = new GTDMNew(gdtmNext, false);
+                    gdtmNext.startNextRowCalcualtions(true, false);
+
+                    System.out.println("i:" + i + " j:"+j);
+                }
+            }
+
+
+
             /**
              *Wpierw to obliczyc normalnie
              */
-            GTDMNew gdtmNowe = new GTDMNew(matrix);
-            gdtmNowe.startFirstCalcualtions(true, false);
-            TexturalPropertiesNew texturalPropertiesNew = new TexturalPropertiesNew(gdtmNowe);
+//            GTDMNew gdtmNowe = new GTDMNew(matrix);
+//            gdtmNowe.startFirstCalcualtions(true, false);
+//            TexturalPropertiesNew texturalPropertiesNew = new TexturalPropertiesNew(gdtmNowe);
 
 
 
@@ -81,52 +101,7 @@ public class Tester {
 
 
 
-//            if (!concurrent) {
-//                 startTime = System.currentTimeMillis();
-//                for (ArrayList<ImageMatrix> list : listOfMatrixData) {
-//                    tex = new ArrayList<>();
-//                    for (ImageMatrix matrix : list) {
-//                        TexturalPropertiesNew texturalPropertiesNew;
-//                        if (Constans.isAverageMatrixes())
-//                            texturalPropertiesNew = calculationsBasedOnSquareSize2(matrix, Constans.getQuadraticSize());
-//                        else
-//                            texturalPropertiesNew = calculationsBasedOnSquareSize(matrix, Constans.getQuadraticSize());
-////                    GTDMNew gdtmNowe = new GTDMNew(matrix);
-////                    gdtmNowe.startCalcualtions(true);
-////                    TexturalPropertiesNew texturalPropertiesNew = new TexturalPropertiesNew(gdtmNowe);
-//                        //texturalPropertiesNew.saveToCsv("partNONE");
-//                        tex.add(texturalPropertiesNew);
-//                    }
-//                    Transformer.averageProperties(tex.get(0), tex.get(1), tex.get(2));
-//                }
-//                long stopTime = System.currentTimeMillis();
-//                long elapsedTime = stopTime - startTime;
-//                System.out.println("Elapsed time" + elapsedTime);
-//
-//            }
-//            else {
-//                startTime = System.currentTimeMillis();
-//                Consumer<? super ArrayList<ImageMatrix>> consumer = (array) -> {
-//                    final ArrayList<TexturalPropertiesNew> finalTex = new ArrayList<>();
-//                    for (ImageMatrix matrix : array) {
-//                        TexturalPropertiesNew texturalPropertiesNew;
-//                        if (Constans.isAverageMatrixes())
-//                            texturalPropertiesNew = calculationsBasedOnSquareSize2(matrix, Constans.getQuadraticSize());
-//                        else
-//                            texturalPropertiesNew = calculationsBasedOnSquareSize(matrix, Constans.getQuadraticSize());
-//                        finalTex.add(texturalPropertiesNew);
-//                    }
-//                    Transformer.averageProperties(finalTex.get(0), finalTex.get(1), finalTex.get(2));
-//                };
-//
-//                listOfMatrixData
-//                        .parallelStream()
-//                        .forEach(consumer);
-//
-//                long stopTime = System.currentTimeMillis();
-//                long elapsedTime = stopTime - startTime;
-//                System.out.println(elapsedTime);
-//            }
+
         }
         catch (Exception ex){
 
@@ -256,5 +231,54 @@ public class Tester {
                 }
             }
         }
+    }
+
+    public void oldSquareCalc(){
+        //            if (!concurrent) {
+//                 startTime = System.currentTimeMillis();
+//                for (ArrayList<ImageMatrix> list : listOfMatrixData) {
+//                    tex = new ArrayList<>();
+//                    for (ImageMatrix matrix : list) {
+//                        TexturalPropertiesNew texturalPropertiesNew;
+//                        if (Constans.isAverageMatrixes())
+//                            texturalPropertiesNew = calculationsBasedOnSquareSize2(matrix, Constans.getQuadraticSize());
+//                        else
+//                            texturalPropertiesNew = calculationsBasedOnSquareSize(matrix, Constans.getQuadraticSize());
+////                    GTDMNew gdtmNowe = new GTDMNew(matrix);
+////                    gdtmNowe.startCalcualtions(true);
+////                    TexturalPropertiesNew texturalPropertiesNew = new TexturalPropertiesNew(gdtmNowe);
+//                        //texturalPropertiesNew.saveToCsv("partNONE");
+//                        tex.add(texturalPropertiesNew);
+//                    }
+//                    Transformer.averageProperties(tex.get(0), tex.get(1), tex.get(2));
+//                }
+//                long stopTime = System.currentTimeMillis();
+//                long elapsedTime = stopTime - startTime;
+//                System.out.println("Elapsed time" + elapsedTime);
+//
+//            }
+//            else {
+//                startTime = System.currentTimeMillis();
+//                Consumer<? super ArrayList<ImageMatrix>> consumer = (array) -> {
+//                    final ArrayList<TexturalPropertiesNew> finalTex = new ArrayList<>();
+//                    for (ImageMatrix matrix : array) {
+//                        TexturalPropertiesNew texturalPropertiesNew;
+//                        if (Constans.isAverageMatrixes())
+//                            texturalPropertiesNew = calculationsBasedOnSquareSize2(matrix, Constans.getQuadraticSize());
+//                        else
+//                            texturalPropertiesNew = calculationsBasedOnSquareSize(matrix, Constans.getQuadraticSize());
+//                        finalTex.add(texturalPropertiesNew);
+//                    }
+//                    Transformer.averageProperties(finalTex.get(0), finalTex.get(1), finalTex.get(2));
+//                };
+//
+//                listOfMatrixData
+//                        .parallelStream()
+//                        .forEach(consumer);
+//
+//                long stopTime = System.currentTimeMillis();
+//                long elapsedTime = stopTime - startTime;
+//                System.out.println(elapsedTime);
+//            }
     }
 }

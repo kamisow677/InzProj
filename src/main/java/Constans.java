@@ -1,5 +1,5 @@
 public class Constans {
-    static int QUADRATIC_SIZE = 400;
+    static int QUADRATIC_SIZE = 140;
     static int D = 2;
     static boolean AVERAGE_MATRIXES = false;
 
