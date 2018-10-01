@@ -23,6 +23,7 @@ public class GTDMNew {
      * probabilty of occurence of value
      */
     private ArrayList<Double> p;
+    private ArrayList<Double> pRaw;
 
     private double n2;
 
@@ -78,11 +79,14 @@ public class GTDMNew {
         this.imageName = imageName;
     }
 
+    public ArrayList<Double> getpRaw() { return pRaw; }
+
     public GTDMNew(Matrix inputData){
         this.matrixA = new MatrixCommon(inputData.getHeight(), inputData.getWidth());
         this.s = new ArrayList<Double>(PIXELS_NUMBER);
         this.p = new ArrayList<Double>(PIXELS_NUMBER);
         this.imageName = imageName;
+        this.pRaw = new ArrayList<Double>(PIXELS_NUMBER);
         height = inputData.getHeight();
         width = inputData.getWidth();
 
@@ -95,6 +99,7 @@ public class GTDMNew {
         this.matrixA = matrixA;
         this.s = new ArrayList<Double>(PIXELS_NUMBER);
         this.p = new ArrayList<Double>(PIXELS_NUMBER);
+        this.pRaw = new ArrayList<Double>(PIXELS_NUMBER);
         this.imageName = imageName;
         height = inputData.getHeight();
         width = inputData.getWidth();
@@ -106,20 +111,20 @@ public class GTDMNew {
     public GTDMNew(GTDMNew previousGDTM, boolean GoingRight){
         this.inputDataMatrix = previousGDTM.getInputDataMatrix();
 
+
         if (GoingRight){
             inputDataMatrix.setStartWidth( inputDataMatrix.getStartWidth() + 1);
             this.s = previousGDTM.getS();
             this.p = previousGDTM.getP();
+            this.pRaw = previousGDTM.getpRaw();
         } else{
             inputDataMatrix.setStartWidth(0);
             inputDataMatrix.setStartHeight( inputDataMatrix.getStartHeight() + 1);
             this.s = new ArrayList<Double>(PIXELS_NUMBER);
             this.p = new ArrayList<Double>(PIXELS_NUMBER);
+            this.pRaw = new ArrayList<Double>(PIXELS_NUMBER);
         }
 
-        /**
-         * narazie to licze ale to trzeba bedzie nie liczyc tak
-         */
         this.matrixA = previousGDTM.getMatrixA();
         this.height = inputDataMatrix.getHeight();
         this.width = inputDataMatrix.getWidth();
@@ -215,7 +220,7 @@ public class GTDMNew {
             System.out.println("Matrix A");
             matrixA.printf();
             printfS();
-        //    printfP();
+            printfP();
         }
     }
 
@@ -227,8 +232,7 @@ public class GTDMNew {
 
         calculateNextS();
         if (calculateP) {
-            initializaP();
-            computeP();
+            computeNextP();
         }
         if (print) {
             System.out.println("Matrix A");
@@ -360,10 +364,49 @@ public class GTDMNew {
                 p.set((int) inputDataMatrix.get(k, l), iNumber);
             }
         }
+        pRaw = new ArrayList<>(p);
         for (int i = 0 ; i< PIXELS_NUMBER ; i++) {
             p.set( i ,p.get(i) / n2);
         }
     }
+
+    public void computeNextP() {
+        /**
+         * First remove remove old components associeted with old square
+         */
+        int startY = inputDataMatrix.getStartHeight();
+        int startX = inputDataMatrix.getStartWidth();
+        for (int k = d ; k < height - d ; k++) {
+            Double iNumber = pRaw.get((int) inputDataMatrix.get(k, d -1));//i
+            if (iNumber == null)
+                iNumber = 0.0;
+            iNumber -= 1;
+            pRaw.set((int) inputDataMatrix.get(k, d - 1), iNumber);
+        }
+
+        /**
+         * Add new components associeted with new square
+         */
+        for (int k = d ; k < height - d ; k++) {
+            Double iNumber = pRaw.get((int) inputDataMatrix.get(k, width - d - 1));//i
+            if (iNumber == null)
+                iNumber = 0.0;
+            iNumber += 1;
+            pRaw.set((int) inputDataMatrix.get(k, width - d - 1), iNumber);
+        }
+
+
+
+        for (int i = 0 ; i< PIXELS_NUMBER ; i++) {
+            p.set( i ,pRaw.get(i) / n2);
+        }
+    }
+
+
+
+
+
+
     public void computeP(Matrix inputDataMatrix1, Matrix inputDataMatrix2, Matrix inputDataMatrix3) {
         for (int k = d; k < height - d; k++) {
             for (int l = d; l < width - d; l++) {
