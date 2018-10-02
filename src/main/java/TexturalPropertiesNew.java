@@ -18,6 +18,7 @@ public class TexturalPropertiesNew {
     private String Color;
     private Double Epsilon = 0.00001;
 
+
     public TexturalPropertiesNew(GTDMNew toneMatrix)  {
         this.toneMatrix = toneMatrix;
         this.s = toneMatrix.getS();
@@ -215,5 +216,12 @@ public class TexturalPropertiesNew {
 
     public String getColor(){
         return Color;
+    }
+
+    public Map<String,Double> getProps(){
+        Map map = new HashMap<String,Double>();
+        map.put(Constans.COARNESS,Coarness);
+        map.put(Constans.CONTRAST,Contrast);
+        return  map;
     }
 }
