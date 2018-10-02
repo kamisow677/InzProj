@@ -109,7 +109,8 @@ public class GDTMtest {
         for (int i = 0; i < expectedP.length; i++){
             assertEquals(pCalculated.get(i), expectedP[i], 0.01);
         }
-
+        TexturalPropertiesNew texturalPropertiesNew = new TexturalPropertiesNew(gdtmFirst);
+        assertEquals(texturalPropertiesNew.getCoarness(), 0.91428571428, 0.01);
 
 
 

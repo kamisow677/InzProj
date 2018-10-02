@@ -152,8 +152,9 @@ public class TexturalPropertiesNew {
         Double denominatorBusyness = 0.0;
         Double partComplexity = 0.0;
         Complexity = 0.0;
-        Double partStrength = 0.0;
         Strength = 0.0;
+        Double partStrength = 0.0;
+
 
         for (int i = 0; i< p.size(); i++){
             denominatorBusyness += i * p.get(i);
@@ -222,6 +223,9 @@ public class TexturalPropertiesNew {
         Map map = new HashMap<String,Double>();
         map.put(Constans.COARNESS,Coarness);
         map.put(Constans.CONTRAST,Contrast);
+        map.put(Constans.BUSYNESS,Math.abs(Busyness));
+        map.put(Constans.COMPLEXITY,Complexity);
+        map.put(Constans.STRENGTH,Strength);
         return  map;
     }
 }

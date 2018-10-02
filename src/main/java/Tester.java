@@ -3,9 +3,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
-import java.util.OptionalDouble;
 
 public class Tester {
 
@@ -96,17 +94,20 @@ public class Tester {
                     }else if (j==q/2){
                         gdtmNext = new GTDMNew(gdtmNext, false);
                         gdtmNext.startNextRowCalcualtions(true, false);
+
+
                     } else {
                         gdtmNext = new GTDMNew(gdtmNext, true);
                         gdtmNext.startNextColumnCalcualtions(true, false);
-                        texturalPropertiesNew = new TexturalPropertiesNew(gdtmNext);
-                        properties.add(texturalPropertiesNew.getProps());
-                        //System.out.println(texturalPropertiesNew);
                     }
-                    System.out.println("i:" + i + " j:"+j);
+                    texturalPropertiesNew = new TexturalPropertiesNew(gdtmNext);
+                    //System.out.println(texturalPropertiesNew);
+                    properties.add(texturalPropertiesNew.getProps());
+                    //System.out.println("i:" + i + " j:"+j);
                 }
             }
-            newPixelImage(properties,h,w);
+            System.out.println("CALC DONE");
+            ImagesCreator.creatPixelImage(properties,h,w);
 
 
             /**
@@ -201,74 +202,6 @@ public class Tester {
             listOfSingleColorImage.add(new ImageMatrix(buffImage, ImageMatrix.COLOR.GREEN, pathToImagePlusName));
             listOfMatrixData.add(listOfSingleColorImage);
         }
-    }
-    public static void newPixelImage(ArrayList<Map<String,Double>> prop ,int height, int width){
-        ImageMatrix imageMatrix = null;
-        OptionalDouble max = prop
-                .stream()
-                .mapToDouble(s -> (double) s.get(Constans.CONTRAST))
-                .max();
-        Double scale = max.getAsDouble() / 255;
-        try {
-            BufferedImage buffImage;
-            buffImage = new BufferedImage(width-Constans.QUADRATIC_SIZE, height-Constans.QUADRATIC_SIZE, BufferedImage.TYPE_INT_ARGB);
-            for (int i = 0; i < height-Constans.QUADRATIC_SIZE; i++) {
-                for (int j = 0; j < width-Constans.QUADRATIC_SIZE; j++) {
-                    int red = (int) ((prop.get(i*(height-Constans.QUADRATIC_SIZE)+j).get(Constans.CONTRAST))/scale);
-                    int green = (int) ((prop.get(i*(height-Constans.QUADRATIC_SIZE)+j).get(Constans.CONTRAST))/scale);
-                    int blue = (int) ((prop.get(i*(height-Constans.QUADRATIC_SIZE)+j).get(Constans.CONTRAST))/scale);
-                    int alpha = 255;
-                    int rgb = alpha;
-                    rgb = (rgb << 8) + red;
-                    rgb = (rgb << 8) + green;
-                    rgb = (rgb << 8) + blue;
-                    buffImage.setRGB(j, i, rgb);
-                }
-            }
-            File f = new File("NAZWATRZEBAZROBIC.png");
-            ImageIO.write(buffImage, "PNG", f);
-
-            imageMatrix = new ImageMatrix(buffImage, ImageMatrix.COLOR.GREY, "ImageName");
-            System.out.println("Height: " + imageMatrix.getHeight());
-            System.out.println("Width: " + imageMatrix.getWidth());
-
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public static void newPicture(){
-        File img = new File("ork.jpg");
-        ImageMatrix imageMatrix = null;
-        try {
-            BufferedImage buffImage = ImageIO.read(img);
-            buffImage = new BufferedImage(100, 100, BufferedImage.TYPE_INT_ARGB);
-            for (int i = 0; i < 100; i++) {
-                for (int j = 0; j < 100; j++) {
-                    int red = 255;
-                    int green = 255;
-                    int blue = 0;
-                    int alpha = 255;
-                    int rgb = alpha;
-                    rgb = (rgb << 8) + red;
-                    rgb = (rgb << 8) + green;
-                    rgb = (rgb << 8) + blue;
-                    buffImage.setRGB(i, j, rgb);
-                }
-            }
-            File f = new File("MyFile.png");
-            ImageIO.write(buffImage, "PNG", f);
-
-            imageMatrix = new ImageMatrix(buffImage, ImageMatrix.COLOR.GREY, "ImageName");
-            System.out.println("Height: " + imageMatrix.getHeight());
-            System.out.println("Width: " + imageMatrix.getWidth());
-
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
     }
 
     /**
