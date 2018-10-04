@@ -6,6 +6,10 @@ import java.util.Random;
 
 import static org.junit.Assert.assertEquals;
 
+/**
+ * Na kartce liczone coarness i contrast
+ */
+
 //@RunWith(MockitoJUnitRunner.class)
 public class GDTMtest {
     int WIELKSC_MACIRZY = 6;
@@ -28,7 +32,6 @@ public class GDTMtest {
         Matrix daneTestowe = new MatrixCommon(dane, WIELKSC_MACIRZY, WIELKSC_MACIRZY, startPointY,startPointX );
         System.out.println("TESTOWE");
         System.out.println(daneTestowe);
-        int q = 4;
 
         /**
          * Tu jest wylicznie punktu startowego czyli pierwszego srodka z kwadratwego regionu
@@ -81,14 +84,14 @@ public class GDTMtest {
         Matrix daneTestowe = new MatrixCommon(dane, WIELKSC_MACIRZY, WIELKSC_MACIRZY, 0,0 );
         gdtmNowe = new GTDMNew(daneTestowe);
         MatrixCommon matrixA = gdtmNowe.getMatrixA();
+        TexturalPropertiesNew texturalPropertiesNew;
 
 
         /**
          * CALCULACTIONS OF SWIARES 0,0
          */
         Matrix squareMAtrixData = new MatrixCommon(dane, SQUARE_SIZE ,SQUARE_SIZE,0,0);
-        System.out.println("TESTOWE");
-        System.out.println(daneTestowe);
+//        System.out.println(daneTestowe);
 
         gdtmFirst = new GTDMNew(squareMAtrixData,matrixA);
         gdtmFirst.startFirstCalcualtions(true, false);
@@ -109,8 +112,10 @@ public class GDTMtest {
         for (int i = 0; i < expectedP.length; i++){
             assertEquals(pCalculated.get(i), expectedP[i], 0.01);
         }
-        TexturalPropertiesNew texturalPropertiesNew = new TexturalPropertiesNew(gdtmFirst);
-        assertEquals(texturalPropertiesNew.getCoarness(), 0.91428571428, 0.01);
+        texturalPropertiesNew = new TexturalPropertiesNew(gdtmFirst);
+        assertEquals(texturalPropertiesNew.getCoarness(), 0.91428571428, 0.0001);
+        assertEquals(texturalPropertiesNew.getContrast(), 0.15755208333, 0.0001);
+
 
 
 
@@ -139,7 +144,9 @@ public class GDTMtest {
         for (int i = 0; i < expectedP.length; i++){
             assertEquals(pCalculated.get(i), expectedP[i], 0.01);
         }
-
+        texturalPropertiesNew = new TexturalPropertiesNew(gdtmNext,texturalPropertiesNew,true);
+        assertEquals(texturalPropertiesNew.getCoarness(), 0.68085106383, 0.0001);
+        assertEquals(texturalPropertiesNew.getContrast(), 0.42057291666, 0.0001);
 
         /**
          * 0,2
@@ -166,7 +173,9 @@ public class GDTMtest {
         for (int i = 0; i < expectedP.length; i++){
             assertEquals(pCalculated.get(i), expectedP[i], 0.01);
         }
-
+        texturalPropertiesNew = new TexturalPropertiesNew(gdtmNext,texturalPropertiesNew,true);
+        assertEquals(texturalPropertiesNew.getCoarness(), 0.51612903225, 0.001);
+        assertEquals(texturalPropertiesNew.getContrast(), 0.59375, 0.001);
 
         /**
          * GOING DOWN 1,0
@@ -192,6 +201,10 @@ public class GDTMtest {
         for (int i = 0; i < expectedP.length; i++){
             assertEquals(pCalculated.get(i), expectedP[i], 0.01);
         }
+        texturalPropertiesNew = new TexturalPropertiesNew(gdtmNext,texturalPropertiesNew, false);
+        assertEquals(texturalPropertiesNew.getCoarness(), 0.5333333333, 0.001);
+        assertEquals(texturalPropertiesNew.getContrast(), 0.9375, 0.0001);
+
 
         /**
          * GOING DOWN 1,1
@@ -217,8 +230,8 @@ public class GDTMtest {
         for (int i = 0; i < expectedP.length; i++){
             assertEquals(pCalculated.get(i), expectedP[i], 0.01);
         }
-
-
-
+        texturalPropertiesNew = new TexturalPropertiesNew(gdtmNext,texturalPropertiesNew,true);
+        assertEquals(texturalPropertiesNew.getCoarness(), 0.37209302325, 0.001);
+        assertEquals(texturalPropertiesNew.getContrast(), 0.796875, 0.0001);
     }
 }

@@ -42,6 +42,10 @@ public class Tester {
             imagePathToMatrix();
             ArrayList<TexturalPropertiesNew> tex = new ArrayList<>();
             long startTime;
+            long stopTime;
+            long elapsedTime;
+            long calc1 = 0;
+            long calc2 = 0;
             boolean concurrent = false;
 
 
@@ -80,33 +84,86 @@ public class Tester {
 //                }
 //            }
 
-            TexturalPropertiesNew texturalPropertiesNew;
+            TexturalPropertiesNew texturalPropertiesNew = null;
             ArrayList<Map<String,Double>> properties = new ArrayList<>();
+
+
+//            startTime = System.currentTimeMillis();
+//            for (int i=q/2; i<h-q/2;i++ ) {
+//                for (int j = q / 2; j < w - q / 2; j++) {
+//                    gdtmNowe = new GTDMNew(matrix,matrixA);
+//                    gdtmNowe.startFirstCalcualtions(true,false);
+//                }
+//            }
+//            stopTime = System.currentTimeMillis();
+//            elapsedTime = stopTime - startTime;
+//            System.out.println("STARE CALC 1" + elapsedTime);
 
             for (int i=q/2; i<h-q/2;i++ ){
                 for (int j=q/2; j<w-q/2;j++ ){
+
                     if (i==q/2 && j==q/2){
                         /**
                          * TO JEST TEN FIRST Z TESTU
                          */
+
+                        startTime = System.currentTimeMillis();
                         gdtmNext = new GTDMNew(matrix,matrixA);
                         gdtmNext.startFirstCalcualtions(true, false);
+                        stopTime = System.currentTimeMillis();
+                        elapsedTime = stopTime - startTime;
+                        calc1+=elapsedTime;
+
+//                        startTime = System.currentTimeMillis();
+//                        texturalPropertiesNew = new TexturalPropertiesNew(gdtmNext);
+//                        properties.add(texturalPropertiesNew.getProps());
+//                        stopTime = System.currentTimeMillis();
+//                        elapsedTime = stopTime - startTime;
+//                        calc2+=elapsedTime;
                     }else if (j==q/2){
+                        startTime = System.currentTimeMillis();
                         gdtmNext = new GTDMNew(gdtmNext, false);
                         gdtmNext.startNextRowCalcualtions(true, false);
+                        stopTime = System.currentTimeMillis();
+                        elapsedTime = stopTime - startTime;
+                        calc1+=elapsedTime;
 
+//                        startTime = System.currentTimeMillis();
+//                        texturalPropertiesNew = new TexturalPropertiesNew(gdtmNext);
+//                        properties.add(texturalPropertiesNew.getProps());
+//                        stopTime = System.currentTimeMillis();
+//                        elapsedTime = stopTime - startTime;
+//                        calc2+=elapsedTime;
 
                     } else {
+                        startTime = System.currentTimeMillis();
                         gdtmNext = new GTDMNew(gdtmNext, true);
                         gdtmNext.startNextColumnCalcualtions(true, false);
+                        stopTime = System.currentTimeMillis();
+                        elapsedTime = stopTime - startTime;
+                        calc1+=elapsedTime;
+
+//                        startTime = System.currentTimeMillis();
+//                        texturalPropertiesNew = new TexturalPropertiesNew(gdtmNext);
+//                        properties.add(texturalPropertiesNew.getProps());
+//                        stopTime = System.currentTimeMillis();
+//                        elapsedTime = stopTime - startTime;
+//                        calc2+=elapsedTime;
+
+
                     }
+//                    texturalPropertiesNew = new TexturalPropertiesNew(gdtmNext,texturalPropertiesNew, true);
                     texturalPropertiesNew = new TexturalPropertiesNew(gdtmNext);
-                    //System.out.println(texturalPropertiesNew);
                     properties.add(texturalPropertiesNew.getProps());
+
+                    //System.out.println(texturalPropertiesNew.getBusyness());
+                   //properties.add(texturalPropertiesNew.getProps());
                     //System.out.println("i:" + i + " j:"+j);
                 }
             }
             System.out.println("CALC DONE");
+            System.out.println("CALC1: "+calc1);
+            System.out.println("CALC2: "+calc2);
             ImagesCreator.creatPixelImage(properties,h,w);
 
 

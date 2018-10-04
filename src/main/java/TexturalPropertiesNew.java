@@ -1,14 +1,16 @@
-import java.io.FileNotFoundException;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 public class TexturalPropertiesNew {
 
-    private GTDMNew toneMatrix;
+    private GTDMNew gtdm;
     private ArrayList<Double> s;
     private ArrayList<Double> p;
+    private ArrayList<Double> sPrevious;
+    private ArrayList<Double> pPrevious;
+    private ArrayList<Double> sOrigin;
+    private ArrayList<Double> pOrigin;
     private Double n2;
     private Double Coarness;
     private Double Contrast;
@@ -18,16 +20,50 @@ public class TexturalPropertiesNew {
     private String Color;
     private Double Epsilon = 0.00001;
 
+    private Double psiNumeratorBusyness;
+    private Double psiNumeratorBusynessOrigin;
 
-    public TexturalPropertiesNew(GTDMNew toneMatrix)  {
-        this.toneMatrix = toneMatrix;
-        this.s = toneMatrix.getS();
-        this.p = toneMatrix.getP();
-        this.n2 = toneMatrix.getN2();
-        this.Color = toneMatrix.getInputDataMatrix().getColor();
 
-        computeCoarnessContrastBusynessComplexity();
+    public TexturalPropertiesNew(GTDMNew gtdm)  {
+        this.gtdm = gtdm;
+        this.s = new ArrayList<>( gtdm.getS());
+        this.p = new ArrayList<>( gtdm.getP());
+        this.n2 = gtdm.getN2();
+        this.Color = gtdm.getInputDataMatrix().getColor();
+
+        //computeCoarnessContrastBusynessComplexityStrength();
+        //psiNumeratorBusyness = 0.0;
+        computeCoarnessContrastBusynessComplexityStrength();
+        //testSpeedFirst();
     }
+
+    /**
+     * gtdm jest nowo wyliczone, tpPRevoius sa propsy poprzedniego gtdm wiec mozna z niego wyciagnac poprzednie gtdm
+     * @param gtdm
+     * @param tpPrevious
+     */
+    public TexturalPropertiesNew(GTDMNew gtdm,TexturalPropertiesNew tpPrevious , Boolean column)  {
+        this.gtdm = new GTDMNew(gtdm);
+        this.s = new ArrayList<>( gtdm.getS());
+        this.p = new ArrayList<>( gtdm.getP());
+        this.n2 = gtdm.getN2();
+        this.Color = gtdm.getInputDataMatrix().getColor();
+
+        //computeCoarnessContrastBusynessComplexityStrength();
+        this.pPrevious = new ArrayList<>( tpPrevious.p);
+        this.sPrevious = new ArrayList<>( tpPrevious.s);
+        this.pOrigin = new ArrayList<>( tpPrevious.gtdm.getOriginP());
+        this.sOrigin = new ArrayList<>( tpPrevious.gtdm.getOriginS());
+        if (column) {
+            psiNumeratorBusyness = tpPrevious.psiNumeratorBusyness;
+            psiNumeratorBusynessOrigin = tpPrevious.psiNumeratorBusynessOrigin;
+            testSpeedColumnCalculations();
+        } else {
+            psiNumeratorBusyness = tpPrevious.psiNumeratorBusynessOrigin;
+            testSpeedRowCalculations();
+        }
+    }
+
     public TexturalPropertiesNew(Double coarness, Double contrast, Double busyness, Double complexity, Double strength, String color)  {
         this.Coarness = coarness;
         this.Contrast = contrast;
@@ -37,7 +73,7 @@ public class TexturalPropertiesNew {
         this.Color = color;
     }
     public void saveToCsv(String part){
-        toneMatrix.saveToCSV(part);
+        gtdm.saveToCSV(part);
     }
 
 
@@ -138,33 +174,37 @@ public class TexturalPropertiesNew {
 //        return suma / fcos;
 //    }
 
-    public void computeCoarnessContrastBusynessComplexity() {
-        Double Ng = new Double(s.size());
-        ArrayList<Double> p1 = new ArrayList<>(p);
-
-        Double psiNumeratorBusyness = 0.0;
-
-        for (int i = 0; i<s.size(); i++){
-            psiNumeratorBusyness += s.get(i)* p.get(i);
+    public void testSpeedColumnCalculations() {
+        Double Ng = 0.0;
+        for (int i = 0 ; i < p.size() ;i++){
+            if (p.get(i)!=0.0){
+                Ng ++;
+            }
         }
-
-        Double firstPartContrast = 0.0;
+        ArrayList<Double> p1 = new ArrayList<>(p);
+        Double partContrast = 0.0;
         Double denominatorBusyness = 0.0;
         Double partComplexity = 0.0;
         Complexity = 0.0;
         Strength = 0.0;
         Double partStrength = 0.0;
 
+        gtdm.getChangedPixels().stream().forEach(i-> {
+            psiNumeratorBusyness -= sPrevious.get(i.intValue())*pPrevious.get(i.intValue());
+            psiNumeratorBusyness += s.get(i.intValue())*p.get(i.intValue());
+        });
+
 
         for (int i = 0; i< p.size(); i++){
-            denominatorBusyness += i * p.get(i);
             if (p.get(i)==0.0)
                 continue;
+//            psiNumeratorBusyness += s.get(i)* p.get(i);
             for (int j = 0; j< p1.size(); j++){
-                denominatorBusyness -= j * p1.get(j);
                 if (p1.get(j)==0.0)
                     continue;
-                firstPartContrast += p.get(i) * p1.get(j) * Math.pow((i - j), 2);
+                denominatorBusyness += i * p.get(i);
+                denominatorBusyness -= j * p1.get(j);
+                partContrast += p.get(i) * p1.get(j) * Math.pow((i - j), 2);
                 partComplexity = Math.abs(i - j) / (n2 * (p.get(i) + p1.get(j)));
                 partComplexity *= (p.get(i) * s.get(i)) + (p1.get(j) * s.get(j));
                 Complexity += partComplexity;
@@ -173,17 +213,182 @@ public class TexturalPropertiesNew {
             }
         }
 
-        firstPartContrast = 1 / Ng / (Ng - 1) * firstPartContrast;
+        partContrast = 1 / Ng / (Ng - 1) * partContrast;
         Double siSum = s
                 .stream()
                 .mapToDouble(s -> s)
                 .sum();
 
         Coarness = Math.pow(Epsilon + psiNumeratorBusyness, -1);
-        Contrast = firstPartContrast * siSum * 1 / n2;
+        Contrast = partContrast * siSum * 1 / n2;
         Busyness = psiNumeratorBusyness / denominatorBusyness;
         Strength /= siSum;
 
+    }
+
+    public void testSpeedRowCalculations() {
+        Double Ng = 0.0;
+        for (int i = 0 ; i < p.size() ;i++){
+            if (p.get(i)!=0.0){
+                Ng ++;
+            }
+        }
+        ArrayList<Double> p1 = new ArrayList<>(p);
+        Double partContrast = 0.0;
+        Double denominatorBusyness = 0.0;
+        Double partComplexity = 0.0;
+        Complexity = 0.0;
+        Strength = 0.0;
+        Double partStrength = 0.0;
+
+        gtdm.getChangedPixels().stream().forEach(i-> {
+            psiNumeratorBusyness -=  sOrigin.get(i.intValue())*pOrigin.get(i.intValue());
+            psiNumeratorBusyness += s.get(i.intValue())*p.get(i.intValue());
+        });
+
+
+        for (int i = 0; i< p.size(); i++){
+            if (p.get(i)==0.0)
+                continue;
+            //psiNumeratorBusyness += s.get(i)* p.get(i);
+            for (int j = 0; j< p1.size(); j++){
+                if (p1.get(j)==0.0)
+                    continue;
+                denominatorBusyness += i * p.get(i);
+                denominatorBusyness -= j * p1.get(j);
+                partContrast += p.get(i) * p1.get(j) * Math.pow((i - j), 2);
+                partComplexity = Math.abs(i - j) / (n2 * (p.get(i) + p1.get(j)));
+                partComplexity *= (p.get(i) * s.get(i)) + (p1.get(j) * s.get(j));
+                Complexity += partComplexity;
+                partStrength = Math.pow((i - j), 2) * (p.get(i) + p1.get(j));
+                Strength += partStrength;
+            }
+        }
+
+        partContrast = 1 / Ng / (Ng - 1) * partContrast;
+        Double siSum = s
+                .stream()
+                .mapToDouble(s -> s)
+                .sum();
+
+        Coarness = Math.pow(Epsilon + psiNumeratorBusyness, -1);
+        System.out.println(Coarness);
+        Contrast = partContrast * siSum * 1 / n2;
+        Busyness = psiNumeratorBusyness / denominatorBusyness;
+        Strength /= siSum;
+
+        psiNumeratorBusynessOrigin = psiNumeratorBusyness;
+    }
+
+
+
+
+
+    public void testSpeedFirst() {
+        Double Ng = 0.0;
+        for (int i = 0 ; i < p.size() ;i++){
+            if (p.get(i)!=0.0){
+                Ng ++;
+            }
+        }
+        ArrayList<Double> p1 = new ArrayList<>(p);
+        psiNumeratorBusyness = 0.0;
+
+        for (int i = 0; i<s.size(); i++){
+            psiNumeratorBusyness += s.get(i)* p.get(i);
+        }
+
+        Double partContrast = 0.0;
+        Double denominatorBusyness = 0.0;
+        Double partComplexity = 0.0;
+        Complexity = 0.0;
+        Strength = 0.0;
+        Double partStrength = 0.0;
+
+
+        for (int i = 0; i< p.size(); i++){
+            if (p.get(i)==0.0)
+                continue;
+            for (int j = 0; j< p1.size(); j++){
+                if (p1.get(j)==0.0)
+                    continue;
+                denominatorBusyness += i * p.get(i);
+                denominatorBusyness -= j * p1.get(j);
+                partContrast += p.get(i) * p1.get(j) * Math.pow((i - j), 2);
+                partComplexity = Math.abs(i - j) / (n2 * (p.get(i) + p1.get(j)));
+                partComplexity *= (p.get(i) * s.get(i)) + (p1.get(j) * s.get(j));
+                Complexity += partComplexity;
+                partStrength = Math.pow((i - j), 2) * (p.get(i) + p1.get(j));
+                Strength += partStrength;
+            }
+        }
+
+        partContrast = 1 / Ng / (Ng - 1) * partContrast;
+        Double siSum = s
+                .stream()
+                .mapToDouble(s -> s)
+                .sum();
+
+        Coarness = Math.pow(Epsilon + psiNumeratorBusyness, -1);
+        Contrast = partContrast * siSum * 1 / n2;
+        Busyness = psiNumeratorBusyness / denominatorBusyness;
+        Strength /= siSum;
+
+        psiNumeratorBusynessOrigin = psiNumeratorBusyness;
+    }
+
+
+
+    public void computeCoarnessContrastBusynessComplexityStrength() {
+        Double Ng = 0.0;
+        for (int i = 0 ; i < p.size() ;i++){
+            if (p.get(i)!=0.0){
+                Ng ++;
+            }
+        }
+        ArrayList<Double> p1 = new ArrayList<>(p);
+        Double psiNumeratorBusyness = 0.0;
+
+        for (int i = 0; i<s.size(); i++){
+            psiNumeratorBusyness += s.get(i)* p.get(i);
+        }
+
+        Double partContrast = 0.0;
+        Double denominatorBusyness = 0.0;
+        Double partComplexity = 0.0;
+        Complexity = 0.0;
+        Strength = 0.0;
+        Double partStrength = 0.0;
+
+
+        for (int i = 0; i< p.size(); i++){
+            if (p.get(i)==0.0)
+                continue;
+            for (int j = 0; j< p1.size(); j++){
+                if (p1.get(j)==0.0)
+                    continue;
+                denominatorBusyness += i * p.get(i);
+                denominatorBusyness -= j * p1.get(j);
+                partContrast += p.get(i) * p1.get(j) * Math.pow((i - j), 2);
+                partComplexity = Math.abs(i - j) / (n2 * (p.get(i) + p1.get(j)));
+                partComplexity *= (p.get(i) * s.get(i)) + (p1.get(j) * s.get(j));
+                Complexity += partComplexity;
+                partStrength = Math.pow((i - j), 2) * (p.get(i) + p1.get(j));
+                Strength += partStrength;
+            }
+        }
+
+        partContrast = 1 / Ng / (Ng - 1) * partContrast;
+        Double siSum = s
+                .stream()
+                .mapToDouble(s -> s)
+                .sum();
+
+        Coarness = Math.pow(Epsilon + psiNumeratorBusyness, -1);
+        //System.out.println(Coarness);
+        Contrast = partContrast * siSum * 1 / n2;
+        Busyness = psiNumeratorBusyness / denominatorBusyness;
+        Strength /= siSum;
     }
     @Override
     public String toString(){

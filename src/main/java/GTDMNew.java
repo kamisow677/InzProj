@@ -1,5 +1,7 @@
 import java.io.*;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 public class GTDMNew {
     /**
@@ -24,8 +26,10 @@ public class GTDMNew {
      */
     private ArrayList<Double> p;
     private ArrayList<Double> pRaw;
-    private ArrayList<Double> pOriginRaw;
-    private ArrayList<Double> pOriginS;
+    private ArrayList<Double> originRawP;
+    private ArrayList<Double> originS;
+    private ArrayList<Double> originP;
+    private Set<Double> changedPixels;
 
     private double n2;
 
@@ -83,9 +87,13 @@ public class GTDMNew {
 
     public ArrayList<Double> getpRaw() { return pRaw; }
 
-    public ArrayList<Double> getpOriginRaw() { return pOriginRaw; }
+    public ArrayList<Double> getOriginRawP() { return originRawP; }
 
-    public ArrayList<Double> getpOriginS() { return pOriginS; }
+    public ArrayList<Double> getOriginS() { return originS; }
+
+    public Set<Double> getChangedPixels() { return changedPixels; }
+
+    public ArrayList<Double> getOriginP() {   return originP;  }
 
     /**
      * Just for matrix A
@@ -103,7 +111,7 @@ public class GTDMNew {
         this.inputDataMatrix = inputData;
         n2 = (double) (height - 2 * d) * (width - 2 * d);
         calculateMatrixA();
-        System.out.println("obliczylem A");
+        //System.out.println("obliczylem A");
     }
 
     /**
@@ -116,6 +124,7 @@ public class GTDMNew {
         this.s = new ArrayList<Double>(PIXELS_NUMBER);
         this.p = new ArrayList<Double>(PIXELS_NUMBER);
         this.pRaw = new ArrayList<Double>(PIXELS_NUMBER);
+        this.changedPixels = new HashSet<>(PIXELS_NUMBER);
         this.imageName = imageName;
         height = inputData.getHeight();
         width = inputData.getWidth();
@@ -132,20 +141,22 @@ public class GTDMNew {
      */
     public GTDMNew(GTDMNew previousGDTM, boolean GoingRight){
         this.inputDataMatrix = previousGDTM.getInputDataMatrix();
+        this.changedPixels = new HashSet<>(PIXELS_NUMBER);
 
         if (GoingRight){
             inputDataMatrix.setStartWidth( inputDataMatrix.getStartWidth() + 1);
             this.s = previousGDTM.getS();
             this.p = previousGDTM.getP();
             this.pRaw = previousGDTM.getpRaw();
-            this.pOriginRaw = previousGDTM.getpOriginRaw();
-            this.pOriginS = previousGDTM.getpOriginS();
+            this.originRawP = previousGDTM.getOriginRawP();
+            this.originS = previousGDTM.getOriginS();
+            this.originP = previousGDTM.getOriginP();
         } else{
             inputDataMatrix.setStartWidth(0);
             inputDataMatrix.setStartHeight( inputDataMatrix.getStartHeight() + 1);
-            this.s = previousGDTM.getpOriginS();
+            this.s = previousGDTM.getOriginS();
             this.p = previousGDTM.getP();
-            this.pRaw = previousGDTM.getpOriginRaw();
+            this.pRaw = previousGDTM.getOriginRawP();
         }
 
         this.matrixA = previousGDTM.getMatrixA();
@@ -154,6 +165,23 @@ public class GTDMNew {
         n2 = (double) (height - 2 * d) * (width - 2 * d);
 
     }
+    public GTDMNew(GTDMNew gdtm){
+        this.d = gdtm.d;
+        inputDataMatrix = gdtm.inputDataMatrix;
+        imageName = gdtm.imageName;
+        height = gdtm.height;
+        width = gdtm.width;
+        PIXELS_NUMBER = 256;
+        matrixA =gdtm.getMatrixA();
+        s = new ArrayList<>(gdtm.s);
+        p = new ArrayList<>(gdtm.p);
+        pRaw = new ArrayList<>(gdtm.pRaw);
+        originRawP = new ArrayList<>(gdtm.originRawP);
+        originS = new ArrayList<>(gdtm.originS);
+        originP = new ArrayList<>(gdtm.originP);
+        changedPixels = new HashSet<>(gdtm.changedPixels);
+    }
+
 
 //    public GTDMNew(GTDMNew matrix1, GTDMNew matrix2, GTDMNew matrix3){
 //        this.s = new ArrayList<Double>(PIXELS_NUMBER);
@@ -243,8 +271,9 @@ public class GTDMNew {
             printfS();
             printfP();
         }
-        pOriginRaw = new ArrayList<>(pRaw);
-        pOriginS = new ArrayList<>(s);
+        originRawP = new ArrayList<>(pRaw);
+        originS = new ArrayList<>(s);
+        originP = new ArrayList<>(p);
     }
 
     /**
@@ -283,8 +312,9 @@ public class GTDMNew {
             printfS();
             printfP();
         }
-        pOriginRaw =  new ArrayList<>(pRaw);
-        pOriginS = new ArrayList<>(s);
+        originRawP =  new ArrayList<>(pRaw);
+        originS = new ArrayList<>(s);
+        originP = new ArrayList<>(p);
     }
 
 
@@ -333,6 +363,8 @@ public class GTDMNew {
                 partSum = 0.0;
             partSum -= Math.abs(i - matrixA.get(k + startY, d - 1 + startX));// |i-A|
             s.set(i.intValue(), partSum);//s(i)= SIGMA |i-A|
+
+            changedPixels.add(i);
         }
 
         /**
@@ -345,6 +377,8 @@ public class GTDMNew {
                 partSum = 0.0;
             partSum += Math.abs(i - matrixA.get(k + startY, - d + width + startX - 1));// |i-A|
             s.set(i.intValue(), partSum);//s(i)= SIGMA |i-A|
+
+            changedPixels.add(i);
         }
     }
     private void calculateNextRowS() {
@@ -361,6 +395,8 @@ public class GTDMNew {
                 partSum = 0.0;
             partSum -= Math.abs(i - matrixA.get(d - 1 + startY, k + startX ));// |i-A|
             s.set(i.intValue(), partSum);//s(i)= SIGMA |i-A|
+
+            changedPixels.add(i);
         }
 
         /**
@@ -373,6 +409,8 @@ public class GTDMNew {
                 partSum = 0.0;
             partSum += Math.abs(i - matrixA.get(- d + height - 1 + startY, k + startX));// |i-A|
             s.set(i.intValue(), partSum);//s(i)= SIGMA |i-A|
+
+            changedPixels.add(i);
         }
     }
 
@@ -447,7 +485,7 @@ public class GTDMNew {
             }
         }
         pRaw = new ArrayList<>(p);
-        pOriginRaw = new ArrayList<>(p);
+        originRawP = new ArrayList<>(p);
         for (int i = 0 ; i< PIXELS_NUMBER ; i++) {
             p.set( i ,p.get(i) / n2);
         }
