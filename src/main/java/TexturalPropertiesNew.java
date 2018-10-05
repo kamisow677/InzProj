@@ -33,8 +33,8 @@ public class TexturalPropertiesNew {
 
         //computeCoarnessContrastBusynessComplexityStrength();
         //psiNumeratorBusyness = 0.0;
-        computeCoarnessContrastBusynessComplexityStrength();
-        //testSpeedFirst();
+        //computeCoarnessContrastBusynessComplexityStrength();
+        testSpeedFirst();
     }
 
     /**

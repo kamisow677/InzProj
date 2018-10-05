@@ -114,12 +114,12 @@ public class Tester {
                         elapsedTime = stopTime - startTime;
                         calc1+=elapsedTime;
 
-//                        startTime = System.currentTimeMillis();
-//                        texturalPropertiesNew = new TexturalPropertiesNew(gdtmNext);
-//                        properties.add(texturalPropertiesNew.getProps());
-//                        stopTime = System.currentTimeMillis();
-//                        elapsedTime = stopTime - startTime;
-//                        calc2+=elapsedTime;
+                        startTime = System.currentTimeMillis();
+                        texturalPropertiesNew = new TexturalPropertiesNew(gdtmNext);
+                        properties.add(texturalPropertiesNew.getProps());
+                        stopTime = System.currentTimeMillis();
+                        elapsedTime = stopTime - startTime;
+                        calc2+=elapsedTime;
                     }else if (j==q/2){
                         startTime = System.currentTimeMillis();
                         gdtmNext = new GTDMNew(gdtmNext, false);
@@ -128,12 +128,12 @@ public class Tester {
                         elapsedTime = stopTime - startTime;
                         calc1+=elapsedTime;
 
-//                        startTime = System.currentTimeMillis();
-//                        texturalPropertiesNew = new TexturalPropertiesNew(gdtmNext);
-//                        properties.add(texturalPropertiesNew.getProps());
-//                        stopTime = System.currentTimeMillis();
-//                        elapsedTime = stopTime - startTime;
-//                        calc2+=elapsedTime;
+                        startTime = System.currentTimeMillis();
+                        texturalPropertiesNew = new TexturalPropertiesNew(gdtmNext);
+                        properties.add(texturalPropertiesNew.getProps());
+                        stopTime = System.currentTimeMillis();
+                        elapsedTime = stopTime - startTime;
+                        calc2+=elapsedTime;
 
                     } else {
                         startTime = System.currentTimeMillis();
@@ -143,18 +143,18 @@ public class Tester {
                         elapsedTime = stopTime - startTime;
                         calc1+=elapsedTime;
 
-//                        startTime = System.currentTimeMillis();
-//                        texturalPropertiesNew = new TexturalPropertiesNew(gdtmNext);
-//                        properties.add(texturalPropertiesNew.getProps());
-//                        stopTime = System.currentTimeMillis();
-//                        elapsedTime = stopTime - startTime;
-//                        calc2+=elapsedTime;
+                        startTime = System.currentTimeMillis();
+                        texturalPropertiesNew = new TexturalPropertiesNew(gdtmNext);
+                        properties.add(texturalPropertiesNew.getProps());
+                        stopTime = System.currentTimeMillis();
+                        elapsedTime = stopTime - startTime;
+                        calc2+=elapsedTime;
 
 
                     }
 //                    texturalPropertiesNew = new TexturalPropertiesNew(gdtmNext,texturalPropertiesNew, true);
-                    texturalPropertiesNew = new TexturalPropertiesNew(gdtmNext);
-                    properties.add(texturalPropertiesNew.getProps());
+//                    texturalPropertiesNew = new TexturalPropertiesNew(gdtmNext);
+//                    properties.add(texturalPropertiesNew.getProps());
 
                     //System.out.println(texturalPropertiesNew.getBusyness());
                    //properties.add(texturalPropertiesNew.getProps());

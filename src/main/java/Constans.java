@@ -1,5 +1,5 @@
 public class Constans {
-    static int QUADRATIC_SIZE = 60;
+    static int QUADRATIC_SIZE = 40;
     static int D = 2;
     static boolean AVERAGE_MATRIXES = false;
     static String COARNESS ="COARNESS";
