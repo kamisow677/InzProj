@@ -194,7 +194,7 @@ public class ZADANIE implements Command {
 //        imagePlus = new ImagePlus("tytul", buffImage);
 //        imagePlus.show();
 
-        //  MainTestClass.start();
+        //  Main.start();
 
 
     }

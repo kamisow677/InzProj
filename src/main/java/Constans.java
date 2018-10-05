@@ -1,7 +1,12 @@
 public class Constans {
-    static int QUADRATIC_SIZE = 400;
+    static int QUADRATIC_SIZE = 40;
     static int D = 2;
     static boolean AVERAGE_MATRIXES = false;
+    static String COARNESS ="COARNESS";
+    static String CONTRAST ="CONTRAST";
+    static String BUSYNESS ="BUSYNESS";
+    static String COMPLEXITY ="COMPLEXITY";
+    static String STRENGTH ="STRENGTH";
 
     public static int getQuadraticSize() {
         return QUADRATIC_SIZE;
