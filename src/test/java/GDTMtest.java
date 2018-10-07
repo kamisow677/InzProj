@@ -308,9 +308,9 @@ public class GDTMtest {
         texturalPropertiesNew = new TexturalPropertiesNew(gdtmNext,texturalPropertiesNew, false);
 //        texturalPropertiesNew = new TexturalPropertiesNew(gdtmNext);
         assertEquals(texturalPropertiesNew.getCoarness(), 0.4705882330795848, 0.001);
-//        assertEquals(texturalPropertiesNew.getContrast(), 0.9375, 0.0001);
-//        assertEquals(texturalPropertiesNew.getComplexity(), 1.875, 0.0001);
-//        assertEquals(texturalPropertiesNew.getStrength(), 2.1333333333333333, 0.0001);
+        assertEquals(texturalPropertiesNew.getContrast(), 1.3177083333, 0.0001);
+        assertEquals(texturalPropertiesNew.getComplexity(), 8.8333333, 0.0001);
+        assertEquals(texturalPropertiesNew.getStrength(), 5.91304347826, 0.0001);
 
     }
 }

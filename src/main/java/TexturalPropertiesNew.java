@@ -235,7 +235,7 @@ public class TexturalPropertiesNew {
                 Constans.a++;
             }
         }
-//
+
 //        Iterator<Double> iterator = gtdm.getChangedPixels().iterator();
 //        while(iterator.hasNext()) {
 //            int i = iterator.next().intValue();
@@ -342,20 +342,34 @@ public class TexturalPropertiesNew {
 //                if (pPrevious.get(i)==0.0 && p.get(i)==0.0) {
 //                    continue;
 //                } else if (p.get(i)==0.0){
+//                    if (pPrevious.get(j)==0.0)
+//                        continue;
 //                    partContrast -= pPrevious.get(i) * pPrevious.get(j) * Math.pow((j - i), 2);
 //                    partStrength -= Math.pow((i - j), 2) * (pPrevious.get(i) + pPrevious.get(j));
 //                    partComplexity -= (Math.abs(i - j) / (n2 * (pPrevious.get(i) + pPrevious.get(j)))) * ((pPrevious.get(i) * sPrevious.get(i)) + (pPrevious.get(j) * sPrevious.get(j)));
 //                } else if (pPrevious.get(i)==0.0){
+//                    if (p.get(j)==0.0)
+//                        continue;
 //                    partContrast += p.get(i) * p1.get(j) * Math.pow((j - i), 2);
 //                    partStrength += Math.pow((i - j), 2) * (p.get(i) + p1.get(j));
 //                    partComplexity += (Math.abs(i - j) / (n2 * (p.get(i) + p.get(j)))) * ((p.get(i) * s.get(i)) + (p.get(j) * s.get(j)));
 //                } else {
-//                    partContrast -= pPrevious.get(i) * pPrevious.get(j) * Math.pow((j - i), 2);
-//                    partStrength -= Math.pow((i - j), 2) * (pPrevious.get(i) + pPrevious.get(j));
-//                    partComplexity -= (Math.abs(i - j) / (n2 * (pPrevious.get(i) + pPrevious.get(j)))) * ((pPrevious.get(i) * sPrevious.get(i)) + (pPrevious.get(j) * sPrevious.get(j)));
-//                    partContrast += p.get(i) * p1.get(j) * Math.pow((j - i), 2);
-//                    partStrength += Math.pow((i - j), 2) * (p.get(i) + p1.get(j));
-//                    partComplexity += (Math.abs(i - j) / (n2 * (p.get(i) + p.get(j)))) * ((p.get(i) * s.get(i)) + (p.get(j) * s.get(j)));
+//                    if (p.get(j)==0.0) {
+//                        partContrast -= pPrevious.get(i) * pPrevious.get(j) * Math.pow((j - i), 2);
+//                        partStrength -= Math.pow((i - j), 2) * (pPrevious.get(i) + pPrevious.get(j));
+//                        partComplexity -= (Math.abs(i - j) / (n2 * (pPrevious.get(i) + pPrevious.get(j)))) * ((pPrevious.get(i) * sPrevious.get(i)) + (pPrevious.get(j) * sPrevious.get(j)));
+//                    }else if (pPrevious.get(j)==0.0) {
+//                        partContrast += p.get(i) * p1.get(j) * Math.pow((j - i), 2);
+//                        partStrength += Math.pow((i - j), 2) * (p.get(i) + p1.get(j));
+//                        partComplexity += (Math.abs(i - j) / (n2 * (p.get(i) + p.get(j)))) * ((p.get(i) * s.get(i)) + (p.get(j) * s.get(j)));
+//                    } else {
+//                        partContrast -= pPrevious.get(i) * pPrevious.get(j) * Math.pow((j - i), 2);
+//                        partStrength -= Math.pow((i - j), 2) * (pPrevious.get(i) + pPrevious.get(j));
+//                        partComplexity -= (Math.abs(i - j) / (n2 * (pPrevious.get(i) + pPrevious.get(j)))) * ((pPrevious.get(i) * sPrevious.get(i)) + (pPrevious.get(j) * sPrevious.get(j)));
+//                        partContrast += p.get(i) * p1.get(j) * Math.pow((j - i), 2);
+//                        partStrength += Math.pow((i - j), 2) * (p.get(i) + p1.get(j));
+//                        partComplexity += (Math.abs(i - j) / (n2 * (p.get(i) + p.get(j)))) * ((p.get(i) * s.get(i)) + (p.get(j) * s.get(j)));
+//                    }
 //                }
 //
 //                Constans.a++;
@@ -633,9 +647,6 @@ public class TexturalPropertiesNew {
                 denominatorBusyness += i * p.get(i);
                 denominatorBusyness -= j * p1.get(j);
                 partContrast += p.get(i) * p1.get(j) * Math.pow((i - j), 2);
-//                partComplexity = (Math.abs(i - j) / (n2 * (p.get(i) + p1.get(j))));
-//                partComplexity *= (p.get(i) * s.get(i)) + (p1.get(j) * s.get(j));
-//                Complexity += partComplexity;
                 partComplexity += (Math.abs(i - j) / (n2 * (p.get(i) + p1.get(j)))) * ((p.get(i) * s.get(i)) + (p1.get(j) * s.get(j)));
                 partStrength += Math.pow((i - j), 2) * (p.get(i) + p1.get(j));
             }

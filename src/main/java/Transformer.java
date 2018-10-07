@@ -23,17 +23,17 @@ public class Transformer {
         System.out.println("Strength:  " +  (t1.getStrength()+t2.getStrength()+t3.getStrength())/3);
     }
     public static TexturalPropertiesNew averageProperties(ArrayList<TexturalPropertiesNew> arr, String color ){
-        System.out.println("\n\nSUM MATRIX "+ color);
-        Double coarness = arr.stream().mapToDouble(asd -> asd.getCoarness()).sum();
-        Double contrast = arr.stream().mapToDouble(asd -> asd.getContrast()).sum();
-        Double busyness = arr.stream().mapToDouble(asd -> asd.getBusyness()).sum();
-        Double complexity = arr.stream().mapToDouble(asd -> asd.getComplexity()).sum();
-        Double strength = arr.stream().mapToDouble(asd -> asd.getStrength()).sum();
-        System.out.println("Coarness:  " +  arr.stream().mapToDouble(asd -> asd.getCoarness()).sum());
-        System.out.println("Contrast:  " +  arr.stream().mapToDouble(asd -> asd.getContrast()).sum());
-        System.out.println("Busyness:  " +  arr.stream().mapToDouble(asd -> asd.getBusyness()).sum());
-        System.out.println("Complexity:  " +  arr.stream().mapToDouble(asd -> asd.getComplexity()).sum());
-        System.out.println("Strength:  " +  arr.stream().mapToDouble(asd -> asd.getStrength()).sum());
+      //  System.out.println("\n\nSUM MATRIX "+ color);
+        Double coarness = (arr.stream().mapToDouble(asd -> asd.getCoarness()).sum())/arr.size();
+        Double contrast = (arr.stream().mapToDouble(asd -> asd.getContrast()).sum())/arr.size();
+        Double busyness = (arr.stream().mapToDouble(asd -> asd.getBusyness()).sum())/arr.size();
+        Double complexity =( arr.stream().mapToDouble(asd -> asd.getComplexity()).sum())/arr.size();
+        Double strength = (arr.stream().mapToDouble(asd -> asd.getStrength()).sum())/arr.size();
+//        System.out.println("Coarness:  " +  arr.stream().mapToDouble(asd -> asd.getCoarness()).sum());
+//        System.out.println("Contrast:  " +  arr.stream().mapToDouble(asd -> asd.getContrast()).sum());
+//        System.out.println("Busyness:  " +  arr.stream().mapToDouble(asd -> asd.getBusyness()).sum());
+//        System.out.println("Complexity:  " +  arr.stream().mapToDouble(asd -> asd.getComplexity()).sum());
+//        System.out.println("Strength:  " +  arr.stream().mapToDouble(asd -> asd.getStrength()).sum());
         return new TexturalPropertiesNew(coarness,contrast,busyness,complexity,strength, color);
     }
 
