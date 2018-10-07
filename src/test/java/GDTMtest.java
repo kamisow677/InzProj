@@ -91,7 +91,7 @@ public class GDTMtest {
          * CALCULACTIONS OF SWIARES 0,0
          */
         Matrix squareMAtrixData = new MatrixCommon(dane, SQUARE_SIZE ,SQUARE_SIZE,0,0);
-//        System.out.println(daneTestowe);
+        System.out.println(daneTestowe);
 
         gdtmFirst = new GTDMNew(squareMAtrixData,matrixA);
         gdtmFirst.startFirstCalcualtions(true, false);
@@ -115,6 +115,8 @@ public class GDTMtest {
         texturalPropertiesNew = new TexturalPropertiesNew(gdtmFirst);
         assertEquals(texturalPropertiesNew.getCoarness(), 0.91428571428, 0.0001);
         assertEquals(texturalPropertiesNew.getContrast(), 0.15755208333, 0.0001);
+        assertEquals(texturalPropertiesNew.getComplexity(), 2.28125, 0.0001);
+        assertEquals(texturalPropertiesNew.getStrength(), 3.09090909, 0.0001);
 
 
 
@@ -145,8 +147,11 @@ public class GDTMtest {
             assertEquals(pCalculated.get(i), expectedP[i], 0.01);
         }
         texturalPropertiesNew = new TexturalPropertiesNew(gdtmNext,texturalPropertiesNew,true);
+//        texturalPropertiesNew = new TexturalPropertiesNew(gdtmNext);
         assertEquals(texturalPropertiesNew.getCoarness(), 0.68085106383, 0.0001);
         assertEquals(texturalPropertiesNew.getContrast(), 0.42057291666, 0.0001);
+        assertEquals(texturalPropertiesNew.getComplexity(), 4.21875, 0.0001);
+        assertEquals(texturalPropertiesNew.getStrength(), 3.8823529411764706, 0.0001);
 
         /**
          * 0,2
@@ -174,8 +179,11 @@ public class GDTMtest {
             assertEquals(pCalculated.get(i), expectedP[i], 0.01);
         }
         texturalPropertiesNew = new TexturalPropertiesNew(gdtmNext,texturalPropertiesNew,true);
+//        texturalPropertiesNew = new TexturalPropertiesNew(gdtmNext);
         assertEquals(texturalPropertiesNew.getCoarness(), 0.51612903225, 0.001);
         assertEquals(texturalPropertiesNew.getContrast(), 0.59375, 0.001);
+        assertEquals(texturalPropertiesNew.getComplexity(), 5.66666666, 0.0001);
+        assertEquals(texturalPropertiesNew.getStrength(), 4.0, 0.0001);
 
         /**
          * GOING DOWN 1,0
@@ -202,8 +210,11 @@ public class GDTMtest {
             assertEquals(pCalculated.get(i), expectedP[i], 0.01);
         }
         texturalPropertiesNew = new TexturalPropertiesNew(gdtmNext,texturalPropertiesNew, false);
+//        texturalPropertiesNew = new TexturalPropertiesNew(gdtmNext);
         assertEquals(texturalPropertiesNew.getCoarness(), 0.5333333333, 0.001);
         assertEquals(texturalPropertiesNew.getContrast(), 0.9375, 0.0001);
+        assertEquals(texturalPropertiesNew.getComplexity(), 1.875, 0.0001);
+        assertEquals(texturalPropertiesNew.getStrength(), 2.1333333333333333, 0.0001);
 
 
         /**
@@ -231,7 +242,75 @@ public class GDTMtest {
             assertEquals(pCalculated.get(i), expectedP[i], 0.01);
         }
         texturalPropertiesNew = new TexturalPropertiesNew(gdtmNext,texturalPropertiesNew,true);
+//        texturalPropertiesNew = new TexturalPropertiesNew(gdtmNext);
         assertEquals(texturalPropertiesNew.getCoarness(), 0.37209302325, 0.001);
         assertEquals(texturalPropertiesNew.getContrast(), 0.796875, 0.0001);
+        assertEquals(texturalPropertiesNew.getComplexity(), 2.6875, 0.0001);
+        assertEquals(texturalPropertiesNew.getStrength(), 1.8823529411764706, 0.0001);
+
+
+        /**
+         * GOING DOWN 1,2
+         */
+        gdtmNext = new GTDMNew(gdtmNext, true);
+        gdtmNext.startNextColumnCalcualtions(true, false);
+        matrixANextCalculated = gdtmNext.getMatrixA();
+        d = gdtmNext.getD();
+        startY = gdtmNext.getInputDataMatrix().getStartHeight();
+        startX = gdtmNext.getInputDataMatrix().getStartWidth();
+        for (int i = d; i < SQUARE_SIZE - d; i++) {
+            for (int j = d; j < SQUARE_SIZE - d; j++) {
+                assertEquals(matrixANextCalculated.get(i, j), expectedMatrixAdate[i][j], 0.01);
+            }
+        }
+//        sCalculated = gdtmNext.getS();
+//        expectedS = new Double[]{0.0,2.125,0.0,1.0,0.0};
+//        for (int i = 0; i < expectedS.length; i++){
+//            assertEquals(sCalculated.get(i), expectedS[i], 0.01);
+//        }
+//        pCalculated = gdtmNext.getP();
+//        expectedP = new Double[]{0.0,0.75,0.0,0.25,0.0};
+//        for (int i = 0; i < expectedP.length; i++){
+//            assertEquals(pCalculated.get(i), expectedP[i], 0.01);
+//        }
+        texturalPropertiesNew = new TexturalPropertiesNew(gdtmNext,texturalPropertiesNew,true);
+//        texturalPropertiesNew = new TexturalPropertiesNew(gdtmNext);
+//        assertEquals(texturalPropertiesNew.getCoarness(), 0.37209302325, 0.001);
+//        assertEquals(texturalPropertiesNew.getContrast(), 0.796875, 0.0001);
+//        assertEquals(texturalPropertiesNew.getComplexity(), 2.6875, 0.0001);
+//        assertEquals(texturalPropertiesNew.getStrength(), 1.8823529411764706, 0.0001);
+
+
+        /**
+         * GOING DOWN 2,0
+         */
+        gdtmNext = new GTDMNew(gdtmNext, false);
+        gdtmNext.startNextRowCalcualtions(true, false);
+        matrixANextCalculated = gdtmNext.getMatrixA();
+        d = gdtmNext.getD();
+        startY = gdtmNext.getInputDataMatrix().getStartHeight();
+        startX = gdtmNext.getInputDataMatrix().getStartWidth();
+        for (int i = d; i < SQUARE_SIZE - d; i++) {
+            for (int j = d; j < SQUARE_SIZE - d; j++) {
+                assertEquals(matrixANextCalculated.get(i, j), expectedMatrixAdate[i][j], 0.01);
+            }
+        }
+        sCalculated = gdtmNext.getS();
+        expectedS = new Double[]{0.0,2.75,0.0,0.5,0.0};
+        for (int i = 0; i < expectedS.length; i++){
+            assertEquals(sCalculated.get(i), expectedS[i], 0.01);
+        }
+        pCalculated = gdtmNext.getP();
+        expectedP = new Double[]{0.0,0.5,0.0,0.25,0.0, 0.25};
+        for (int i = 0; i < expectedP.length; i++){
+            assertEquals(pCalculated.get(i), expectedP[i], 0.01);
+        }
+        texturalPropertiesNew = new TexturalPropertiesNew(gdtmNext,texturalPropertiesNew, false);
+//        texturalPropertiesNew = new TexturalPropertiesNew(gdtmNext);
+        assertEquals(texturalPropertiesNew.getCoarness(), 0.4705882330795848, 0.001);
+//        assertEquals(texturalPropertiesNew.getContrast(), 0.9375, 0.0001);
+//        assertEquals(texturalPropertiesNew.getComplexity(), 1.875, 0.0001);
+//        assertEquals(texturalPropertiesNew.getStrength(), 2.1333333333333333, 0.0001);
+
     }
 }

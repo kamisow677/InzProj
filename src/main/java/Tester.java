@@ -129,7 +129,8 @@ public class Tester {
                         calc1+=elapsedTime;
 
                         startTime = System.currentTimeMillis();
-                        texturalPropertiesNew = new TexturalPropertiesNew(gdtmNext);
+                        texturalPropertiesNew = new TexturalPropertiesNew(gdtmNext,texturalPropertiesNew,false);
+//                        texturalPropertiesNew = new TexturalPropertiesNew(gdtmNext);
                         properties.add(texturalPropertiesNew.getProps());
                         stopTime = System.currentTimeMillis();
                         elapsedTime = stopTime - startTime;
@@ -144,7 +145,8 @@ public class Tester {
                         calc1+=elapsedTime;
 
                         startTime = System.currentTimeMillis();
-                        texturalPropertiesNew = new TexturalPropertiesNew(gdtmNext);
+                        texturalPropertiesNew = new TexturalPropertiesNew(gdtmNext,texturalPropertiesNew,true);
+//                        texturalPropertiesNew = new TexturalPropertiesNew(gdtmNext);
                         properties.add(texturalPropertiesNew.getProps());
                         stopTime = System.currentTimeMillis();
                         elapsedTime = stopTime - startTime;
@@ -158,12 +160,14 @@ public class Tester {
 
                     //System.out.println(texturalPropertiesNew.getBusyness());
                    //properties.add(texturalPropertiesNew.getProps());
-                    //System.out.println("i:" + i + " j:"+j);
+                    System.out.println("i:" + i + " j:"+j);
                 }
             }
             System.out.println("CALC DONE");
             System.out.println("CALC1: "+calc1);
             System.out.println("CALC2: "+calc2);
+            System.out.println("a: "+Constans.a);
+            System.out.println("b: "+Constans.b);
             ImagesCreator.creatPixelImage(properties,h,w);
 
 

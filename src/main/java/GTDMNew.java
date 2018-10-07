@@ -403,7 +403,7 @@ public class GTDMNew {
          * Add new components associeted with new square
          */
         for (int k = d ; k < width - d ; k++) {
-            i = inputDataMatrix.get(k,- d + height - 1);
+            i = inputDataMatrix.get(- d + height - 1, k);
             Double partSum = s.get(i.intValue());
             if (partSum == null)
                 partSum = 0.0;

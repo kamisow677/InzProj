@@ -1,5 +1,5 @@
 public class Constans {
-    static int QUADRATIC_SIZE = 40;
+    static int QUADRATIC_SIZE = 16;
     static int D = 2;
     static boolean AVERAGE_MATRIXES = false;
     static String COARNESS ="COARNESS";
@@ -7,6 +7,8 @@ public class Constans {
     static String BUSYNESS ="BUSYNESS";
     static String COMPLEXITY ="COMPLEXITY";
     static String STRENGTH ="STRENGTH";
+    static long  a = 0 ;
+    static long  b = 0;
 
     public static int getQuadraticSize() {
         return QUADRATIC_SIZE;
