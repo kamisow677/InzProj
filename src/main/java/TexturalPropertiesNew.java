@@ -411,7 +411,6 @@ public class TexturalPropertiesNew {
         Contrast = Contrast * siSum * 1 / n2;
         Busyness = psiNumeratorBusyness / denominatorBusyness;
         Strength = partStrength /(Epsilon +siSum);
-        System.out.println(Coarness);
 
     }
 
@@ -511,9 +510,6 @@ public class TexturalPropertiesNew {
 
 
 
-
-
-
 //        gtdm.getChangedPixels().stream().forEach(i-> {
 //            psiNumeratorBusyness -=  sOrigin.get(i.intValue())*pOrigin.get(i.intValue());
 //            psiNumeratorBusyness += s.get(i.intValue())*p.get(i.intValue());
@@ -545,7 +541,6 @@ public class TexturalPropertiesNew {
                 .sum();
 
         Coarness = Math.pow(Epsilon + psiNumeratorBusyness, -1);
-       // System.out.println(Coarness);
         Contrast = Contrast * siSum * 1 / n2;
         Busyness = psiNumeratorBusyness / denominatorBusyness;
         Strength = partStrength / siSum;
@@ -554,7 +549,6 @@ public class TexturalPropertiesNew {
         partContrastOrigin = partContrast;
         partStrengthOrigin = partStrength;
         partComplexityOrigin = partComplexity;
-        System.out.println(Coarness);
     }
 
 
@@ -611,7 +605,6 @@ public class TexturalPropertiesNew {
         partContrastOrigin = partContrast;
         partStrengthOrigin = partStrength;
         partComplexityOrigin = partComplexity;
-        System.out.println(Coarness);
     }
 
 

@@ -1,12 +1,14 @@
 public class Constans {
-    static int QUADRATIC_SIZE = 16;
-    static int D = 2;
+    static int QUADRATIC_SIZE = 32;
+    static int D = 1;
     static boolean AVERAGE_MATRIXES = true;
     static String COARNESS ="COARNESS";
     static String CONTRAST ="CONTRAST";
     static String BUSYNESS ="BUSYNESS";
     static String COMPLEXITY ="COMPLEXITY";
     static String STRENGTH ="STRENGTH";
+    static String FOLDER_PATH = "C:\\Users\\Kamil Sowa\\Desktop\\obrazki21\\";
+    static String SAVE_PATH = "C:\\Users\\Kamil Sowa\\Desktop\\obrazki21\\";
     static long  a = 0 ;
     static long  b = 0;
 
