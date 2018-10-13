@@ -10,7 +10,7 @@ import javax.imageio.ImageIO;
 public class Main {
 
     public static void main(String[] args) {
-        Tester2 tester = new Tester2();
+        Tester tester = new Tester();
         tester.run();
     }
 }

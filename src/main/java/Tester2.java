@@ -66,25 +66,49 @@ public class Tester2 {
                     l.setWidth(Constans.QUADRATIC_SIZE);
                 }
                 if (Constans.AVERAGE_MATRIXES) {
-                    int numberOfThreads = 2;
+                    int numberOfThreads = 4;
 //                    int endRow = (h - q)/numberOfThreads;
                     int endRow = h - q/2;
 
                      ArrayList<ImageMatrix> list2 = new ArrayList<>();
                      for (ImageMatrix imageMatrix : list){
                          ImageMatrix im = new ImageMatrix(imageMatrix);
-                         im.setStartHeight(h/2-q/2);
+                         im.setStartHeight((h-q)/4);
                          im.setStartWidth(0);
                          im.setHeight(Constans.QUADRATIC_SIZE);
                          im.setWidth(Constans.QUADRATIC_SIZE);
                          list2.add(im);
                      }
 
+                    ArrayList<ImageMatrix> list3 = new ArrayList<>();
+                    for (ImageMatrix imageMatrix : list){
+                        ImageMatrix im = new ImageMatrix(imageMatrix);
+                        im.setStartHeight(2*(h-q)/4);
+                        im.setStartWidth(0);
+                        im.setHeight(Constans.QUADRATIC_SIZE);
+                        im.setWidth(Constans.QUADRATIC_SIZE);
+                        list3.add(im);
+                    }
+
+                    ArrayList<ImageMatrix> list4 = new ArrayList<>();
+                    for (ImageMatrix imageMatrix : list){
+                        ImageMatrix im = new ImageMatrix(imageMatrix);
+                        im.setStartHeight(3*(h-q)/4);
+                        im.setStartWidth(0);
+                        im.setHeight(Constans.QUADRATIC_SIZE);
+                        im.setWidth(Constans.QUADRATIC_SIZE);
+                        list4.add(im);
+                    }
+                    int pla = (h-q)/numberOfThreads;
+                    int rest = (h-q) % numberOfThreads;
 
                     startTime = System.currentTimeMillis();
                     ExecutorService executor = Executors.newWorkStealingPool();
-                    callables.add(createCallable(q/2, h/2, q, w, new ArrayList<>(list), new ArrayList<>(matrixesA)));
-                    callables.add(createCallable(h/2, h-q/2, q, w, new ArrayList<>(list2), new ArrayList<>(matrixesA)));
+                    callables.add(createCallable(0, pla, q, w, new ArrayList<>(list), new ArrayList<>(matrixesA)));
+                    callables.add(createCallable(pla, 2*pla, q, w, new ArrayList<>(list2), new ArrayList<>(matrixesA)));
+                    callables.add(createCallable(2*pla, 3*pla, q, w, new ArrayList<>(list3), new ArrayList<>(matrixesA)));
+                    callables.add(createCallable(3*pla, 4*pla +rest, q, w, new ArrayList<>(list4), new ArrayList<>(matrixesA)));
+
                     List<Future<ArrayList<Map<String, Double>>>> futures = executor.invokeAll(callables);
                     for (Future<ArrayList<Map<String, Double>>>  future : futures){
                         properties2.add(future.get());
