@@ -108,9 +108,13 @@ public class GTDMNew {
         height = inputData.getHeight();
         width = inputData.getWidth();
 
-        this.inputDataMatrix = inputData;
+        if (inputDataMatrix instanceof  ImageMatrix)
+            this.inputDataMatrix =  new ImageMatrix((ImageMatrix) inputData);
+        else
+            this.inputDataMatrix = inputData;
         n2 = (double) (height - 2 * d) * (width - 2 * d);
         calculateMatrixA();
+
         //System.out.println("obliczylem A");
     }
 
@@ -129,7 +133,10 @@ public class GTDMNew {
         height = inputData.getHeight();
         width = inputData.getWidth();
 
-        this.inputDataMatrix = inputData;
+        if (inputDataMatrix instanceof  ImageMatrix)
+            this.inputDataMatrix =  new ImageMatrix((ImageMatrix) inputData);
+        else
+            this.inputDataMatrix = inputData;
         n2 = (double) (height - 2 * d) * (width - 2 * d);
 
     }
@@ -140,8 +147,13 @@ public class GTDMNew {
      * @param GoingRight
      */
     public GTDMNew(GTDMNew previousGDTM, boolean GoingRight){
-        this.inputDataMatrix = previousGDTM.getInputDataMatrix();
+        //this.inputDataMatrix = previousGDTM.getInputDataMatrix();
+        if (inputDataMatrix instanceof  ImageMatrix)
+            this.inputDataMatrix =  new ImageMatrix((ImageMatrix) previousGDTM.getInputDataMatrix());
+        else
+            this.inputDataMatrix = previousGDTM.getInputDataMatrix();
         this.changedPixels = new HashSet<>(PIXELS_NUMBER);
+        this.matrixA = previousGDTM.getMatrixA();
 
         if (GoingRight){
             inputDataMatrix.setStartWidth( inputDataMatrix.getStartWidth() + 1);
@@ -159,7 +171,7 @@ public class GTDMNew {
             this.pRaw = previousGDTM.getOriginRawP();
         }
 
-        this.matrixA = previousGDTM.getMatrixA();
+
         this.height = inputDataMatrix.getHeight();
         this.width = inputDataMatrix.getWidth();
         n2 = (double) (height - 2 * d) * (width - 2 * d);
@@ -167,7 +179,11 @@ public class GTDMNew {
     }
     public GTDMNew(GTDMNew gdtm){
         this.d = gdtm.d;
-        inputDataMatrix = gdtm.inputDataMatrix;
+        //inputDataMatrix = gdtm.inputDataMatrix;
+        if (inputDataMatrix instanceof  ImageMatrix)
+            this.inputDataMatrix =  new ImageMatrix((ImageMatrix) gdtm.inputDataMatrix);
+        else
+            this.inputDataMatrix = gdtm.inputDataMatrix;
         imageName = gdtm.imageName;
         height = gdtm.height;
         width = gdtm.width;
@@ -183,25 +199,31 @@ public class GTDMNew {
     }
 
 
-//    public GTDMNew(GTDMNew matrix1, GTDMNew matrix2, GTDMNew matrix3){
-//        this.s = new ArrayList<Double>(PIXELS_NUMBER);
-//        this.p = new ArrayList<Double>(PIXELS_NUMBER);
-//        height = matrix1.getInputDataMatrix().getHeight();
-//        width = matrix2.getInputDataMatrix().getWidth();
-//        this.imageName = imageName;
-//
-//        this.inputDataMatrix = matrix1.getInputDataMatrix();
-//        n2 = (double) (height - 2 * d) * (width - 2 * d);
-//        //inputDataMatrix.printf();
-//
-//        initializaS();
-//        calculateS(matrix1.getS(),matrix2.getS(),matrix3.getS());
-//        //  printfS();
-//
-//        initializaP();
-//        computeP(matrix1.getInputDataMatrix(),matrix2.getInputDataMatrix(),matrix3.getInputDataMatrix());
-//        //  printfP();
-//    }
+    public GTDMNew(GTDMNew matrix1, GTDMNew matrix2, GTDMNew matrix3){
+        this.matrixA = matrixA;
+        this.s = new ArrayList<Double>(PIXELS_NUMBER);
+        this.p = new ArrayList<Double>(PIXELS_NUMBER);
+        height = matrix1.getInputDataMatrix().getHeight();
+        width = matrix2.getInputDataMatrix().getWidth();
+        this.imageName = imageName;
+
+        //this.inputDataMatrix = matrix1.getInputDataMatrix();
+        if (inputDataMatrix instanceof  ImageMatrix)
+            this.inputDataMatrix =  new ImageMatrix((ImageMatrix) matrix1.getInputDataMatrix());
+        else
+            this.inputDataMatrix = matrix1.getInputDataMatrix();
+        n2 = (double) (height - 2 * d) * (width - 2 * d);
+        //inputDataMatrix.printf();
+
+        initializaS();
+        calculateS(matrix1.getS(),matrix2.getS(),matrix3.getS());
+        //  printfS();
+
+        initializaP();
+        //computeP(matrix1.getInputDataMatrix(),matrix2.getInputDataMatrix(),matrix3.getInputDataMatrix());
+        computeP(matrix1.getP(),matrix2.getP(),matrix3.getP());
+        //  printfP();
+    }
 
     public GTDMNew( ArrayList<GTDMNew> matrixes, int heigth , int width) {
         this.s = new ArrayList<Double>(PIXELS_NUMBER);
@@ -250,9 +272,6 @@ public class GTDMNew {
             }
         }
     }
-
-
-
 
     /**
      * Needs calculations made for the first squareRegion
@@ -403,7 +422,7 @@ public class GTDMNew {
          * Add new components associeted with new square
          */
         for (int k = d ; k < width - d ; k++) {
-            i = inputDataMatrix.get(k,- d + height - 1);
+            i = inputDataMatrix.get(- d + height - 1, k);
             Double partSum = s.get(i.intValue());
             if (partSum == null)
                 partSum = 0.0;
@@ -548,11 +567,17 @@ public class GTDMNew {
         }
     }
 
-
+    private void computeP(ArrayList<Double> p1, ArrayList<Double> p2, ArrayList<Double> p3) {
+        int i=0;
+        for (i = 0; i < 255 ; i++){
+            p.set(i, (p1.get(i)+p2.get(i)+p3.get(i))/3.0);//s(i)= SIGMA |i-A|
+        }
+    }
 
 
 
     public void computeP(Matrix inputDataMatrix1, Matrix inputDataMatrix2, Matrix inputDataMatrix3) {
+
         for (int k = d; k < height - d; k++) {
             for (int l = d; l < width - d; l++) {
                 Double iNumber = p.get((int) inputDataMatrix1.get(k, l));//i

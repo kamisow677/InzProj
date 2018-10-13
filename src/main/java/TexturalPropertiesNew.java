@@ -1,6 +1,4 @@
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class TexturalPropertiesNew {
 
@@ -18,11 +16,19 @@ public class TexturalPropertiesNew {
     private Double Complexity;
     private Double Strength;
     private String Color;
-    private Double Epsilon = 0.00001;
+    private Double Epsilon = 0.00000001;
 
     private Double psiNumeratorBusyness;
     private Double psiNumeratorBusynessOrigin;
 
+    private Double partContrast;
+    private Double partContrastOrigin;
+
+    private Double partStrength;
+    private Double partStrengthOrigin;
+
+    private Double partComplexity;
+    private Double partComplexityOrigin;
 
     public TexturalPropertiesNew(GTDMNew gtdm)  {
         this.gtdm = gtdm;
@@ -33,7 +39,7 @@ public class TexturalPropertiesNew {
 
         //computeCoarnessContrastBusynessComplexityStrength();
         //psiNumeratorBusyness = 0.0;
-        //computeCoarnessContrastBusynessComplexityStrength();
+//        computeCoarnessContrastBusynessComplexityStrength();
         testSpeedFirst();
     }
 
@@ -54,12 +60,22 @@ public class TexturalPropertiesNew {
         this.sPrevious = new ArrayList<>( tpPrevious.s);
         this.pOrigin = new ArrayList<>( tpPrevious.gtdm.getOriginP());
         this.sOrigin = new ArrayList<>( tpPrevious.gtdm.getOriginS());
+
         if (column) {
             psiNumeratorBusyness = tpPrevious.psiNumeratorBusyness;
             psiNumeratorBusynessOrigin = tpPrevious.psiNumeratorBusynessOrigin;
+            partContrast = tpPrevious.partContrast;
+            partContrastOrigin = tpPrevious.partContrastOrigin;
+            partStrength = tpPrevious.partStrength;
+            partStrengthOrigin = tpPrevious.partStrengthOrigin;
+            partComplexity = tpPrevious.partComplexity;
+            partComplexityOrigin = tpPrevious.partComplexityOrigin;
             testSpeedColumnCalculations();
         } else {
             psiNumeratorBusyness = tpPrevious.psiNumeratorBusynessOrigin;
+            partContrast = tpPrevious.partContrastOrigin;
+            partStrength = tpPrevious.partStrengthOrigin;
+            partComplexity = tpPrevious.partComplexityOrigin;
             testSpeedRowCalculations();
         }
     }
@@ -182,50 +198,227 @@ public class TexturalPropertiesNew {
             }
         }
         ArrayList<Double> p1 = new ArrayList<>(p);
-        Double partContrast = 0.0;
+        //Double partContrast = 0.0;
         Double denominatorBusyness = 0.0;
-        Double partComplexity = 0.0;
+//        Double partComplexity = 0.0;
         Complexity = 0.0;
         Strength = 0.0;
-        Double partStrength = 0.0;
+        //Double partStrength = 0.0;
 
-        gtdm.getChangedPixels().stream().forEach(i-> {
-            psiNumeratorBusyness -= sPrevious.get(i.intValue())*pPrevious.get(i.intValue());
-            psiNumeratorBusyness += s.get(i.intValue())*p.get(i.intValue());
-        });
-
-
-        for (int i = 0; i< p.size(); i++){
+        Iterator<Double> iterator = gtdm.getChangedPixels().iterator();
+        while(iterator.hasNext()) {
+            int i = iterator.next().intValue();
+            if (pPrevious.get(i)==0.0)
+                continue;
+            psiNumeratorBusyness -= sPrevious.get(i)*pPrevious.get(i);
+            for (int j = 0; j< p1.size(); j++) {
+                if (pPrevious.get(j)==0.0)
+                    continue;
+                partContrast -= pPrevious.get(i) * pPrevious.get(j) * Math.pow((i - j), 2);
+                partStrength -= Math.pow((i - j), 2) * (pPrevious.get(i) + pPrevious.get(j));
+                partComplexity -= (Math.abs(i - j) / (n2 * (pPrevious.get(i) + pPrevious.get(j)))) * ((pPrevious.get(i) * sPrevious.get(i)) + (pPrevious.get(j) * sPrevious.get(j)));
+                Constans.a++;
+            }
+        }
+        iterator = gtdm.getChangedPixels().iterator();
+        while(iterator.hasNext()) {
+            int i = iterator.next().intValue();
             if (p.get(i)==0.0)
                 continue;
-//            psiNumeratorBusyness += s.get(i)* p.get(i);
-            for (int j = 0; j< p1.size(); j++){
-                if (p1.get(j)==0.0)
+            psiNumeratorBusyness += s.get(i)*p.get(i);
+            for (int j = 0; j< p1.size(); j++) {
+                if (p.get(j)==0.0)
                     continue;
-                denominatorBusyness += i * p.get(i);
-                denominatorBusyness -= j * p1.get(j);
                 partContrast += p.get(i) * p1.get(j) * Math.pow((i - j), 2);
-                partComplexity = Math.abs(i - j) / (n2 * (p.get(i) + p1.get(j)));
-                partComplexity *= (p.get(i) * s.get(i)) + (p1.get(j) * s.get(j));
-                Complexity += partComplexity;
-                partStrength = Math.pow((i - j), 2) * (p.get(i) + p1.get(j));
-                Strength += partStrength;
+                partStrength += Math.pow((i - j), 2) * (p.get(i) + p1.get(j));
+                partComplexity += (Math.abs(i - j) / (n2 * (p.get(i) + p.get(j)))) * ((p.get(i) * s.get(i)) + (p.get(j) * s.get(j)));
+                Constans.a++;
             }
         }
 
-        partContrast = 1 / Ng / (Ng - 1) * partContrast;
+//        Iterator<Double> iterator = gtdm.getChangedPixels().iterator();
+//        while(iterator.hasNext()) {
+//            int i = iterator.next().intValue();
+//            if (pPrevious.get(i)==0.0 && p.get(i)==0.0) {
+//                continue;
+//            }
+//            else if (pPrevious.get(i)==0.0){
+//                psiNumeratorBusyness += s.get(i)*p.get(i);
+//            }
+//            else if (p.get(i)==0.0){
+//                psiNumeratorBusyness -= sPrevious.get(i)*pPrevious.get(i);
+//            }else{
+//                psiNumeratorBusyness -= sPrevious.get(i)*pPrevious.get(i);
+//                psiNumeratorBusyness += s.get(i)*p.get(i);
+//            }
+//            for (int j = 0; j< p1.size(); j++) {
+//                if (pPrevious.get(j)==0.0 && p.get(j)==0.0) {
+//                    continue;
+//                } else if (pPrevious.get(j)==0.0){
+//                    if (p.get(i)==0.0)
+//                        continue;
+//                    partContrast += p.get(i) * p1.get(j) * Math.pow((i - j), 2);
+//                    partStrength += Math.pow((i - j), 2) * (p.get(i) + p1.get(j));
+//                    partComplexity += (Math.abs(i - j) / (n2 * (p.get(i) + p.get(j)))) * ((p.get(i) * s.get(i)) + (p.get(j) * s.get(j)));
+//                }
+//                else if (p.get(j)==0.0){
+//                    if (pPrevious.get(i)==0.0)
+//                        continue;
+//                    partContrast -= pPrevious.get(i) * pPrevious.get(j) * Math.pow((i - j), 2);
+//                    partStrength -= Math.pow((i - j), 2) * (pPrevious.get(i) + pPrevious.get(j));
+//                    partComplexity -= (Math.abs(i - j) / (n2 * (pPrevious.get(i) + pPrevious.get(j)))) * ((pPrevious.get(i) * sPrevious.get(i)) + (pPrevious.get(j) * sPrevious.get(j)));
+//                } else  {
+//                    if (p.get(i)==0.0) {
+//                        partContrast -= pPrevious.get(i) * pPrevious.get(j) * Math.pow((i - j), 2);
+//                        partStrength -= Math.pow((i - j), 2) * (pPrevious.get(i) + pPrevious.get(j));
+//                        partComplexity -= (Math.abs(i - j) / (n2 * (pPrevious.get(i) + pPrevious.get(j)))) * ((pPrevious.get(i) * sPrevious.get(i)) + (pPrevious.get(j) * sPrevious.get(j)));
+//                    } else if (pPrevious.get(i)==0.0) {
+//                        partContrast += p.get(i) * p1.get(j) * Math.pow((i - j), 2);
+//                        partStrength += Math.pow((i - j), 2) * (p.get(i) + p1.get(j));
+//                        partComplexity += (Math.abs(i - j) / (n2 * (p.get(i) + p.get(j)))) * ((p.get(i) * s.get(i)) + (p.get(j) * s.get(j)));
+//                    } else {
+//                        partContrast -= pPrevious.get(i) * pPrevious.get(j) * Math.pow((i - j), 2);
+//                        partContrast += p.get(i) * p1.get(j) * Math.pow((i - j), 2);
+//                        partStrength -= Math.pow((i - j), 2) * (pPrevious.get(i) + pPrevious.get(j));
+//                        partStrength += Math.pow((i - j), 2) * (p.get(i) + p1.get(j));
+//                        partComplexity -= (Math.abs(i - j) / (n2 * (pPrevious.get(i) + pPrevious.get(j)))) * ((pPrevious.get(i) * sPrevious.get(i)) + (pPrevious.get(j) * sPrevious.get(j)));
+//                        partComplexity += (Math.abs(i - j) / (n2 * (p.get(i) + p.get(j)))) * ((p.get(i) * s.get(i)) + (p.get(j) * s.get(j)));
+//                    }
+//                }
+//                Constans.a++;
+//            }
+//        }
+
+
+
+
+        List rest = new ArrayList();
+        for (int j = 0; j< p1.size(); j++) {
+            if (!gtdm.getChangedPixels().contains(new Double(j))){
+                rest.add(new Double(j));
+            }
+        }
+
+        for (Object k : rest) {
+            int j = ((Double) k).intValue();
+            if (pPrevious.get(j)==0.0)
+                continue;
+            iterator = gtdm.getChangedPixels().iterator();
+            while (iterator.hasNext()) {
+                int  i = iterator.next().intValue();
+                if (pPrevious.get(i)==0.0)
+                    continue;
+                partContrast -= pPrevious.get(i) * pPrevious.get(j) * Math.pow((j - i), 2);
+                partStrength -= Math.pow((i - j), 2) * (pPrevious.get(i) + pPrevious.get(j));
+                partComplexity -= (Math.abs(i - j) / (n2 * (pPrevious.get(i) + pPrevious.get(j)))) * ((pPrevious.get(i) * sPrevious.get(i)) + (pPrevious.get(j) * sPrevious.get(j)));
+                Constans.a++;
+            }
+
+        }
+        for (Object k : rest) {
+            int j = ((Double) k).intValue();
+            if (p.get(j)==0.0)
+                continue;
+            iterator = gtdm.getChangedPixels().iterator();
+            while (iterator.hasNext()) {
+                int  i = iterator.next().intValue();
+                if (p.get(i)==0.0)
+                    continue;
+                partContrast += p.get(i) * p1.get(j) * Math.pow((j - i), 2);
+                partStrength += Math.pow((i - j), 2) * (p.get(i) + p1.get(j));
+                partComplexity += (Math.abs(i - j) / (n2 * (p.get(i) + p.get(j)))) * ((p.get(i) * s.get(i)) + (p.get(j) * s.get(j)));
+                Constans.a++;
+            }
+        }
+
+//        for (Object k : rest) {
+//            int j = ((Double) k).intValue();
+//            if (pPrevious.get(j)==0.0 && p.get(j)==0.0) {
+//                continue;
+//            }
+//            iterator = gtdm.getChangedPixels().iterator();
+//            while (iterator.hasNext()) {
+//                int  i = iterator.next().intValue();
+//                if (pPrevious.get(i)==0.0 && p.get(i)==0.0) {
+//                    continue;
+//                } else if (p.get(i)==0.0){
+//                    if (pPrevious.get(j)==0.0)
+//                        continue;
+//                    partContrast -= pPrevious.get(i) * pPrevious.get(j) * Math.pow((j - i), 2);
+//                    partStrength -= Math.pow((i - j), 2) * (pPrevious.get(i) + pPrevious.get(j));
+//                    partComplexity -= (Math.abs(i - j) / (n2 * (pPrevious.get(i) + pPrevious.get(j)))) * ((pPrevious.get(i) * sPrevious.get(i)) + (pPrevious.get(j) * sPrevious.get(j)));
+//                } else if (pPrevious.get(i)==0.0){
+//                    if (p.get(j)==0.0)
+//                        continue;
+//                    partContrast += p.get(i) * p1.get(j) * Math.pow((j - i), 2);
+//                    partStrength += Math.pow((i - j), 2) * (p.get(i) + p1.get(j));
+//                    partComplexity += (Math.abs(i - j) / (n2 * (p.get(i) + p.get(j)))) * ((p.get(i) * s.get(i)) + (p.get(j) * s.get(j)));
+//                } else {
+//                    if (p.get(j)==0.0) {
+//                        partContrast -= pPrevious.get(i) * pPrevious.get(j) * Math.pow((j - i), 2);
+//                        partStrength -= Math.pow((i - j), 2) * (pPrevious.get(i) + pPrevious.get(j));
+//                        partComplexity -= (Math.abs(i - j) / (n2 * (pPrevious.get(i) + pPrevious.get(j)))) * ((pPrevious.get(i) * sPrevious.get(i)) + (pPrevious.get(j) * sPrevious.get(j)));
+//                    }else if (pPrevious.get(j)==0.0) {
+//                        partContrast += p.get(i) * p1.get(j) * Math.pow((j - i), 2);
+//                        partStrength += Math.pow((i - j), 2) * (p.get(i) + p1.get(j));
+//                        partComplexity += (Math.abs(i - j) / (n2 * (p.get(i) + p.get(j)))) * ((p.get(i) * s.get(i)) + (p.get(j) * s.get(j)));
+//                    } else {
+//                        partContrast -= pPrevious.get(i) * pPrevious.get(j) * Math.pow((j - i), 2);
+//                        partStrength -= Math.pow((i - j), 2) * (pPrevious.get(i) + pPrevious.get(j));
+//                        partComplexity -= (Math.abs(i - j) / (n2 * (pPrevious.get(i) + pPrevious.get(j)))) * ((pPrevious.get(i) * sPrevious.get(i)) + (pPrevious.get(j) * sPrevious.get(j)));
+//                        partContrast += p.get(i) * p1.get(j) * Math.pow((j - i), 2);
+//                        partStrength += Math.pow((i - j), 2) * (p.get(i) + p1.get(j));
+//                        partComplexity += (Math.abs(i - j) / (n2 * (p.get(i) + p.get(j)))) * ((p.get(i) * s.get(i)) + (p.get(j) * s.get(j)));
+//                    }
+//                }
+//
+//                Constans.a++;
+//            }
+//
+//        }
+
+
+
+
+
+
+//        for (int i = 0; i< p.size(); i++){
+//            if (p.get(i)==0.0)
+//                continue;
+////            psiNumeratorBusyness += s.get(i)* p.get(i);
+//            for (int j = 0; j< p1.size(); j++){
+//                if (p1.get(j)==0.0)
+//                    continue;
+//                denominatorBusyness += i * p.get(i);
+//                denominatorBusyness -= j * p1.get(j);
+//                //partContrast += p.get(i) * p1.get(j) * Math.pow((i - j), 2);
+////                partComplexity = Math.abs(i - j) / (n2 * (p.get(i) + p1.get(j)));
+////                partComplexity *= (p.get(i) * s.get(i)) + (p1.get(j) * s.get(j));
+////                Complexity += partComplexity;
+//               // partStrength += Math.pow((i - j), 2) * (p.get(i) + p1.get(j));
+//
+//            }
+//        }
+
+        Complexity = partComplexity;
+        Contrast = 1 / Ng / (Ng - 1) * partContrast;
         Double siSum = s
                 .stream()
                 .mapToDouble(s -> s)
                 .sum();
 
         Coarness = Math.pow(Epsilon + psiNumeratorBusyness, -1);
-        Contrast = partContrast * siSum * 1 / n2;
+        Contrast = Contrast * siSum * 1 / n2;
         Busyness = psiNumeratorBusyness / denominatorBusyness;
-        Strength /= siSum;
+        Strength = partStrength /(Epsilon +siSum);
 
     }
 
+
+    /**
+     *
+     *
+     */
     public void testSpeedRowCalculations() {
         Double Ng = 0.0;
         for (int i = 0 ; i < p.size() ;i++){
@@ -234,54 +427,129 @@ public class TexturalPropertiesNew {
             }
         }
         ArrayList<Double> p1 = new ArrayList<>(p);
-        Double partContrast = 0.0;
+        //Double partContrast = 0.0;
         Double denominatorBusyness = 0.0;
-        Double partComplexity = 0.0;
+//        Double partComplexity = 0.0;
         Complexity = 0.0;
         Strength = 0.0;
-        Double partStrength = 0.0;
-
-        gtdm.getChangedPixels().stream().forEach(i-> {
-            psiNumeratorBusyness -=  sOrigin.get(i.intValue())*pOrigin.get(i.intValue());
-            psiNumeratorBusyness += s.get(i.intValue())*p.get(i.intValue());
-        });
+       // Double partStrength = 0.0;
 
 
-        for (int i = 0; i< p.size(); i++){
+
+        Iterator<Double> iterator = gtdm.getChangedPixels().iterator();
+        while(iterator.hasNext()) {
+            int i = iterator.next().intValue();
+            if (pOrigin.get(i)==0.0)
+                continue;
+            psiNumeratorBusyness -= pOrigin.get(i)*sOrigin.get(i);
+            for (int j = 0; j< p1.size(); j++) {
+                if (pOrigin.get(j)==0.0)
+                    continue;
+                partContrast -= pOrigin.get(i) * pOrigin.get(j) * Math.pow((i - j), 2);
+                partStrength -= Math.pow((i - j), 2) * (pOrigin.get(i) + pOrigin.get(j));
+                partComplexity -= (Math.abs(i - j) / (n2 * (pOrigin.get(i) + pOrigin.get(j)))) * ((pOrigin.get(i) * sOrigin.get(i)) + (pOrigin.get(j) * sOrigin.get(j)));
+                Constans.a++;
+            }
+        }
+        iterator = gtdm.getChangedPixels().iterator();
+        while(iterator.hasNext()) {
+            int i = iterator.next().intValue();
             if (p.get(i)==0.0)
                 continue;
-            //psiNumeratorBusyness += s.get(i)* p.get(i);
-            for (int j = 0; j< p1.size(); j++){
-                if (p1.get(j)==0.0)
+            psiNumeratorBusyness += s.get(i)*p.get(i);
+            for (int j = 0; j< p1.size(); j++) {
+                if (p.get(j)==0.0)
                     continue;
-                denominatorBusyness += i * p.get(i);
-                denominatorBusyness -= j * p1.get(j);
-                partContrast += p.get(i) * p1.get(j) * Math.pow((i - j), 2);
-                partComplexity = Math.abs(i - j) / (n2 * (p.get(i) + p1.get(j)));
-                partComplexity *= (p.get(i) * s.get(i)) + (p1.get(j) * s.get(j));
-                Complexity += partComplexity;
-                partStrength = Math.pow((i - j), 2) * (p.get(i) + p1.get(j));
-                Strength += partStrength;
+                partContrast += p.get(i) * p.get(j) * Math.pow((i - j), 2);
+                partStrength += Math.pow((i - j), 2) * (p.get(i) + p.get(j));
+                partComplexity += (Math.abs(i - j) / (n2 * (p.get(i) + p1.get(j)))) * ((p.get(i) * s.get(i)) + (p1.get(j) * s.get(j)));
+                Constans.a++;
             }
         }
 
-        partContrast = 1 / Ng / (Ng - 1) * partContrast;
+        List rest = new ArrayList();
+        for (int j = 0; j< p1.size(); j++) {
+            if (!gtdm.getChangedPixels().contains(new Double(j))){
+                rest.add(new Double(j));
+            }
+        }
+
+        for (Object k : rest) {
+            int j = ((Double) k).intValue();
+            if (pOrigin.get(j)==0.0)
+                continue;
+            iterator = gtdm.getChangedPixels().iterator();
+            while (iterator.hasNext()) {
+                int  i = iterator.next().intValue();
+                if (pOrigin.get(i)==0.0)
+                    continue;
+                partContrast -= pOrigin.get(i) * pOrigin.get(j) * Math.pow((j - i), 2);
+                partStrength -= Math.pow((i - j), 2) * (pOrigin.get(i) + pOrigin.get(j));
+                partComplexity -= (Math.abs(i - j) / (n2 * (pOrigin.get(i) + pOrigin.get(j)))) * ((pOrigin.get(i) * sOrigin.get(i)) + (pOrigin.get(j) * sOrigin.get(j)));
+                Constans.a++;
+            }
+
+        }
+        for (Object k : rest) {
+            int j = ((Double) k).intValue();
+            if (p.get(j)==0.0)
+                continue;
+            iterator = gtdm.getChangedPixels().iterator();
+            while (iterator.hasNext()) {
+                int  i = iterator.next().intValue();
+                if (p.get(i)==0.0)
+                    continue;
+                partContrast += p.get(i) * p.get(j) * Math.pow((j - i), 2);
+                partStrength += Math.pow((i - j), 2) * (p.get(i) + p.get(j));
+                partComplexity += (Math.abs(i - j) / (n2 * (p.get(i) + p1.get(j)))) * ((p.get(i) * s.get(i)) + (p1.get(j) * s.get(j)));
+                Constans.a++;
+            }
+        }
+
+
+
+
+
+//        gtdm.getChangedPixels().stream().forEach(i-> {
+//            psiNumeratorBusyness -=  sOrigin.get(i.intValue())*pOrigin.get(i.intValue());
+//            psiNumeratorBusyness += s.get(i.intValue())*p.get(i.intValue());
+//        });
+
+
+//        for (int i = 0; i< p.size(); i++){
+//            if (p.get(i)==0.0)
+//                continue;
+//            //psiNumeratorBusyness += s.get(i)* p.get(i);
+//            for (int j = 0; j< p1.size(); j++){
+//                if (p1.get(j)==0.0)
+//                    continue;
+//                denominatorBusyness += i * p.get(i);
+//                denominatorBusyness -= j * p1.get(j);
+//                //partContrast += p.get(i) * p1.get(j) * Math.pow((i - j), 2);
+////                partComplexity = Math.abs(i - j) / (n2 * (p.get(i) + p1.get(j)));
+////                partComplexity *= (p.get(i) * s.get(i)) + (p1.get(j) * s.get(j));
+////                Complexity += partComplexity;
+//             //   partStrength += Math.pow((i - j), 2) * (p.get(i) + p1.get(j));
+//            }
+//        }
+
+        Complexity = partComplexity;
+        Contrast = 1 / Ng / (Ng - 1) * partContrast;
         Double siSum = s
                 .stream()
                 .mapToDouble(s -> s)
                 .sum();
 
         Coarness = Math.pow(Epsilon + psiNumeratorBusyness, -1);
-        System.out.println(Coarness);
-        Contrast = partContrast * siSum * 1 / n2;
+        Contrast = Contrast * siSum * 1 / n2;
         Busyness = psiNumeratorBusyness / denominatorBusyness;
-        Strength /= siSum;
+        Strength = partStrength / siSum;
 
         psiNumeratorBusynessOrigin = psiNumeratorBusyness;
+        partContrastOrigin = partContrast;
+        partStrengthOrigin = partStrength;
+        partComplexityOrigin = partComplexity;
     }
-
-
-
 
 
     public void testSpeedFirst() {
@@ -298,12 +566,12 @@ public class TexturalPropertiesNew {
             psiNumeratorBusyness += s.get(i)* p.get(i);
         }
 
-        Double partContrast = 0.0;
+        partContrast = 0.0;
         Double denominatorBusyness = 0.0;
-        Double partComplexity = 0.0;
+        partComplexity = 0.0;
         Complexity = 0.0;
         Strength = 0.0;
-        Double partStrength = 0.0;
+        partStrength = 0.0;
 
 
         for (int i = 0; i< p.size(); i++){
@@ -312,29 +580,31 @@ public class TexturalPropertiesNew {
             for (int j = 0; j< p1.size(); j++){
                 if (p1.get(j)==0.0)
                     continue;
-                denominatorBusyness += i * p.get(i);
-                denominatorBusyness -= j * p1.get(j);
+//                denominatorBusyness += i * p.get(i);
+//                denominatorBusyness -= j * p1.get(j);
                 partContrast += p.get(i) * p1.get(j) * Math.pow((i - j), 2);
-                partComplexity = Math.abs(i - j) / (n2 * (p.get(i) + p1.get(j)));
-                partComplexity *= (p.get(i) * s.get(i)) + (p1.get(j) * s.get(j));
-                Complexity += partComplexity;
-                partStrength = Math.pow((i - j), 2) * (p.get(i) + p1.get(j));
-                Strength += partStrength;
+                partComplexity += (Math.abs(i - j) / (n2 * (p.get(i) + p1.get(j)))) * ((p.get(i) * s.get(i)) + (p1.get(j) * s.get(j)));
+                partStrength += Math.pow((i - j), 2) * (p.get(i) + p1.get(j));
+                Constans.b++;
             }
         }
-
-        partContrast = 1 / Ng / (Ng - 1) * partContrast;
+        Complexity = partComplexity;
+        Contrast = 1 / Ng / (Ng - 1) * partContrast;
         Double siSum = s
                 .stream()
                 .mapToDouble(s -> s)
                 .sum();
 
+
         Coarness = Math.pow(Epsilon + psiNumeratorBusyness, -1);
-        Contrast = partContrast * siSum * 1 / n2;
+        Contrast = Contrast * siSum * 1 / n2;
         Busyness = psiNumeratorBusyness / denominatorBusyness;
-        Strength /= siSum;
+        Strength = partStrength / siSum;
 
         psiNumeratorBusynessOrigin = psiNumeratorBusyness;
+        partContrastOrigin = partContrast;
+        partStrengthOrigin = partStrength;
+        partComplexityOrigin = partComplexity;
     }
 
 
@@ -355,7 +625,7 @@ public class TexturalPropertiesNew {
 
         Double partContrast = 0.0;
         Double denominatorBusyness = 0.0;
-        Double partComplexity = 0.0;
+        partComplexity = 0.0;
         Complexity = 0.0;
         Strength = 0.0;
         Double partStrength = 0.0;
@@ -370,15 +640,13 @@ public class TexturalPropertiesNew {
                 denominatorBusyness += i * p.get(i);
                 denominatorBusyness -= j * p1.get(j);
                 partContrast += p.get(i) * p1.get(j) * Math.pow((i - j), 2);
-                partComplexity = Math.abs(i - j) / (n2 * (p.get(i) + p1.get(j)));
-                partComplexity *= (p.get(i) * s.get(i)) + (p1.get(j) * s.get(j));
-                Complexity += partComplexity;
-                partStrength = Math.pow((i - j), 2) * (p.get(i) + p1.get(j));
-                Strength += partStrength;
+                partComplexity += (Math.abs(i - j) / (n2 * (p.get(i) + p1.get(j)))) * ((p.get(i) * s.get(i)) + (p1.get(j) * s.get(j)));
+                partStrength += Math.pow((i - j), 2) * (p.get(i) + p1.get(j));
             }
         }
 
-        partContrast = 1 / Ng / (Ng - 1) * partContrast;
+        Complexity = partComplexity;
+        Contrast = 1 / Ng / (Ng - 1) * partContrast;
         Double siSum = s
                 .stream()
                 .mapToDouble(s -> s)
@@ -386,9 +654,9 @@ public class TexturalPropertiesNew {
 
         Coarness = Math.pow(Epsilon + psiNumeratorBusyness, -1);
         //System.out.println(Coarness);
-        Contrast = partContrast * siSum * 1 / n2;
+        Contrast = Contrast * siSum * 1 / n2;
         Busyness = psiNumeratorBusyness / denominatorBusyness;
-        Strength /= siSum;
+        Strength = partStrength / siSum;
     }
     @Override
     public String toString(){

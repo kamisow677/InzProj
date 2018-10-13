@@ -75,7 +75,7 @@ public class ZADANIE implements Command {
     @Parameter(min = "1" , max = "5")
     private int neighbourhood = 2;
 
-    @Parameter(min = "100" , max = "200")
+    @Parameter(min = "16" , max = "200")
     private int quadraticRegionSize = 150;
 
     @Parameter(label="Choose folder to which everything should be saved")
@@ -114,20 +114,13 @@ public class ZADANIE implements Command {
         tester.run();
 
 
-
-
-
-
-
-
-
         // image = datasetIOService.open(imageFile.getAbsolutePath());
         //ImagePlus ij=new ImagePlus(imageFile.getAbsolutePath());
 
         //ImagePlus imagePlus = convertService.convert(image, ImagePlus.class);
 
-        ImagePlus imagePlus = new ImagePlus(imageFile.getAbsolutePath());
-        BufferedImage buffImage = imagePlus.getBufferedImage();
+//        ImagePlus imagePlus = new ImagePlus(imageFile.getAbsolutePath());
+//        BufferedImage buffImage = imagePlus.getBufferedImage();
         greeting = "neighbourhoodSize: " + neighbourhood;
 
         //ImageProcessor improc =imagePlus.getProcessor();
@@ -141,55 +134,55 @@ public class ZADANIE implements Command {
 //        imagePlus2.show();
 
 
-        PrintWriter writer = null;
-        try {
-            writer = new PrintWriter("RGB.txt", "UTF-8");
-            writer.printf("Number og bytes per pixel %d \n", imagePlus.getBytesPerPixel());
-            writer.printf("Height %d \n", buffImage.getHeight());
-            writer.printf("Height %d \n", buffImage.getWidth());
-            //writer.printf("BLUE PARAM %d \n", blueParam);
-
-            for (int i = 0; i < buffImage.getHeight(); i++) {
-                for (int j = 0; j < buffImage.getWidth(); j++) {
-                    int argb = buffImage.getRGB(j, i);
-
-                    Color c = new Color(buffImage.getRGB(j, i), true);
-
-                    // writer.printf("%d", buffImage.getRGB(i,j));
-                    int b = (argb) & 0xFF;
-                    int g = (argb >> 8) & 0xFF;
-                    int r = (argb >> 16) & 0xFF;
-                    int a = (argb >> 24) & 0xFF;
-
-                    writer.printf(" red:%d", r);
-                    writer.printf(" green:%d", g);
-                    writer.printf(" blue:%d", b);
-                    writer.printf(" alfa:%d", a);
-
-                    int red = r;
-                    int green = g;
-                    int blue = b;
-                    int alpha = 255;
-                    int rgb = alpha;
-                    rgb = (rgb << 8) + red;
-                    rgb = (rgb << 8) + green;
-                    rgb = (rgb << 8) + blue;
-
-                    buffImage.setRGB(j, i, rgb);
-
-                    writer.printf("!!\n");
-                    writer.printf("\n\r");
-                }
-                writer.printf("\n\r");
-            }
-            //writer.printf("Numasdasdasd");
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        } finally {
-            writer.close();
-        }
+//        PrintWriter writer = null;
+//        try {
+//            writer = new PrintWriter("RGB.txt", "UTF-8");
+//            writer.printf("Number og bytes per pixel %d \n", imagePlus.getBytesPerPixel());
+//            writer.printf("Height %d \n", buffImage.getHeight());
+//            writer.printf("Height %d \n", buffImage.getWidth());
+//            //writer.printf("BLUE PARAM %d \n", blueParam);
+//
+//            for (int i = 0; i < buffImage.getHeight(); i++) {
+//                for (int j = 0; j < buffImage.getWidth(); j++) {
+//                    int argb = buffImage.getRGB(j, i);
+//
+//                    Color c = new Color(buffImage.getRGB(j, i), true);
+//
+//                    // writer.printf("%d", buffImage.getRGB(i,j));
+//                    int b = (argb) & 0xFF;
+//                    int g = (argb >> 8) & 0xFF;
+//                    int r = (argb >> 16) & 0xFF;
+//                    int a = (argb >> 24) & 0xFF;
+//
+//                    writer.printf(" red:%d", r);
+//                    writer.printf(" green:%d", g);
+//                    writer.printf(" blue:%d", b);
+//                    writer.printf(" alfa:%d", a);
+//
+//                    int red = r;
+//                    int green = g;
+//                    int blue = b;
+//                    int alpha = 255;
+//                    int rgb = alpha;
+//                    rgb = (rgb << 8) + red;
+//                    rgb = (rgb << 8) + green;
+//                    rgb = (rgb << 8) + blue;
+//
+//                    buffImage.setRGB(j, i, rgb);
+//
+//                    writer.printf("!!\n");
+//                    writer.printf("\n\r");
+//                }
+//                writer.printf("\n\r");
+//            }
+//            //writer.printf("Numasdasdasd");
+//        } catch (FileNotFoundException e) {
+//            e.printStackTrace();
+//        } catch (UnsupportedEncodingException e) {
+//            e.printStackTrace();
+//        } finally {
+//            writer.close();
+//        }
 
 //        imagePlus = new ImagePlus("tytul", buffImage);
 //        imagePlus.show();

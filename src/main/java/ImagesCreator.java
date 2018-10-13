@@ -9,7 +9,7 @@ import java.util.OptionalDouble;
 public class ImagesCreator {
 
 
-    public static void creatPixelImage(ArrayList<Map<String,Double>> prop , int height, int width){
+    public static void creatPixelImage(ArrayList<Map<String,Double>> prop , int height, int width, String imageName){
         System.out.println("Width: "+(width-Constans.QUADRATIC_SIZE));
         System.out.println("Height: "+(height-Constans.QUADRATIC_SIZE));
 
@@ -41,7 +41,6 @@ public class ImagesCreator {
                 buffImages[i] =  new BufferedImage(width-Constans.QUADRATIC_SIZE, height-Constans.QUADRATIC_SIZE, BufferedImage.TYPE_INT_ARGB);
             }
 
-
             for (int i = 0; i < height-Constans.QUADRATIC_SIZE ; i++) {
                 for (int j = 0; j < width-Constans.QUADRATIC_SIZE ; j++) {
                     for (int k = 0 ; k<5 ; k++) {
@@ -58,9 +57,10 @@ public class ImagesCreator {
                     }
                 }
             }
+
             for (int i = 0 ; i < 5 ; i++) {
                 System.out.println("SAVED " + featuresNames[i] + ".png");
-                File f = new File(featuresNames[i] + ".png");
+                File f = new File(Constans.SAVE_PATH + nameFromPath(imageName) + featuresNames[i] + ".png");
                 ImageIO.write(buffImages[i], "PNG", f);
                 ImageMatrix imageMatrix = new ImageMatrix(buffImages[i], ImageMatrix.COLOR.GREY, "ImageName");
 
@@ -105,6 +105,9 @@ public class ImagesCreator {
             e.printStackTrace();
         }
 
+    }
+    static String nameFromPath(String path){
+        return path.substring(path.lastIndexOf("\\"));
     }
 
 }
