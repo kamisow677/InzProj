@@ -9,9 +9,13 @@ public class Constans {
     static String STRENGTH ="STRENGTH";
     static String FOLDER_PATH = "C:\\Users\\Kamil Sowa\\Desktop\\obrazki21\\";
     static String SAVE_PATH = "C:\\Users\\Kamil Sowa\\Desktop\\obrazki21\\";
+    static int QUANTIZATION = 1;
     static long  a = 0 ;
     static long  b = 0;
     static int NUMBER_OF_COLORS = 3;
+    static int PIXEL_NUMBER = 255;
+    static int PIXEL_NUMBER_PLUS_1 = 256;
+    static int PROGRESS = 0;
 
     public static int getQuadraticSize() {
         return QUADRATIC_SIZE;

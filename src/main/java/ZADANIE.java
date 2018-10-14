@@ -4,8 +4,12 @@ import java.io.*;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
 
+import ij.IJ;
+import ij.ImageStack;
+import ij.gui.ProgressBar;
 import ij.plugin.FolderOpener;
 import ij.process.ImageProcessor;
 import net.imagej.Dataset;
@@ -18,6 +22,7 @@ import ij.ImagePlus;
 import net.imagej.ImgPlus;
 import net.imagej.axis.Axes;
 import net.imagej.axis.AxisType;
+import net.imagej.ops.math.PrimitiveMath;
 import net.imglib2.Cursor;
 import net.imglib2.RandomAccess;
 import net.imglib2.converter.ChannelARGBConverter;
@@ -27,6 +32,7 @@ import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.real.FloatType;
 import org.scijava.ItemIO;
+import org.scijava.app.StatusService;
 import org.scijava.command.Command;
 import org.scijava.convert.ConvertService;
 import org.scijava.display.DisplayService;
@@ -35,6 +41,10 @@ import org.scijava.plugin.Parameter;
 import net.imglib2.type.numeric.ARGBType;
 import org.scijava.plugin.Plugin;
 import io.scif.services.DatasetIOService;
+import org.scijava.ui.UIService;
+import org.scijava.ui.UserInterface;
+import sun.misc.Signal;
+
 import javax.swing.*;
 
 import javax.imageio.ImageIO;
@@ -50,6 +60,8 @@ public class ZADANIE implements Command {
     @Parameter
     private DatasetIOService datasetIOService;
 
+    @Parameter
+    private UIService ui;
     /*
      * In this command, we will be using functions that can throw exceptions.
      * Best practice is to log these exceptions to let the user know what went
@@ -58,6 +70,10 @@ public class ZADANIE implements Command {
      */
     @Parameter
     private LogService logService;
+
+
+    @Parameter
+    private StatusService sts;
 
 
     @Parameter
@@ -82,6 +98,9 @@ public class ZADANIE implements Command {
     @Parameter(label="Choose folder to which everything should be saved")
     private File imageFile;
 
+    @Parameter(label="Quantization factor")
+    private int quantization;
+
     @Parameter(label="Average matrixes or average properties?",choices={"YES","NO"})
     private String averageMatrixes = "YES";
 
@@ -93,7 +112,7 @@ public class ZADANIE implements Command {
 //    @Parameter(type = ItemIO.OUTPUT)
 //    private Dataset image;
 //
-    @Parameter(type = ItemIO.OUTPUT )
+    @Parameter//(type = ItemIO.OUTPUT )
     private String greeting;
 
 
@@ -112,12 +131,43 @@ public class ZADANIE implements Command {
             Constans.setAverageMatrixes(false);
         Constans.setD(neighbourhood);
         Constans.setQuadraticSize(quadraticRegionSize);
+        Constans.NUMBER_OF_COLORS = 3;
+        Constans.QUANTIZATION = quantization;
+
 
         new Thread(new Runnable() {
             public void run() {
-                tester.pla();
+                tester.run();
             }
         }).start();
+
+        Thread t1 = new Thread(new Runnable() {
+            public void run() {
+                try {
+                    while (Constans.NUMBER_OF_COLORS !=4) {
+                        int percentage =0;
+                        for (Map.Entry<String,Integer> progress : tester.progress.entrySet()) {
+                            if (!(progress.getValue()==null && tester.progressMax.get(progress.getKey())!=0)) {
+                                percentage += (progress.getValue() * 100) / tester.progressMax.get(progress.getKey());
+
+                            }
+                        }
+                        if (tester.progress.entrySet().size()!=0 &&  !String.valueOf(percentage/ tester.progress.entrySet().size()).equals("null") )
+                            sts.showStatus("" + String.valueOf(percentage/ tester.progress.entrySet().size()) + "%  " + tester.progress.entrySet().size());
+                        Thread.sleep(1000);
+                    }
+                    sts.showStatus("GOTOWE");
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        t1.start();
+
+
+//        ui.showUI("asd");
+//        UserInterface defaultUI = ui.getDefaultUI();
+//        defaultUI.
 
 
         // image = datasetIOService.open(imageFile.getAbsolutePath());
@@ -128,18 +178,12 @@ public class ZADANIE implements Command {
 //        ImagePlus imagePlus = new ImagePlus(imageFile.getAbsolutePath());
 //        BufferedImage buffImage = imagePlus.getBufferedImage();
         greeting = "neighbourhoodSize: " + neighbourhood;
-        new Thread(new Runnable() {
-            public void run() {
-                if (Constans.NUMBER_OF_COLORS == 4)
-                    greeting += "PLALASLLDAS";
-            }
-        }).start();
 
-        javax.swing.SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                createAndShowGUI();
-            }
-        });
+//        javax.swing.SwingUtilities.invokeLater(new Runnable() {
+//            public void run() {
+//                createAndShowGUI();
+//            }
+//        });
 
 
         //ImageProcessor improc =imagePlus.getProcessor();
@@ -208,7 +252,6 @@ public class ZADANIE implements Command {
 
         //  Main.start();
 
-
     }
 
     /*
@@ -222,6 +265,19 @@ public class ZADANIE implements Command {
         // Launch ImageJ as usual.
         final ImageJ ij = new ImageJ();
         ij.launch(args);
+//        ij.status().showStatus("It's nine o'clock and all is well.");
+//        IJ.showProgress(1, 2);
+//
+//
+//        ImagePlus imp = IJ.getImage();
+//        ImageStack stack = imp.getImageStack();
+//
+//        for (int i = 0; i<stack.getSize()+1;i++)
+//        {
+//            IJ.showProgress(i, stack.getSize()+1);
+//        }
+//
+//                IJ.showProgress(1);
 
 
         // Launch the "OpenImage" command.

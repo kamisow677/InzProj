@@ -3,6 +3,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
@@ -15,11 +16,18 @@ public class Tester3 {
 
     ArrayList<String> listOfPathsToImagePlusName = new ArrayList<>();
     ArrayList<ArrayList<ImageMatrix>> listOfMatrixData = new ArrayList<>();
+    public Map<String,Integer> progress = new HashMap();
+    public Map<String,Integer> progressMax = new HashMap();
+    public String name;
 
     public void run() {
         System.out.println("D: " + Constans.getD());
         System.out.println("Quadratic: " + Constans.getQuadraticSize());
         System.out.println("Average matrixes?: " + Constans.isAverageMatrixes());
+        Constans.NUMBER_OF_COLORS = 3;
+        //Constans.PIXEL_NUMBER = Constans.PIXEL_NUMBER/Constans.QUANTIZATION;
+        listOfPathsToImagePlusName = new ArrayList<>();
+        listOfMatrixData = new ArrayList<>();
 
         try {
             final File folder = new File(Constans.FOLDER_PATH);
@@ -34,8 +42,6 @@ public class Tester3 {
             long stopTime;
             long elapsedTime;
             long calc1 = 0;
-            long calc2 = 0;
-
 
             /**
              * Now i only take one matrix
@@ -54,20 +60,9 @@ public class Tester3 {
             TexturalProperties texturalPropertiesNew = null;
             ArrayList<Callable<ArrayList<Map<String, Double>>>> result = new ArrayList<>();
 
-//            ExecutorService executor = Executors.newWorkStealingPool();
-
             Consumer<? super ArrayList<ImageMatrix>> consumer = (array) -> createTask2(array) ;
 
-//            for (ArrayList<ImageMatrix> list : listOfMatrixData) {
-//                callables.add(createCallable(list));
-//            }
-
-
             startTime = System.currentTimeMillis();
-//            List<Future<Long>> futures = executor.invokeAll(callables);
-//                for (Future<Long> future : futures) {
-//                    future.get();
-//                }
 
             listOfMatrixData.parallelStream()
                     .forEach(consumer);
@@ -79,7 +74,8 @@ public class Tester3 {
             System.out.println("CALC DONE");
             System.out.println("CALC1: " + calc1);
             Constans.NUMBER_OF_COLORS = 4;
-
+            progress.clear();
+            progressMax.clear();
 
 
         } catch (Exception ex) {
@@ -97,7 +93,9 @@ public class Tester3 {
             BufferedImage buffImage = null;
             try {
                 buffImage = ImageIO.read(img);
-//                buffImage.ty
+                //System.out.println( pathToImagePlusName+ "  TYPE: "+buffImage.getType());
+                progressMax.put(pathToImagePlusName,buffImage.getHeight()-Constans.QUADRATIC_SIZE);
+                System.out.println(name);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -105,6 +103,7 @@ public class Tester3 {
             listOfSingleColorImage.add(new ImageMatrix(buffImage, ImageMatrix.COLOR.BLUE, pathToImagePlusName));
             listOfSingleColorImage.add(new ImageMatrix(buffImage, ImageMatrix.COLOR.RED, pathToImagePlusName));
             listOfSingleColorImage.add(new ImageMatrix(buffImage, ImageMatrix.COLOR.GREEN, pathToImagePlusName));
+
             listOfMatrixData.add(listOfSingleColorImage);
         }
     }
@@ -122,7 +121,7 @@ public class Tester3 {
                 String fullPathWithNameOfImage = Constans.FOLDER_PATH + fileEntry.getName();
                 if (fullPathWithNameOfImage.endsWith(".jpg")) {
                     listOfPathsToImagePlusName.add(Constans.FOLDER_PATH + fileEntry.getName());
-                    System.out.println(Constans.FOLDER_PATH + fileEntry.getName());
+                   // System.out.println(Constans.FOLDER_PATH + fileEntry.getName());
                 }
             }
         }
@@ -247,7 +246,7 @@ public Long createTask( ArrayList<ImageMatrix> list) {
                 }
             }
         }
-        ImagesCreator.creatPixelImage(properties, h, w, list.get(0).getImageName());
+        ImagesCreator.createPixelImage(properties, h, w, list.get(0).getImageName());
         properties.clear();
         listaGDTMOWNext.clear();
         matrixesA.clear();
@@ -276,7 +275,7 @@ public Long createTask( ArrayList<ImageMatrix> list) {
             l.setWidth(Constans.QUADRATIC_SIZE);
         }
 
-        int numberOfThreads = 8;
+        int numberOfThreads = 6;
         ArrayList< ArrayList<ImageMatrix>> listParts = new ArrayList<>();
         int pla = (h - q) / numberOfThreads;
         for (int i =0 ; i< numberOfThreads ; i++) {
@@ -294,7 +293,6 @@ public Long createTask( ArrayList<ImageMatrix> list) {
 
         int rest = (h - q) % numberOfThreads;
 
-        long startTime = System.currentTimeMillis();
         ExecutorService executor = Executors.newWorkStealingPool();
         for (int i = 0 ; i<listParts.size() -1; i++){
             callables.add(createCallable(i*pla, (i+1)*pla, q, w, new ArrayList<>(listParts.get(i)), new ArrayList<>(matrixesA)));
@@ -314,7 +312,7 @@ public Long createTask( ArrayList<ImageMatrix> list) {
                 }
             }
 
-            ImagesCreator.creatPixelImage(properties, h, w, list.get(0).getImageName());
+            ImagesCreator.createPixelImage(properties, h, w, list.get(0).getImageName());
             properties.clear();
             listaGDTMOWNext.clear();
             matrixesA.clear();
@@ -332,7 +330,7 @@ public Long createTask( ArrayList<ImageMatrix> list) {
 
         Callable<ArrayList<Map<String, Double>>> task = () -> {
             ArrayList<Map<String, Double>> properties = new ArrayList<>();
-            GTDM gdtmNext;
+            GTDM gdtmNext = null;
             TexturalProperties texturalPropertiesNew;
             ArrayList<TexturalProperties> tex = new ArrayList<>();
             ArrayList<GTDM> listaGDTMOWNext = new ArrayList<>();
@@ -382,13 +380,16 @@ public Long createTask( ArrayList<ImageMatrix> list) {
                                 properties.add(texturalPropertiesNew.getProps());
                                 tex.clear();
                             }
-                            System.out.println("i:" + i + " j:" + j);
+                           // System.out.println("i:" + i + " j:" + j);
                         } catch (ArrayIndexOutOfBoundsException ex) {
-                            System.out.println("ZJEBALO:");
-                            System.out.println("startRow:" + startRow );
-                            System.out.println("i:" + i + " j:" + j);
+                          //  System.out.println("i:" + i + " j:" + j);
                         }
                     }
+                    if (progress.get(gdtmNext.getInputDataMatrix().getImageName())!=null)
+                        progress.put(gdtmNext.getInputDataMatrix().getImageName(),(int) progress.get(gdtmNext.getInputDataMatrix().getImageName())+1);
+                    else
+                        progress.put(gdtmNext.getInputDataMatrix().getImageName(),1);
+                    System.out.println(progress);
                 }
             } else {
                 for (int i = startRow; i < endRow; i++) {
@@ -433,8 +434,14 @@ public Long createTask( ArrayList<ImageMatrix> list) {
                             properties.add(texturalPropertiesNew.getProps());
                             tex.clear();
                         }
-                        System.out.println("i:" + i + " j:" + j);
+                       // System.out.println("i:" + i + " j:" + j);
                     }
+                    if (progress.get(gdtmNext.getInputDataMatrix().getImageName())!=null)
+                        progress.put(gdtmNext.getInputDataMatrix().getImageName(),(int) progress.get(gdtmNext.getInputDataMatrix().getImageName())+1);
+                    else
+                        progress.put(gdtmNext.getInputDataMatrix().getImageName(),1);
+                    System.out.println(progress);
+                   // System.out.println((String) progress.get(name));
                 }
             }
             return properties;

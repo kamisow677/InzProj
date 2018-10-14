@@ -218,7 +218,7 @@ public class Tester2 {
                         }
                     }
 
-                    ImagesCreator.creatPixelImage(properties, h, w, list.get(0).getImageName());
+                    ImagesCreator.createPixelImage(properties, h, w, list.get(0).getImageName());
                     properties.clear();
                     listaGDTMOWNext.clear();
                     matrixesA.clear();
