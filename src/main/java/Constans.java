@@ -1,5 +1,5 @@
 public class Constans {
-    static int QUADRATIC_SIZE = 64;
+    static int QUADRATIC_SIZE = 32;
     static int D = 1;
     static boolean AVERAGE_MATRIXES = true;
     static String COARNESS ="COARNESS";
@@ -11,6 +11,7 @@ public class Constans {
     static String SAVE_PATH = "C:\\Users\\Kamil Sowa\\Desktop\\obrazki21\\";
     static long  a = 0 ;
     static long  b = 0;
+    static int NUMBER_OF_COLORS = 3;
 
     public static int getQuadraticSize() {
         return QUADRATIC_SIZE;

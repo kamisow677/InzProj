@@ -35,6 +35,7 @@ import org.scijava.plugin.Parameter;
 import net.imglib2.type.numeric.ARGBType;
 import org.scijava.plugin.Plugin;
 import io.scif.services.DatasetIOService;
+import javax.swing.*;
 
 import javax.imageio.ImageIO;
 
@@ -104,14 +105,19 @@ public class ZADANIE implements Command {
      */
     @Override
     public void run() {
-        Tester tester = new Tester();
+        Tester3 tester = new Tester3();
         if (averageMatrixes.equals("YES"))
             Constans.setAverageMatrixes(true);
         else
             Constans.setAverageMatrixes(false);
         Constans.setD(neighbourhood);
         Constans.setQuadraticSize(quadraticRegionSize);
-        tester.run();
+
+        new Thread(new Runnable() {
+            public void run() {
+                tester.pla();
+            }
+        }).start();
 
 
         // image = datasetIOService.open(imageFile.getAbsolutePath());
@@ -122,6 +128,19 @@ public class ZADANIE implements Command {
 //        ImagePlus imagePlus = new ImagePlus(imageFile.getAbsolutePath());
 //        BufferedImage buffImage = imagePlus.getBufferedImage();
         greeting = "neighbourhoodSize: " + neighbourhood;
+        new Thread(new Runnable() {
+            public void run() {
+                if (Constans.NUMBER_OF_COLORS == 4)
+                    greeting += "PLALASLLDAS";
+            }
+        }).start();
+
+        javax.swing.SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                createAndShowGUI();
+            }
+        });
+
 
         //ImageProcessor improc =imagePlus.getProcessor();
         //imagePlus.show();
@@ -207,6 +226,21 @@ public class ZADANIE implements Command {
 
         // Launch the "OpenImage" command.
         ij.command().run(ZADANIE.class, true);
+    }
+    private static void createAndShowGUI() {
+        //Create and set up the window.
+        JFrame frame = new JFrame("HelloWorldSwing");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(500, 300);
+
+        //Add the ubiquitous "Hello World" label.
+        JLabel label = new JLabel("Hello World");
+        frame.getContentPane().add(label);
+
+        //Display the window.
+        frame.show();
+        frame.pack();
+        frame.setVisible(true);
     }
 
 
