@@ -25,7 +25,8 @@ public class Tester3 {
         System.out.println("Quadratic: " + Constans.getQuadraticSize());
         System.out.println("Average matrixes?: " + Constans.isAverageMatrixes());
         Constans.NUMBER_OF_COLORS = 3;
-        //Constans.PIXEL_NUMBER = Constans.PIXEL_NUMBER/Constans.QUANTIZATION;
+        Constans.PIXEL_NUMBER = Constans.PIXEL_NUMBER/Constans.QUANTIZATION;
+        Constans.PIXEL_NUMBER_PLUS_1 = Constans.PIXEL_NUMBER_PLUS_1/Constans.QUANTIZATION;
         listOfPathsToImagePlusName = new ArrayList<>();
         listOfMatrixData = new ArrayList<>();
 

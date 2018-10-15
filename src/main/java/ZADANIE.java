@@ -92,13 +92,13 @@ public class ZADANIE implements Command {
     @Parameter(min = "1" , max = "5")
     private int neighbourhood = 2;
 
-    @Parameter(min = "16" , max = "200")
+    @Parameter(min = "8" , max = "200")
     private int quadraticRegionSize = 150;
 
     @Parameter(label="Choose folder to which everything should be saved")
     private File imageFile;
 
-    @Parameter(label="Quantization factor")
+    @Parameter(label="Quantization factor", min = "1" , max = "8")
     private int quantization;
 
     @Parameter(label="Average matrixes or average properties?",choices={"YES","NO"})
@@ -133,6 +133,8 @@ public class ZADANIE implements Command {
         Constans.setQuadraticSize(quadraticRegionSize);
         Constans.NUMBER_OF_COLORS = 3;
         Constans.QUANTIZATION = quantization;
+        Constans.PIXEL_NUMBER = 255;
+        Constans.PIXEL_NUMBER_PLUS_1 = 256;
 
 
         new Thread(new Runnable() {

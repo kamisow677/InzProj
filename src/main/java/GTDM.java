@@ -146,6 +146,7 @@ public class GTDM {
      * @param GoingRight
      */
     public GTDM(GTDM previousGDTM, boolean GoingRight){
+        this.d = previousGDTM.d;
         //this.inputDataMatrix = previousGDTM.getInputDataMatrix();
         if (inputDataMatrix instanceof  ImageMatrix)
             this.inputDataMatrix =  new ImageMatrix((ImageMatrix) previousGDTM.getInputDataMatrix());
@@ -199,6 +200,7 @@ public class GTDM {
 
     public GTDM(GTDM matrix1, GTDM matrix2, GTDM matrix3){
         this.matrixA = matrixA;
+        this.d = matrix1.d;
         this.s = new ArrayList<Double>(Constans.PIXEL_NUMBER_PLUS_1);
         this.p = new ArrayList<Double>(Constans.PIXEL_NUMBER_PLUS_1);
         height = matrix1.getInputDataMatrix().getHeight();
@@ -226,6 +228,7 @@ public class GTDM {
     public GTDM(ArrayList<GTDM> matrixes, int heigth , int width) {
         this.s = new ArrayList<Double>(Constans.PIXEL_NUMBER_PLUS_1);
         this.p = new ArrayList<Double>(Constans.PIXEL_NUMBER_PLUS_1);
+        this.d = matrixes.get(0).getD();
         height = heigth;
         this.width = width;
         this.imageName = imageName;
@@ -452,14 +455,14 @@ public class GTDM {
 
     private void calculateS(ArrayList<Double> s1, ArrayList<Double> s2, ArrayList<Double> s3) {
         int i=0;
-        for (i = 0; i < 255 ; i++){
+        for (i = 0; i < Constans.PIXEL_NUMBER ; i++){
             s.set(i, (s1.get(i)+s2.get(i)+s3.get(i))/3.0);//s(i)= SIGMA |i-A|
         }
     }
 
     private void calculateS(ArrayList<GTDM> matrixes) {
         int i=0;
-        for (i = 0; i < 255 ; i++){
+        for (i = 0; i <  Constans.PIXEL_NUMBER ; i++){
             final int il = i;
             s.set(i,matrixes
                     .stream()
@@ -567,7 +570,7 @@ public class GTDM {
 
     private void computeP(ArrayList<Double> p1, ArrayList<Double> p2, ArrayList<Double> p3) {
         int i=0;
-        for (i = 0; i < 255 ; i++){
+        for (i = 0; i <  Constans.PIXEL_NUMBER ; i++){
             p.set(i, (p1.get(i)+p2.get(i)+p3.get(i))/3.0);//s(i)= SIGMA |i-A|
         }
     }

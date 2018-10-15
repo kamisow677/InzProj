@@ -20,6 +20,7 @@ public class GDTMtest {
 
     @Test
     public void customOnGDTM() {
+        Constans.QUANTIZATION =1 ;
         Random rand = new Random();
 
         double[][] dane = {{1, 2, 5, 1, 4, 4}, {1, 2, 3, 4, 1, 4}, {0, 1, 3, 1, 2, 3},
@@ -66,6 +67,7 @@ public class GDTMtest {
 
     @Test
     public void customGDTMOfSquareSize() {
+        Constans.QUANTIZATION =1 ;
         Random rand = new Random();
         int d;
         ArrayList<Double> sCalculated;
