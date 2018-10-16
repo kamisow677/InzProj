@@ -159,7 +159,7 @@ public class Tester {
                     }
                 }
 
-                ImagesCreator.createPixelImage(properties, h, w, list.get(0).getImageName());
+                ImagesCreator.createRGBPixelImage(properties, h, w, list.get(0).getImageName());
                 properties.clear();
                 listaGDTMOWNext.clear();
                 matrixesA.clear();

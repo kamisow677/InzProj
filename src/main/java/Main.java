@@ -10,10 +10,8 @@ import javax.imageio.ImageIO;
 public class Main {
 
     public static void main(String[] args) {
-//        for (int i=0;i<2;i++) {
             Tester3 tester = new Tester3();
             tester.run();
-//        }
     }
 }
 

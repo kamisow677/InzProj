@@ -136,6 +136,12 @@ public class ZADANIE implements Command {
         Constans.PIXEL_NUMBER = 255;
         Constans.PIXEL_NUMBER_PLUS_1 = 256;
 
+//        try {
+//            buffImage = ImageIO.read(new File("C:\\Users\\Kamil Sowa\\Desktop\\obrazki21\\Mona_Lisa_GS2.jpg"));
+//            greeting += buffImage.getHeight();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
 
         new Thread(new Runnable() {
             public void run() {
@@ -143,11 +149,14 @@ public class ZADANIE implements Command {
             }
         }).start();
 
+        sts.showStatus(String.valueOf(Constans.PROGRESS));
         Thread t1 = new Thread(new Runnable() {
             public void run() {
                 try {
+
                     while (Constans.NUMBER_OF_COLORS !=4) {
                         int percentage =0;
+                       // sts.showStatus(String.valueOf(Constans.PROGRESS) +" " +String.valueOf(Constans.temp2) + " "+ Constans.temp1);
                         for (Map.Entry<String,Integer> progress : tester.progress.entrySet()) {
                             if (!(progress.getValue()==null && tester.progressMax.get(progress.getKey())!=0)) {
                                 percentage += (progress.getValue() * 100) / tester.progressMax.get(progress.getKey());
@@ -156,7 +165,7 @@ public class ZADANIE implements Command {
                         }
                         if (tester.progress.entrySet().size()!=0 &&  !String.valueOf(percentage/ tester.progress.entrySet().size()).equals("null") )
                             sts.showStatus("" + String.valueOf(percentage/ tester.progress.entrySet().size()) + "%  " + tester.progress.entrySet().size());
-                        Thread.sleep(1000);
+                        Thread.sleep(100);
                     }
                     sts.showStatus("GOTOWE");
                 } catch (InterruptedException e) {
@@ -165,6 +174,20 @@ public class ZADANIE implements Command {
             }
         });
         t1.start();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 //        ui.showUI("asd");
@@ -179,7 +202,7 @@ public class ZADANIE implements Command {
 
 //        ImagePlus imagePlus = new ImagePlus(imageFile.getAbsolutePath());
 //        BufferedImage buffImage = imagePlus.getBufferedImage();
-        greeting = "neighbourhoodSize: " + neighbourhood;
+        greeting += "neighbourhoodSize: " + neighbourhood;
 
 //        javax.swing.SwingUtilities.invokeLater(new Runnable() {
 //            public void run() {

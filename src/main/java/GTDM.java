@@ -647,9 +647,9 @@ public class GTDM {
             boolean firstVal = true;
             Integer i = 0;
             for (Double val : s) {
-                if (!firstVal) {
-                    w.write(";");
-                }
+//                if (!firstVal) {
+//                    w.write(";");
+//                }
                 w.write(i.toString());
                 w.write(";");
                // w.write("\"");
