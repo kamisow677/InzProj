@@ -2,13 +2,11 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.*;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
-import java.util.stream.Collectors;
 
 public class Tester2 {
 
@@ -24,12 +22,12 @@ public class Tester2 {
             final File folder = new File(Constans.FOLDER_PATH);
             listFilesForFolder(folder);
             imagePathToMatrix();
-            ArrayList<TexturalPropertiesNew> tex = new ArrayList<>();
+            ArrayList<TexturalProperties> tex = new ArrayList<>();
             ArrayList<Map<String, Double>> properties = new ArrayList<>();//final props all to write image
             ArrayList<ArrayList<Map<String, Double>>>properties2 = new ArrayList<>();//final props all to write image
             ArrayList<MatrixCommon> matrixesA = new ArrayList<>();
-            GTDMNew gdtmNext = null;
-            ArrayList<GTDMNew> listaGDTMOWNext = new ArrayList<>();
+            GTDM gdtmNext = null;
+            ArrayList<GTDM> listaGDTMOWNext = new ArrayList<>();
             long startTime;
             long stopTime;
             long elapsedTime;
@@ -45,178 +43,185 @@ public class Tester2 {
             int h = matrix.getHeight();
             matrix.setStartHeight(0);
             matrix.setStartWidth(0);
-            GTDMNew gdtmNowe = new GTDMNew(matrix);
+            GTDM gdtmNowe = new GTDM(matrix);
             gdtmNowe.startFirstCalcualtions(true, false);
             gdtmNowe.saveToCSV("");
 
-            TexturalPropertiesNew texturalPropertiesNew = null;
+            TexturalProperties texturalPropertiesNew = null;
             ArrayList<Callable<ArrayList<Map<String, Double>>>> callables = new ArrayList<>();
 
             //showOld(matrix,matrixA,q,w,h);
 
             for (ArrayList<ImageMatrix> list : listOfMatrixData) {
-                for (ImageMatrix l : list) {
-                    l.setStartHeight(0);
-                    l.setStartWidth(0);
-                    gdtmNowe = new GTDMNew(l);
-                    gdtmNowe.setD(Constans.D);
-                    gdtmNowe.startFirstCalcualtions(true, false);
-                    matrixesA.add(gdtmNowe.getMatrixA());
-                    l.setHeight(Constans.QUADRATIC_SIZE);
-                    l.setWidth(Constans.QUADRATIC_SIZE);
-                }
-                if (Constans.AVERAGE_MATRIXES) {
-                    int numberOfThreads = 4;
-//                    int endRow = (h - q)/numberOfThreads;
-                    int endRow = h - q/2;
 
-                     ArrayList<ImageMatrix> list2 = new ArrayList<>();
-                     for (ImageMatrix imageMatrix : list){
-                         ImageMatrix im = new ImageMatrix(imageMatrix);
-                         im.setStartHeight((h-q)/4);
-                         im.setStartWidth(0);
-                         im.setHeight(Constans.QUADRATIC_SIZE);
-                         im.setWidth(Constans.QUADRATIC_SIZE);
-                         list2.add(im);
-                     }
-
-                    ArrayList<ImageMatrix> list3 = new ArrayList<>();
-                    for (ImageMatrix imageMatrix : list){
-                        ImageMatrix im = new ImageMatrix(imageMatrix);
-                        im.setStartHeight(2*(h-q)/4);
-                        im.setStartWidth(0);
-                        im.setHeight(Constans.QUADRATIC_SIZE);
-                        im.setWidth(Constans.QUADRATIC_SIZE);
-                        list3.add(im);
+                    for (ImageMatrix l : list) {
+                        l.setStartHeight(0);
+                        l.setStartWidth(0);
+                        gdtmNowe = new GTDM(l);
+                        gdtmNowe.setD(Constans.D);
+                        gdtmNowe.startFirstCalcualtions(true, false);
+                        matrixesA.add(gdtmNowe.getMatrixA());
+                        l.setHeight(Constans.QUADRATIC_SIZE);
+                        l.setWidth(Constans.QUADRATIC_SIZE);
                     }
-
-                    ArrayList<ImageMatrix> list4 = new ArrayList<>();
-                    for (ImageMatrix imageMatrix : list){
-                        ImageMatrix im = new ImageMatrix(imageMatrix);
-                        im.setStartHeight(3*(h-q)/4);
-                        im.setStartWidth(0);
-                        im.setHeight(Constans.QUADRATIC_SIZE);
-                        im.setWidth(Constans.QUADRATIC_SIZE);
-                        list4.add(im);
-                    }
-                    int pla = (h-q)/numberOfThreads;
-                    int rest = (h-q) % numberOfThreads;
-
-                    startTime = System.currentTimeMillis();
-                    ExecutorService executor = Executors.newWorkStealingPool();
-                    callables.add(createCallable(0, pla, q, w, new ArrayList<>(list), new ArrayList<>(matrixesA)));
-                    callables.add(createCallable(pla, 2*pla, q, w, new ArrayList<>(list2), new ArrayList<>(matrixesA)));
-                    callables.add(createCallable(2*pla, 3*pla, q, w, new ArrayList<>(list3), new ArrayList<>(matrixesA)));
-                    callables.add(createCallable(3*pla, 4*pla +rest, q, w, new ArrayList<>(list4), new ArrayList<>(matrixesA)));
-
-                    List<Future<ArrayList<Map<String, Double>>>> futures = executor.invokeAll(callables);
-                    for (Future<ArrayList<Map<String, Double>>>  future : futures){
-                        properties2.add(future.get());
-                    }
-                    stopTime = System.currentTimeMillis();
-                    elapsedTime = stopTime - startTime;
-                    calc1 += elapsedTime;
-                    //properties = properties2.stream().flatMap(hList -> hList.stream()).collect(Collectors.toList());;
-                    for(List<Map<String, Double>> p : properties2) {
-                        for(Map<String, Double> map : p) {
-                            properties.add(map);
+                    if (Constans.AVERAGE_MATRIXES) {
+                        int numberOfThreads = 4;
+    //                    int endRow = (h - q)/numberOfThreads;
+                        ArrayList<ImageMatrix> list2 = new ArrayList<>();
+                        for (ImageMatrix imageMatrix : list) {
+                            ImageMatrix im = new ImageMatrix(imageMatrix);
+                            im.setStartHeight((h - q) / 4);
+                            im.setStartWidth(0);
+                            im.setHeight(Constans.QUADRATIC_SIZE);
+                            im.setWidth(Constans.QUADRATIC_SIZE);
+                            list2.add(im);
                         }
-                    }
 
-//                    createCallable(int startRow, int endRow, int q, int h, int w
-//        , ArrayList<ImageMatrix> list, ArrayList<MatrixCommon> matrixesA)
+                        ArrayList<ImageMatrix> list3 = new ArrayList<>();
+                        for (ImageMatrix imageMatrix : list) {
+                            ImageMatrix im = new ImageMatrix(imageMatrix);
+                            im.setStartHeight(2 * (h - q) / 4);
+                            im.setStartWidth(0);
+                            im.setHeight(Constans.QUADRATIC_SIZE);
+                            im.setWidth(Constans.QUADRATIC_SIZE);
+                            list3.add(im);
+                        }
 
-                } else {
-                    for (int i = q / 2; i < h - q / 2; i++) {
-                        for (int j = q / 2; j < w - q / 2; j++) {
-                            if (i == q / 2 && j == q / 2) {
-                                /**
-                                 * TO JEST TEN FIRST Z TESTU
-                                 */
-                                startTime = System.currentTimeMillis();
-                                int k = 0;
-                                for (ImageMatrix l : list) {
-                                    gdtmNext = new GTDMNew(l, matrixesA.get(k));
-                                    gdtmNext.setD(Constans.D);
-                                    gdtmNext.startFirstCalcualtions(true, false);
-                                    listaGDTMOWNext.add(gdtmNext);
-                                    tex.add(new TexturalPropertiesNew(gdtmNext));
-                                    k++;
-                                }
-                                stopTime = System.currentTimeMillis();
-                                elapsedTime = stopTime - startTime;
-                                calc1 += elapsedTime;
+                        ArrayList<ImageMatrix> list4 = new ArrayList<>();
+                        for (ImageMatrix imageMatrix : list) {
+                            ImageMatrix im = new ImageMatrix(imageMatrix);
+                            im.setStartHeight(3 * (h - q) / 4);
+                            im.setStartWidth(0);
+                            im.setHeight(Constans.QUADRATIC_SIZE);
+                            im.setWidth(Constans.QUADRATIC_SIZE);
+                            list4.add(im);
+                        }
+                        int pla = (h - q) / numberOfThreads;
+                        int rest = (h - q) % numberOfThreads;
 
+                        startTime = System.currentTimeMillis();
+                        ExecutorService executor = Executors.newWorkStealingPool();
+                        callables.add(createCallable(0, pla, q, w, new ArrayList<>(list), new ArrayList<>(matrixesA)));
+                        callables.add(createCallable(pla, 2 * pla, q, w, new ArrayList<>(list2), new ArrayList<>(matrixesA)));
+                        callables.add(createCallable(2 * pla, 3 * pla, q, w, new ArrayList<>(list3), new ArrayList<>(matrixesA)));
+                        callables.add(createCallable(3 * pla, 4 * pla + rest, q, w, new ArrayList<>(list4), new ArrayList<>(matrixesA)));
 
-                                startTime = System.currentTimeMillis();
-                                texturalPropertiesNew = Transformer.averageProperties(tex, list.get(0).getColor());
-                                properties.add(texturalPropertiesNew.getProps());
-                                stopTime = System.currentTimeMillis();
-                                elapsedTime = stopTime - startTime;
-                                calc2 += elapsedTime;
-                                tex.clear();
-                            } else if (j == q / 2) {
-                                startTime = System.currentTimeMillis();
-                                listaGDTMOWNext.set(0, new GTDMNew(listaGDTMOWNext.get(0), false));
-                                listaGDTMOWNext.set(1, new GTDMNew(listaGDTMOWNext.get(1), false));
-                                listaGDTMOWNext.set(2, new GTDMNew(listaGDTMOWNext.get(2), false));
-
-                                listaGDTMOWNext.get(0).startNextRowCalcualtions(true, false);
-                                listaGDTMOWNext.get(1).startNextRowCalcualtions(true, false);
-                                listaGDTMOWNext.get(2).startNextRowCalcualtions(true, false);
-
-                                stopTime = System.currentTimeMillis();
-                                elapsedTime = stopTime - startTime;
-                                calc1 += elapsedTime;
-
-                                startTime = System.currentTimeMillis();
-//                        texturalPropertiesNew = new TexturalPropertiesNew(gdtmNext,texturalPropertiesNew,false);
-//                                tex.add(new TexturalPropertiesNew(listaGDTMOWNext.get(0),false));
-//                                tex.add(new TexturalPropertiesNew(listaGDTMOWNext.get(1)));
-//                                tex.add(new TexturalPropertiesNew(listaGDTMOWNext.get(2)));
-
-                                tex.add(new TexturalPropertiesNew(listaGDTMOWNext.get(0)));
-                                tex.add(new TexturalPropertiesNew(listaGDTMOWNext.get(1)));
-                                tex.add(new TexturalPropertiesNew(listaGDTMOWNext.get(2)));
-
-                                texturalPropertiesNew = Transformer.averageProperties(tex, list.get(0).getColor());
-                                properties.add(texturalPropertiesNew.getProps());
-                                stopTime = System.currentTimeMillis();
-                                elapsedTime = stopTime - startTime;
-                                calc2 += elapsedTime;
-                                tex.clear();
-                            } else {
-                                startTime = System.currentTimeMillis();
-                                listaGDTMOWNext.set(0, new GTDMNew(listaGDTMOWNext.get(0), true));
-                                listaGDTMOWNext.set(1, new GTDMNew(listaGDTMOWNext.get(1), true));
-                                listaGDTMOWNext.set(2, new GTDMNew(listaGDTMOWNext.get(2), true));
-
-                                listaGDTMOWNext.get(0).startNextColumnCalcualtions(true, false);
-                                listaGDTMOWNext.get(1).startNextColumnCalcualtions(true, false);
-                                listaGDTMOWNext.get(2).startNextColumnCalcualtions(true, false);
-
-                                stopTime = System.currentTimeMillis();
-                                elapsedTime = stopTime - startTime;
-                                calc1 += elapsedTime;
-
-                                startTime = System.currentTimeMillis();
-//                        texturalPropertiesNew = new TexturalPropertiesNew(gdtmNext,texturalPropertiesNew,true);
-                                tex.add(new TexturalPropertiesNew(listaGDTMOWNext.get(0)));
-                                tex.add(new TexturalPropertiesNew(listaGDTMOWNext.get(1)));
-                                tex.add(new TexturalPropertiesNew(listaGDTMOWNext.get(2)));
-
-                                texturalPropertiesNew = Transformer.averageProperties(tex, list.get(0).getColor());
-                                properties.add(texturalPropertiesNew.getProps());
-                                stopTime = System.currentTimeMillis();
-                                elapsedTime = stopTime - startTime;
-                                calc2 += elapsedTime;
-
-                                tex.clear();
+                        List<Future<ArrayList<Map<String, Double>>>> futures = executor.invokeAll(callables);
+                        for (Future<ArrayList<Map<String, Double>>> future : futures) {
+                            properties2.add(future.get());
+                        }
+                        stopTime = System.currentTimeMillis();
+                        elapsedTime = stopTime - startTime;
+                        calc1 += elapsedTime;
+                        //properties = properties2.stream().flatMap(hList -> hList.stream()).collect(Collectors.toList());;
+                        for (List<Map<String, Double>> p : properties2) {
+                            for (Map<String, Double> map : p) {
+                                properties.add(map);
                             }
-                            System.out.println("i:" + i + " j:" + j);
+                        }
+                        list4.clear();
+                        list2.clear();
+                        list3.clear();
+
+    //                    createCallable(int startRow, int endRow, int q, int h, int w
+    //        , ArrayList<ImageMatrix> list, ArrayList<MatrixCommon> matrixesA)
+
+                    } else {
+                        for (int i = q / 2; i < h - q / 2; i++) {
+                            for (int j = q / 2; j < w - q / 2; j++) {
+                                if (i == q / 2 && j == q / 2) {
+                                    /**
+                                     * TO JEST TEN FIRST Z TESTU
+                                     */
+                                    startTime = System.currentTimeMillis();
+                                    int k = 0;
+                                    for (ImageMatrix l : list) {
+                                        gdtmNext = new GTDM(l, matrixesA.get(k));
+                                        gdtmNext.setD(Constans.D);
+                                        gdtmNext.startFirstCalcualtions(true, false);
+                                        listaGDTMOWNext.add(gdtmNext);
+                                        tex.add(new TexturalProperties(gdtmNext));
+                                        k++;
+                                    }
+                                    stopTime = System.currentTimeMillis();
+                                    elapsedTime = stopTime - startTime;
+                                    calc1 += elapsedTime;
+
+
+                                    startTime = System.currentTimeMillis();
+                                    texturalPropertiesNew = Transformer.averageProperties(tex, list.get(0).getColor());
+                                    properties.add(texturalPropertiesNew.getProps());
+                                    stopTime = System.currentTimeMillis();
+                                    elapsedTime = stopTime - startTime;
+                                    calc2 += elapsedTime;
+                                    tex.clear();
+                                } else if (j == q / 2) {
+                                    startTime = System.currentTimeMillis();
+                                    listaGDTMOWNext.set(0, new GTDM(listaGDTMOWNext.get(0), false));
+                                    listaGDTMOWNext.set(1, new GTDM(listaGDTMOWNext.get(1), false));
+                                    listaGDTMOWNext.set(2, new GTDM(listaGDTMOWNext.get(2), false));
+
+                                    listaGDTMOWNext.get(0).startNextRowCalcualtions(true, false);
+                                    listaGDTMOWNext.get(1).startNextRowCalcualtions(true, false);
+                                    listaGDTMOWNext.get(2).startNextRowCalcualtions(true, false);
+
+                                    stopTime = System.currentTimeMillis();
+                                    elapsedTime = stopTime - startTime;
+                                    calc1 += elapsedTime;
+
+                                    startTime = System.currentTimeMillis();
+    //                        texturalPropertiesNew = new TexturalProperties(gdtmNext,texturalPropertiesNew,false);
+    //                                tex.add(new TexturalProperties(listaGDTMOWNext.get(0),false));
+    //                                tex.add(new TexturalProperties(listaGDTMOWNext.get(1)));
+    //                                tex.add(new TexturalProperties(listaGDTMOWNext.get(2)));
+
+                                    tex.add(new TexturalProperties(listaGDTMOWNext.get(0)));
+                                    tex.add(new TexturalProperties(listaGDTMOWNext.get(1)));
+                                    tex.add(new TexturalProperties(listaGDTMOWNext.get(2)));
+
+                                    texturalPropertiesNew = Transformer.averageProperties(tex, list.get(0).getColor());
+                                    properties.add(texturalPropertiesNew.getProps());
+                                    stopTime = System.currentTimeMillis();
+                                    elapsedTime = stopTime - startTime;
+                                    calc2 += elapsedTime;
+                                    tex.clear();
+                                } else {
+                                    startTime = System.currentTimeMillis();
+                                    listaGDTMOWNext.set(0, new GTDM(listaGDTMOWNext.get(0), true));
+                                    listaGDTMOWNext.set(1, new GTDM(listaGDTMOWNext.get(1), true));
+                                    listaGDTMOWNext.set(2, new GTDM(listaGDTMOWNext.get(2), true));
+
+                                    listaGDTMOWNext.get(0).startNextColumnCalcualtions(true, false);
+                                    listaGDTMOWNext.get(1).startNextColumnCalcualtions(true, false);
+                                    listaGDTMOWNext.get(2).startNextColumnCalcualtions(true, false);
+
+                                    stopTime = System.currentTimeMillis();
+                                    elapsedTime = stopTime - startTime;
+                                    calc1 += elapsedTime;
+
+                                    startTime = System.currentTimeMillis();
+    //                        texturalPropertiesNew = new TexturalProperties(gdtmNext,texturalPropertiesNew,true);
+                                    tex.add(new TexturalProperties(listaGDTMOWNext.get(0)));
+                                    tex.add(new TexturalProperties(listaGDTMOWNext.get(1)));
+                                    tex.add(new TexturalProperties(listaGDTMOWNext.get(2)));
+
+                                    texturalPropertiesNew = Transformer.averageProperties(tex, list.get(0).getColor());
+                                    properties.add(texturalPropertiesNew.getProps());
+                                    stopTime = System.currentTimeMillis();
+                                    elapsedTime = stopTime - startTime;
+                                    calc2 += elapsedTime;
+
+                                    tex.clear();
+                                }
+                                System.out.println("i:" + i + " j:" + j);
+                            }
                         }
                     }
-                }
+
+                    ImagesCreator.createRGBPixelImage(properties, h, w, list.get(0).getImageName());
+                    properties.clear();
+                    listaGDTMOWNext.clear();
+                    matrixesA.clear();
                 System.out.println("CALC DONE");
                 System.out.println("CALC1: " + calc1);
                 System.out.println("CALC2: " + calc2);
@@ -224,10 +229,6 @@ public class Tester2 {
                 System.out.println("b: " + Constans.b);
                 calc1 = 0;
                 calc2 = 0;
-                ImagesCreator.creatPixelImage(properties, h, w, list.get(0).getImageName());
-                properties.clear();
-                listaGDTMOWNext.clear();
-                matrixesA.clear();
             }
         } catch (Exception ex) {
 
@@ -236,10 +237,10 @@ public class Tester2 {
 
     private void showOld(ImageMatrix matrix, MatrixCommon matrixA, int q, int w, int h) {
         long startTime = System.currentTimeMillis();
-        GTDMNew gtdmNowe = null;
+        GTDM gtdmNowe = null;
         for (int i = q / 2; i < h - q / 2; i++) {
             for (int j = q / 2; j < w - q / 2; j++) {
-                gtdmNowe = new GTDMNew(matrix, matrixA);
+                gtdmNowe = new GTDM(matrix, matrixA);
                 gtdmNowe.startFirstCalcualtions(true, false);
             }
         }
@@ -298,14 +299,14 @@ public class Tester2 {
 //                for (ArrayList<ImageMatrix> list : listOfMatrixData) {
 //                    tex = new ArrayList<>();
 //                    for (ImageMatrix matrix : list) {
-//                        TexturalPropertiesNew texturalPropertiesNew;
+//                        TexturalProperties texturalPropertiesNew;
 //                        if (Constans.isAverageMatrixes())
 //                            texturalPropertiesNew = calculationsBasedOnSquareSize2(matrix, Constans.getQuadraticSize());
 //                        else
 //                            texturalPropertiesNew = calculationsBasedOnSquareSize(matrix, Constans.getQuadraticSize());
-////                    GTDMNew gdtmNowe = new GTDMNew(matrix);
+////                    GTDM gdtmNowe = new GTDM(matrix);
 ////                    gdtmNowe.startCalcualtions(true);
-////                    TexturalPropertiesNew texturalPropertiesNew = new TexturalPropertiesNew(gdtmNowe);
+////                    TexturalProperties texturalPropertiesNew = new TexturalProperties(gdtmNowe);
 //                        //texturalPropertiesNew.saveToCsv("partNONE");
 //                        tex.add(texturalPropertiesNew);
 //                    }
@@ -319,9 +320,9 @@ public class Tester2 {
 //            else {
 //                startTime = System.currentTimeMillis();
 //                Consumer<? super ArrayList<ImageMatrix>> consumer = (array) -> {
-//                    final ArrayList<TexturalPropertiesNew> finalTex = new ArrayList<>();
+//                    final ArrayList<TexturalProperties> finalTex = new ArrayList<>();
 //                    for (ImageMatrix matrix : array) {
-//                        TexturalPropertiesNew texturalPropertiesNew;
+//                        TexturalProperties texturalPropertiesNew;
 //                        if (Constans.isAverageMatrixes())
 //                            texturalPropertiesNew = calculationsBasedOnSquareSize2(matrix, Constans.getQuadraticSize());
 //                        else
@@ -347,10 +348,10 @@ public class Tester2 {
         , ArrayList<ImageMatrix> list, ArrayList<MatrixCommon> matrixesA) {
         Callable<ArrayList<Map<String, Double>>> task = () -> {
             ArrayList<Map<String, Double>> properties = new ArrayList<>();
-            GTDMNew gdtmNext;
-            TexturalPropertiesNew texturalPropertiesNew;
-            ArrayList<TexturalPropertiesNew> tex = new ArrayList<>();
-            ArrayList<GTDMNew> listaGDTMOWNext = new ArrayList<>();
+            GTDM gdtmNext;
+            TexturalProperties texturalPropertiesNew;
+            ArrayList<TexturalProperties> tex = new ArrayList<>();
+            ArrayList<GTDM> listaGDTMOWNext = new ArrayList<>();
             long calc1 = 0;
             long calc2 = 0;
             long startTime = 0;
@@ -366,19 +367,19 @@ public class Tester2 {
                             startTime = System.currentTimeMillis();
                             int k = 0;
                             for (ImageMatrix l : list) {
-                                gdtmNext = new GTDMNew(l, matrixesA.get(k));
+                                gdtmNext = new GTDM(l, matrixesA.get(k));
                                 gdtmNext.setD(Constans.D);
                                 gdtmNext.startFirstCalcualtions(true, false);
                                 listaGDTMOWNext.add(gdtmNext);
                                 k++;
                             }
-                            gdtmNext = new GTDMNew(listaGDTMOWNext.get(0), listaGDTMOWNext.get(1), listaGDTMOWNext.get(2));
+                            gdtmNext = new GTDM(listaGDTMOWNext.get(0), listaGDTMOWNext.get(1), listaGDTMOWNext.get(2));
                             stopTime = System.currentTimeMillis();
                             elapsedTime = stopTime - startTime;
                             calc1 += elapsedTime;
 
                             startTime = System.currentTimeMillis();
-                            texturalPropertiesNew = new TexturalPropertiesNew(gdtmNext);
+                            texturalPropertiesNew = new TexturalProperties(gdtmNext);
                             properties.add(texturalPropertiesNew.getProps());
                             stopTime = System.currentTimeMillis();
                             elapsedTime = stopTime - startTime;
@@ -387,22 +388,22 @@ public class Tester2 {
                         } else if (j == q/2) {
                             startTime = System.currentTimeMillis();
 
-                            listaGDTMOWNext.set(0, new GTDMNew(listaGDTMOWNext.get(0), false));
-                            listaGDTMOWNext.set(1, new GTDMNew(listaGDTMOWNext.get(1), false));
-                            listaGDTMOWNext.set(2, new GTDMNew(listaGDTMOWNext.get(2), false));
+                            listaGDTMOWNext.set(0, new GTDM(listaGDTMOWNext.get(0), false));
+                            listaGDTMOWNext.set(1, new GTDM(listaGDTMOWNext.get(1), false));
+                            listaGDTMOWNext.set(2, new GTDM(listaGDTMOWNext.get(2), false));
 
                             listaGDTMOWNext.get(0).startNextRowCalcualtions(true, false);
                             listaGDTMOWNext.get(1).startNextRowCalcualtions(true, false);
                             listaGDTMOWNext.get(2).startNextRowCalcualtions(true, false);
 
-                            gdtmNext = new GTDMNew(listaGDTMOWNext.get(0), listaGDTMOWNext.get(1), listaGDTMOWNext.get(2));
+                            gdtmNext = new GTDM(listaGDTMOWNext.get(0), listaGDTMOWNext.get(1), listaGDTMOWNext.get(2));
 
                             stopTime = System.currentTimeMillis();
                             elapsedTime = stopTime - startTime;
                             calc1 += elapsedTime;
 
                             startTime = System.currentTimeMillis();
-                            texturalPropertiesNew = new TexturalPropertiesNew(gdtmNext);
+                            texturalPropertiesNew = new TexturalProperties(gdtmNext);
                             properties.add(texturalPropertiesNew.getProps());
                             stopTime = System.currentTimeMillis();
                             elapsedTime = stopTime - startTime;
@@ -412,9 +413,9 @@ public class Tester2 {
                         } else {
                             startTime = System.currentTimeMillis();
 
-                            listaGDTMOWNext.set(0, new GTDMNew(listaGDTMOWNext.get(0), true));
-                            listaGDTMOWNext.set(1, new GTDMNew(listaGDTMOWNext.get(1), true));
-                            listaGDTMOWNext.set(2, new GTDMNew(listaGDTMOWNext.get(2), true));
+                            listaGDTMOWNext.set(0, new GTDM(listaGDTMOWNext.get(0), true));
+                            listaGDTMOWNext.set(1, new GTDM(listaGDTMOWNext.get(1), true));
+                            listaGDTMOWNext.set(2, new GTDM(listaGDTMOWNext.get(2), true));
 
                             if (i == 94 && j==18)
                                 startTime = 2;
@@ -422,13 +423,13 @@ public class Tester2 {
                             listaGDTMOWNext.get(1).startNextColumnCalcualtions(true, false);
                             listaGDTMOWNext.get(2).startNextColumnCalcualtions(true, false);
 
-                            gdtmNext = new GTDMNew(listaGDTMOWNext.get(0), listaGDTMOWNext.get(1), listaGDTMOWNext.get(2));
+                            gdtmNext = new GTDM(listaGDTMOWNext.get(0), listaGDTMOWNext.get(1), listaGDTMOWNext.get(2));
                             stopTime = System.currentTimeMillis();
                             elapsedTime = stopTime - startTime;
                             calc1 += elapsedTime;
 
                             startTime = System.currentTimeMillis();
-                            texturalPropertiesNew = new TexturalPropertiesNew(gdtmNext);
+                            texturalPropertiesNew = new TexturalProperties(gdtmNext);
                             properties.add(texturalPropertiesNew.getProps());
                             stopTime = System.currentTimeMillis();
                             elapsedTime = stopTime - startTime;
@@ -458,29 +459,29 @@ public class Tester2 {
 //         */
 //
 //        startTime = System.currentTimeMillis();
-//        gdtmNext = new GTDMNew(matrix, matrixA);
+//        gdtmNext = new GTDM(matrix, matrixA);
 //        gdtmNext.startFirstCalcualtions(true, false);
 //        stopTime = System.currentTimeMillis();
 //        elapsedTime = stopTime - startTime;
 //        calc1 += elapsedTime;
 //
 //        startTime = System.currentTimeMillis();
-//        texturalPropertiesNew = new TexturalPropertiesNew(gdtmNext);
+//        texturalPropertiesNew = new TexturalProperties(gdtmNext);
 //        properties.add(texturalPropertiesNew.getProps());
 //        stopTime = System.currentTimeMillis();
 //        elapsedTime = stopTime - startTime;
 //        calc2 += elapsedTime;
 //        } else if (j == q / 2) {
 //        startTime = System.currentTimeMillis();
-//        gdtmNext = new GTDMNew(gdtmNext, false);
+//        gdtmNext = new GTDM(gdtmNext, false);
 //        gdtmNext.startNextRowCalcualtions(true, false);
 //        stopTime = System.currentTimeMillis();
 //        elapsedTime = stopTime - startTime;
 //        calc1 += elapsedTime;
 //
 //        startTime = System.currentTimeMillis();
-////                        texturalPropertiesNew = new TexturalPropertiesNew(gdtmNext,texturalPropertiesNew,false);
-//        texturalPropertiesNew = new TexturalPropertiesNew(gdtmNext);
+////                        texturalPropertiesNew = new TexturalProperties(gdtmNext,texturalPropertiesNew,false);
+//        texturalPropertiesNew = new TexturalProperties(gdtmNext);
 //        properties.add(texturalPropertiesNew.getProps());
 //        stopTime = System.currentTimeMillis();
 //        elapsedTime = stopTime - startTime;
@@ -488,15 +489,15 @@ public class Tester2 {
 //
 //        } else {
 //        startTime = System.currentTimeMillis();
-//        gdtmNext = new GTDMNew(gdtmNext, true);
+//        gdtmNext = new GTDM(gdtmNext, true);
 //        gdtmNext.startNextColumnCalcualtions(true, false);
 //        stopTime = System.currentTimeMillis();
 //        elapsedTime = stopTime - startTime;
 //        calc1 += elapsedTime;
 //
 //        startTime = System.currentTimeMillis();
-////                        texturalPropertiesNew = new TexturalPropertiesNew(gdtmNext,texturalPropertiesNew,true);
-//        texturalPropertiesNew = new TexturalPropertiesNew(gdtmNext);
+////                        texturalPropertiesNew = new TexturalProperties(gdtmNext,texturalPropertiesNew,true);
+//        texturalPropertiesNew = new TexturalProperties(gdtmNext);
 //        properties.add(texturalPropertiesNew.getProps());
 //        stopTime = System.currentTimeMillis();
 //        elapsedTime = stopTime - startTime;

@@ -39,25 +39,27 @@ public class ImageMatrix implements Matrix {
     @Override
     public double get(int j, int i) {
         int argb = bufferedImage.getRGB(i+startWidth, j+startHeight);
+
         switch (color) {
             case GREY: {
-                return ((argb) & 0xFF + (argb >> 8) & 0xFF + (argb >> 16) & 0xFF)/3.0;
+                //return (((argb) & 0xFF + (argb >> 8) & 0xFF + (argb >> 16) & 0xFF)/3.0)/Constans.QUANTIZATION;
+                return ((argb) & 0xFF)/Constans.QUANTIZATION;
             }
             case BLUE: {
-                return (argb) & 0xFF;
+                return ((argb) & 0xFF)/Constans.QUANTIZATION;
             }
             case GREEN: {
-                return (argb >> 8) & 0xFF;
+                return ((argb >> 8) & 0xFF)/Constans.QUANTIZATION;
             }
             case RED: {
-                return (argb >> 16) & 0xFF;
+                return ((argb >> 16) & 0xFF)/Constans.QUANTIZATION;
             }
             case ALL:{
-                return ((argb) & 0xFF + (argb >> 8) & 0xFF + (argb >> 16) & 0xFF)/3.0;
+                return (((argb) & 0xFF + (argb >> 8) & 0xFF + (argb >> 16) & 0xFF)/3.0)/Constans.QUANTIZATION;
             }
 
         }
-        return (argb) & 0xFF;
+        return ((argb) & 0xFF)/Constans.QUANTIZATION;
     }
 
     public String getColor() {
@@ -137,5 +139,7 @@ public class ImageMatrix implements Matrix {
         return startHeight;
     }
 
-
+    public BufferedImage getBufferedImage() {
+        return bufferedImage;
+    }
 }
