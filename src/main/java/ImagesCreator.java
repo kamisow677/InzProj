@@ -1,8 +1,6 @@
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferByte;
-import java.awt.image.DataBufferInt;
-import java.awt.image.DataBufferUShort;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -30,16 +28,7 @@ public class ImagesCreator {
             scalesValues[i] = max.getAsDouble() / 255.0;
         }
 
-//        OptionalDouble max = prop
-//                .stream()
-//                .mapToDouble(s -> (double) s.get(Constans.CONTRAST))
-//                .max();
-//        Double scale = max.getAsDouble() / 255.0;
-
-
         try {
-            //BufferedImage buffImage = new BufferedImage(width-Constans.QUADRATIC_SIZE, height-Constans.QUADRATIC_SIZE, BufferedImage.TYPE_INT_ARGB);
-
             for (int i = 0 ; i<5 ; i++){
                 buffImages[i] =  new BufferedImage(width-Constans.QUADRATIC_SIZE, height-Constans.QUADRATIC_SIZE, BufferedImage.TYPE_INT_ARGB);
             }
@@ -55,7 +44,6 @@ public class ImagesCreator {
                         rgb = (rgb << 8) + red;
                         rgb = (rgb << 8) + green;
                         rgb = (rgb << 8) + blue;
-                        // System.out.println(red);
                         buffImages[k].setRGB(j, i, rgb);
                     }
                 }
@@ -65,11 +53,7 @@ public class ImagesCreator {
                 System.out.println("SAVED " + featuresNames[i] + ".png");
                 File f = new File(Constans.SAVE_PATH + nameFromPath(imageName) + featuresNames[i] + ".png");
                 ImageIO.write(buffImages[i], "PNG", f);
-                ImageMatrix imageMatrix = new ImageMatrix(buffImages[i], ImageMatrix.COLOR.GREY, "ImageName");
-
             }
-//            System.out.println("Height: " + imageMatrix.getHeight());
-//            System.out.println("Width: " + imageMatrix.getWidth());
 
 
         } catch (IOException e) {
@@ -77,38 +61,6 @@ public class ImagesCreator {
         }
     }
 
-    public static void newPicture(){
-        File img = new File("ork.jpg");
-        ImageMatrix imageMatrix = null;
-        try {
-            BufferedImage buffImage = ImageIO.read(img);
-            buffImage = new BufferedImage(100, 100, BufferedImage.TYPE_INT_ARGB);
-            for (int i = 0; i < 100; i++) {
-                for (int j = 0; j < 100; j++) {
-                    int red = 255;
-                    int green = 255;
-                    int blue = 0;
-                    int alpha = 255;
-                    int rgb = alpha;
-                    rgb = (rgb << 8) + red;
-                    rgb = (rgb << 8) + green;
-                    rgb = (rgb << 8) + blue;
-                    buffImage.setRGB(i, j, rgb);
-                }
-            }
-            File f = new File("MyFile.png");
-            ImageIO.write(buffImage, "PNG", f);
-
-            imageMatrix = new ImageMatrix(buffImage, ImageMatrix.COLOR.GREY, "ImageName");
-            System.out.println("Height: " + imageMatrix.getHeight());
-            System.out.println("Width: " + imageMatrix.getWidth());
-
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-    }
     static String nameFromPath(String path){
         return path.substring(path.lastIndexOf("\\"));
     }
@@ -144,21 +96,16 @@ public class ImagesCreator {
                 for (int j = 0; j < width-Constans.QUADRATIC_SIZE ; j++) {
                     for (int k = 0 ; k<5 ; k++) {
                         Integer grey = (int) Math.abs(((prop.get(i * (width - Constans.QUADRATIC_SIZE) + j).get(featuresNames[k])) / scalesValues[k]));
-                        //int rgb = grey;
-                       // buffImages[k].setRGB(j, i, grey);
                         newDates[k][i*(width-Constans.QUADRATIC_SIZE )+j] = grey.byteValue();
                     }
                 }
             }
 
             for (int i = 0 ; i < 5 ; i++) {
-                System.out.println("SAVED " + featuresNames[i] + ".jpg");
-                File f = new File(Constans.SAVE_PATH + nameFromPath(imageName) + featuresNames[i] + ".jpg");
-                ImageIO.write(buffImages[i], "JPG", f);
-                ImageMatrix imageMatrix = new ImageMatrix(buffImages[i], ImageMatrix.COLOR.GREY, "ImageName");
-
+                System.out.println("SAVED " + featuresNames[i] + ".png");
+                File f = new File(Constans.SAVE_PATH + nameFromPath(imageName) + featuresNames[i] + ".png");
+                ImageIO.write(buffImages[i], "PNG", f);
             }
-
 
         } catch (IOException e) {
             e.printStackTrace();

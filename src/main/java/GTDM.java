@@ -128,7 +128,7 @@ public class GTDM {
         this.p = new ArrayList<Double>(Constans.PIXEL_NUMBER_PLUS_1);
         this.pRaw = new ArrayList<Double>(Constans.PIXEL_NUMBER_PLUS_1);
         this.changedPixels = new HashSet<>(Constans.PIXEL_NUMBER_PLUS_1);
-        this.imageName = imageName;
+        this.imageName = inputData.getImageName();
         height = inputData.getHeight();
         width = inputData.getWidth();
 
@@ -147,7 +147,6 @@ public class GTDM {
      */
     public GTDM(GTDM previousGDTM, boolean GoingRight){
         this.d = previousGDTM.d;
-        //this.inputDataMatrix = previousGDTM.getInputDataMatrix();
         if (inputDataMatrix instanceof  ImageMatrix)
             this.inputDataMatrix =  new ImageMatrix((ImageMatrix) previousGDTM.getInputDataMatrix());
         else
@@ -179,7 +178,6 @@ public class GTDM {
     }
     public GTDM(GTDM gdtm){
         this.d = gdtm.d;
-        //inputDataMatrix = gdtm.inputDataMatrix;
         if (inputDataMatrix instanceof  ImageMatrix)
             this.inputDataMatrix =  new ImageMatrix((ImageMatrix) gdtm.inputDataMatrix);
         else
@@ -199,13 +197,13 @@ public class GTDM {
 
 
     public GTDM(GTDM matrix1, GTDM matrix2, GTDM matrix3){
-        this.matrixA = matrixA;
+        this.matrixA = matrix1.getMatrixA();
         this.d = matrix1.d;
         this.s = new ArrayList<Double>(Constans.PIXEL_NUMBER_PLUS_1);
         this.p = new ArrayList<Double>(Constans.PIXEL_NUMBER_PLUS_1);
         height = matrix1.getInputDataMatrix().getHeight();
         width = matrix2.getInputDataMatrix().getWidth();
-        this.imageName = imageName;
+        this.imageName = matrix1.imageName;
 
         //this.inputDataMatrix = matrix1.getInputDataMatrix();
         if (inputDataMatrix instanceof  ImageMatrix)
@@ -235,15 +233,12 @@ public class GTDM {
 
         this.inputDataMatrix = matrixes.get(0).getInputDataMatrix();
         n2 = (double) (height - 2 * d) * (this.width - 2 * d);
-        //inputDataMatrix.printf();
 
         initializaS();
         calculateS(matrixes);
-        //  printfS();
 
         initializaP();
         computeP();
-        //  printfP();
     }
 
 
@@ -312,9 +307,7 @@ public class GTDM {
             printfS();
             printfP();
         }
-
     }
-
 
     /**
      * Needs calculations for rest
@@ -335,31 +328,6 @@ public class GTDM {
         originRawP =  new ArrayList<>(pRaw);
         originS = new ArrayList<>(s);
         originP = new ArrayList<>(p);
-    }
-
-
-
-
-
-
-    /**
-     * Old one for first task
-     * @param calculateP
-     */
-    public void startCalcualtions(Boolean calculateP){
-        calculateMatrixA();
-//        System.out.println("Matrix A");
-//        matrixA.printf();
-
-        initializaS();
-        calculateS();
-          //printfS();
-
-        if (calculateP) {
-            initializaP();
-            computeP();
-            //  printfP();
-        }
     }
 
 
@@ -434,9 +402,6 @@ public class GTDM {
         }
     }
 
-
-
-
     private void calculateS() {
         Double i=0.0;
         int startY = inputDataMatrix.getStartHeight();
@@ -454,15 +419,13 @@ public class GTDM {
     }
 
     private void calculateS(ArrayList<Double> s1, ArrayList<Double> s2, ArrayList<Double> s3) {
-        int i=0;
-        for (i = 0; i < Constans.PIXEL_NUMBER ; i++){
+        for (int i = 0; i < Constans.PIXEL_NUMBER ; i++){
             s.set(i, (s1.get(i)+s2.get(i)+s3.get(i))/3.0);//s(i)= SIGMA |i-A|
         }
     }
 
     private void calculateS(ArrayList<GTDM> matrixes) {
-        int i=0;
-        for (i = 0; i <  Constans.PIXEL_NUMBER ; i++){
+        for (int i = 0; i <  Constans.PIXEL_NUMBER ; i++){
             final int il = i;
             s.set(i,matrixes
                     .stream()
@@ -515,8 +478,6 @@ public class GTDM {
         /**
          * First remove remove old components associeted with old square
          */
-        int startY = inputDataMatrix.getStartHeight();
-        int startX = inputDataMatrix.getStartWidth();
         for (int k = d ; k < height - d ; k++) {
             Double iNumber = pRaw.get((int) inputDataMatrix.get(k, d -1));//i
             if (iNumber == null)
@@ -543,8 +504,6 @@ public class GTDM {
         /**
          * First remove remove old components associeted with old square
          */
-        int startY = inputDataMatrix.getStartHeight();
-        int startX = inputDataMatrix.getStartWidth();
         for (int k = d ; k < width - d ; k++) {
             Double iNumber = pRaw.get((int) inputDataMatrix.get(d - 1 , k ));//i
             if (iNumber == null)
@@ -575,8 +534,6 @@ public class GTDM {
         }
     }
 
-
-
     public void computeP(Matrix inputDataMatrix1, Matrix inputDataMatrix2, Matrix inputDataMatrix3) {
 
         for (int k = d; k < height - d; k++) {
@@ -606,65 +563,18 @@ public class GTDM {
     }
 
 
-//    private void computeP(ArrayList<GTDM> matrixes) {
-//        Double iNumber;
-//        for (int k = d; k < height - d; k++) {
-//            for (int l = d; l < width - d; l++) {
-//                for (GTDM gtdm: matrixes) {
-//
-//                }
-//                Double iNumber = p.get((int) inputDataMatrix1.get(k, l));//i
-//                if (iNumber == null)
-//                    iNumber = 0.0;
-//                iNumber += 1;
-//                p.set((int) inputDataMatrix1.get(k, l), iNumber);
-//
-//                iNumber = p.get((int) inputDataMatrix2.get(k, l));//i
-//                if (iNumber == null)
-//                    iNumber = 0.0;
-//                iNumber += 1;
-//                p.set((int) inputDataMatrix1.get(k, l), iNumber);
-//
-//                iNumber = p.get((int) inputDataMatrix3.get(k, l));//i
-//                if (iNumber == null)
-//                    iNumber = 0.0;
-//                iNumber += 1;
-//                p.set((int) inputDataMatrix3.get(k, l), iNumber);
-//            }
-//        }
-//        for (int i = 0 ; i< PIXELS_NUMBER ; i++) {
-//            p.set( i ,p.get(i) / n2/3.0);
-//        }
-//    }
-
-
     public  void saveToCSV(String part) {
         PrintWriter w = null;
-        File fileForCsv = new File(inputDataMatrix.getImageName() + "CsvFiles\\");
+        File fileForCsv = new File(Constans.SAVE_PATH + nameFromPath(inputDataMatrix.getImageName()) + "CsvFiles\\");
         boolean success = (fileForCsv).mkdirs();
         try {
-            w = new PrintWriter(fileForCsv.getAbsolutePath()+ "\\" + inputDataMatrix.getColor() + "X" + part + ".csv", "UTF-8");
-            boolean firstVal = true;
+            w = new PrintWriter(fileForCsv.getAbsolutePath()+ "\\" + inputDataMatrix.getColor() + part + ".csv", "UTF-8");
             Integer i = 0;
             for (Double val : s) {
-//                if (!firstVal) {
-//                    w.write(";");
-//                }
                 w.write(i.toString());
                 w.write(";");
-               // w.write("\"");
                 w.write(val.toString());
-//                String val2 = val.toString();
-//                for (int j = 0; j < val2.length(); j++) {
-//                    char ch = val2.charAt(j);
-//                    if (ch == '\"') {
-//                        w.write("\"");
-//                    }
-//                    w.write(ch);
-//                }
                 i++;
-               // w.write("\"");
-                firstVal = false;
                 w.write("\n");
             }
             w.write("\n");
@@ -674,6 +584,9 @@ public class GTDM {
             e.printStackTrace();
         }
         w.close();
+    }
+    static String nameFromPath(String path){
+        return path.substring(path.lastIndexOf("\\"));
     }
 
 }

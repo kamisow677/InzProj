@@ -7,4 +7,13 @@ public class NOTATKI {
      * 5. RAZY DWA
      * 6. Rownoleglosc
      */
+
+    /**
+     * bgr
+     * komentarze
+     * resty
+     * bibliogradia
+     * folderpath
+     * walidacji
+     */
 }

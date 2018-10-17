@@ -31,25 +31,13 @@ public class Tester3 {
         listOfMatrixData = new ArrayList<>();
 
         try {
-            //BufferedImage buffImage = ImageIO.read(new File("C:\\Users\\Kamil Sowa\\Desktop\\obrazki21\\Mona_Lisa_grey.tif"));
-            Constans.PROGRESS =6;
-            //Constans.temp1 = buffImage.toString();
             final File folder = new File(Constans.FOLDER_PATH);
-            Constans.PROGRESS =5;
             listFilesForFolder(folder);
-            Constans.PROGRESS =4;
             imagePathToMatrix();
-            ArrayList<TexturalProperties> tex = new ArrayList<>();
-            ArrayList<Map<String, Double>> properties = new ArrayList<>();//final props all to write image
-            ArrayList<MatrixCommon> matrixesA = new ArrayList<>();
-            GTDM gdtmNext = null;
-            ArrayList<GTDM> listaGDTMOWNext = new ArrayList<>();
             long startTime;
             long stopTime;
             long elapsedTime;
             long calc1 = 0;
-
-            Constans.PROGRESS =3;
 
             /**
              * Now i only take one matrix
@@ -64,11 +52,6 @@ public class Tester3 {
                     gdtmNowe.saveToCSV("");
                 }
             }
-            Constans.PROGRESS =2;
-
-            ArrayList<Callable<Long>> callables = new ArrayList<>();
-            TexturalProperties texturalPropertiesNew = null;
-            ArrayList<Callable<ArrayList<Map<String, Double>>>> result = new ArrayList<>();
 
             Consumer<? super ArrayList<ImageMatrix>> consumer = (array) -> createTask2(array) ;
 
@@ -87,7 +70,6 @@ public class Tester3 {
             progress.clear();
             progressMax.clear();
 
-
         } catch (Exception ex) {
 
         }
@@ -100,34 +82,20 @@ public class Tester3 {
     private void imagePathToMatrix() {
         for (String pathToImagePlusName : listOfPathsToImagePlusName) {
             File img = new File(pathToImagePlusName);
-            Constans.temp1=pathToImagePlusName;
             ArrayList<ImageMatrix> listOfSingleColorImage = new ArrayList<>();
             BufferedImage buffImage;
-            Constans.PROGRESS =9;
             try {
-
                 buffImage = ImageIO.read(img);
-                Constans.PROGRESS =11;
-                Constans.temp2 =  buffImage.getType();
-                Constans.temp1=pathToImagePlusName;
-                Constans.PROGRESS =13;
                 System.out.println( pathToImagePlusName+ "  TYPE: "+buffImage.getType());
-                Constans.temp2=  buffImage.getHeight()-Constans.QUADRATIC_SIZE;
                 progressMax.put(pathToImagePlusName,buffImage.getHeight()-Constans.QUADRATIC_SIZE);
-                Constans.PROGRESS =12;
-
 
                 if (buffImage.getType()==BufferedImage.TYPE_BYTE_GRAY) {
                     listOfSingleColorImage.add(new ImageMatrix(buffImage, ImageMatrix.COLOR.GREY, pathToImagePlusName));
-                    Constans.PROGRESS =7;
                 } else {
                     listOfSingleColorImage.add(new ImageMatrix(buffImage, ImageMatrix.COLOR.BLUE, pathToImagePlusName));
                     listOfSingleColorImage.add(new ImageMatrix(buffImage, ImageMatrix.COLOR.RED, pathToImagePlusName));
                     listOfSingleColorImage.add(new ImageMatrix(buffImage, ImageMatrix.COLOR.GREEN, pathToImagePlusName));
-                    Constans.PROGRESS =6;
                 }
-
-
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -143,14 +111,14 @@ public class Tester3 {
      */
     public void listFilesForFolder(final File folder) {
         for (final File fileEntry : folder.listFiles()) {
-            if (fileEntry.isDirectory()) {
-                listFilesForFolder(fileEntry);
-            } else {
+//            if (fileEntry.isDirectory()) {
+//                listFilesForFolder(fileEntry);
+//            } else {
                 String fullPathWithNameOfImage = Constans.FOLDER_PATH + fileEntry.getName();
                 if (fullPathWithNameOfImage.endsWith(".jpg") || fullPathWithNameOfImage.endsWith(".tif")) {
                     listOfPathsToImagePlusName.add(Constans.FOLDER_PATH + fileEntry.getName());
                    // System.out.println(Constans.FOLDER_PATH + fileEntry.getName());
-                }
+//                }
             }
         }
     }
@@ -306,7 +274,7 @@ public Long createTask( ArrayList<ImageMatrix> list) {
             l.setWidth(Constans.QUADRATIC_SIZE);
         }
 
-        int numberOfThreads = 4;
+        int numberOfThreads = Runtime.getRuntime().availableProcessors()-2;
         ArrayList< ArrayList<ImageMatrix>> listParts = new ArrayList<>();
         int pla = (h - q) / numberOfThreads;
         for (int i =0 ; i< numberOfThreads ; i++) {
@@ -336,7 +304,6 @@ public Long createTask( ArrayList<ImageMatrix> list) {
                 properties2.add(future.get());
             }
 
-            //properties = properties2.stream().flatMap(hList -> hList.stream()).collect(Collectors.toList());;
             for (List<Map<String, Double>> p : properties2) {
                 for (Map<String, Double> map : p) {
                     properties.add(map);
