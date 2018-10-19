@@ -102,7 +102,7 @@ public class GTDM {
         this.matrixA = new MatrixCommon(inputData.getHeight(), inputData.getWidth());
         this.s = new ArrayList<Double>(Constans.PIXEL_NUMBER_PLUS_1);
         this.p = new ArrayList<Double>(Constans.PIXEL_NUMBER_PLUS_1);
-        this.imageName = imageName;
+        this.imageName = inputData.getImageName();
         this.pRaw = new ArrayList<Double>(Constans.PIXEL_NUMBER_PLUS_1);
         height = inputData.getHeight();
         width = inputData.getWidth();
@@ -369,6 +369,26 @@ public class GTDM {
             changedPixels.add(i);
         }
     }
+    public void writeAllValuesOfImage(){
+
+        PrintWriter writer = null;
+        try {
+            writer = new PrintWriter(Constans.FOLDER_PATH + "\\" + nameFromPath(imageName) + ".txt", "UTF-8");
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        for (int k = d; 2*k < height - d; k++) {
+            for (int l = d; l < width - d; l++) {
+               // System.out.print(inputDataMatrix.get(k, l));
+                writer.println(inputDataMatrix.get(k, l));
+               // System.out.print(" ");
+            }
+           // System.out.println();
+        }
+        writer.close();
+    }
     private void calculateNextRowS() {
         Double i = 0.0;
         /**
@@ -455,6 +475,7 @@ public class GTDM {
         for (int i = 0; i<p.size(); i++) {
             System.out.println( i +":  " + p.get(i));
         }
+        System.out.println("Suma: "+ p.stream().mapToDouble(x->x).sum());
     }
 
     public void computeP() {

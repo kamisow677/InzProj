@@ -1,5 +1,5 @@
 public class MatrixCommon implements Matrix {
-    private double[][] data;
+    public double[][] data;
     private int height;
     private int width;
     private int startHeight;
@@ -77,13 +77,29 @@ public class MatrixCommon implements Matrix {
     @Override
     public String toString() {
         String str = new String();
-        for (int i = 0; i < height; i++) {
-            for (int j = 0; j < width; j++) {
-                str += (data[i+startWidth][j+getStartHeight()] + " ");
+        try {
+            for (int i = 0; i < height; i++) {
+                for (int j = 0; j < width; j++) {
+                    str += (data[i + startWidth][j + getStartHeight()] + " ");
+                }
+                str += "\n";
             }
             str += "\n";
+        } catch (Exception ex){
+            System.out.println(ex.getStackTrace());
         }
-        str += "\n";
+        return  str;
+    }
+    public String toString2(int num) {
+        String str = new String();
+        try {
+            for (int j = 0; j < width; j++) {
+                str += (data[num + startWidth][j + getStartHeight()] + " ");
+                str += "\n";
+            }
+        } catch (Exception ex){
+            System.out.println(ex.getStackTrace());
+        }
         return  str;
     }
 

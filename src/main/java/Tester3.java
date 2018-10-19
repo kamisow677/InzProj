@@ -1,7 +1,6 @@
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -42,7 +41,7 @@ public class Tester3 {
             /**
              * Now i only take one matrix
              */
-            ImageMatrix matrix = listOfMatrixData.get(0).get(0);
+
             for (ArrayList<ImageMatrix> list : listOfMatrixData){
                 for (ImageMatrix m : list){
                     m.setStartHeight(0);
@@ -50,8 +49,13 @@ public class Tester3 {
                     GTDM gdtmNowe = new GTDM(m);
                     gdtmNowe.startFirstCalcualtions(true, false);
                     gdtmNowe.saveToCSV("");
+                    gdtmNowe.writeAllValuesOfImage();
+                    TexturalProperties texturalProperties = new TexturalProperties(gdtmNowe);
+                    System.out.println(texturalProperties);
                 }
             }
+
+            Transformer.compareTwoFiles();
 
             Consumer<? super ArrayList<ImageMatrix>> consumer = (array) -> createTask2(array) ;
 
@@ -74,7 +78,6 @@ public class Tester3 {
 
         }
     }
-
 
     /**
      * Transform path to new Matrix of data
@@ -115,7 +118,7 @@ public class Tester3 {
 //                listFilesForFolder(fileEntry);
 //            } else {
                 String fullPathWithNameOfImage = Constans.FOLDER_PATH + fileEntry.getName();
-                if (fullPathWithNameOfImage.endsWith(".jpg") || fullPathWithNameOfImage.endsWith(".tif")) {
+                if (fullPathWithNameOfImage.endsWith(".jpg") || fullPathWithNameOfImage.endsWith(".tiff")) {
                     listOfPathsToImagePlusName.add(Constans.FOLDER_PATH + fileEntry.getName());
                    // System.out.println(Constans.FOLDER_PATH + fileEntry.getName());
 //                }
@@ -273,8 +276,11 @@ public Long createTask( ArrayList<ImageMatrix> list) {
             l.setHeight(Constans.QUADRATIC_SIZE);
             l.setWidth(Constans.QUADRATIC_SIZE);
         }
+        System.out.println(matrixesA.get(0).getStartHeight());
+        System.out.println(matrixesA.get(0).get(2,3));
 
-        int numberOfThreads = Runtime.getRuntime().availableProcessors()-2;
+       // int numberOfThreads = Runtime.getRuntime().availableProcessors()-2;
+        int numberOfThreads = 1;
         ArrayList< ArrayList<ImageMatrix>> listParts = new ArrayList<>();
         int pla = (h - q) / numberOfThreads;
         for (int i =0 ; i< numberOfThreads ; i++) {
@@ -389,6 +395,7 @@ public Long createTask( ArrayList<ImageMatrix> list) {
                                         listaGDTMOWNext.set(k, new GTDM(listaGDTMOWNext.get(k), true));
                                         listaGDTMOWNext.get(k).startNextColumnCalcualtions(true, false);
                                     }
+
                                     gdtmNext = new GTDM(listaGDTMOWNext.get(0), listaGDTMOWNext.get(1), listaGDTMOWNext.get(2));
                                 }
                                 texturalPropertiesNew = new TexturalProperties(gdtmNext);
@@ -404,9 +411,20 @@ public Long createTask( ArrayList<ImageMatrix> list) {
                         progress.put(gdtmNext.getInputDataMatrix().getImageName(),(int) progress.get(gdtmNext.getInputDataMatrix().getImageName())+1);
                     else
                         progress.put(gdtmNext.getInputDataMatrix().getImageName(),1);
-                    System.out.println(progress);
+                    //System.out.println(progress);
                 }
             } else {
+
+                PrintWriter writer = null;
+                try {
+                    writer = new PrintWriter(Constans.FOLDER_PATH + "\\" + "Coarnesrgb" + ".txt", "UTF-8");
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+
+
                 for (int i = startRow; i < endRow; i++) {
                     for (int j = q / 2; j < w - q / 2; j++) {
                         if (i == startRow && j == q / 2) {
@@ -423,7 +441,8 @@ public Long createTask( ArrayList<ImageMatrix> list) {
                                 tex.add(new TexturalProperties(gdtmNext));
                                 k++;
                             }
-
+                            System.out.println(gdtmNext.getP());
+                            writer.println(tex.get(0).getCoarness());
                             texturalPropertiesNew = Transformer.averageProperties(tex, list.get(0).getColor());
                             properties.add(texturalPropertiesNew.getProps());
                             tex.clear();
@@ -432,12 +451,14 @@ public Long createTask( ArrayList<ImageMatrix> list) {
                                 listaGDTMOWNext.set(0, new GTDM(listaGDTMOWNext.get(0), false));
                                 listaGDTMOWNext.get(0).startNextRowCalcualtions(true, false);
                                 texturalPropertiesNew = new TexturalProperties(listaGDTMOWNext.get(0));
+                                writer.println(texturalPropertiesNew.getCoarness());
                             } else {
                                 for (int k = 0; k < Constans.NUMBER_OF_COLORS; k++) {
                                     listaGDTMOWNext.set(k, new GTDM(listaGDTMOWNext.get(k), false));
                                     listaGDTMOWNext.get(k).startNextRowCalcualtions(true, false);
                                     tex.add(new TexturalProperties(listaGDTMOWNext.get(k)));
                                 }
+                                writer.println(tex.get(0).getCoarness());
                                 texturalPropertiesNew = Transformer.averageProperties(tex, list.get(0).getColor());
                             }
                             properties.add(texturalPropertiesNew.getProps());
@@ -447,12 +468,14 @@ public Long createTask( ArrayList<ImageMatrix> list) {
                                 listaGDTMOWNext.set(0, new GTDM(listaGDTMOWNext.get(0), true));
                                 listaGDTMOWNext.get(0).startNextColumnCalcualtions(true, false);
                                 texturalPropertiesNew = new TexturalProperties(listaGDTMOWNext.get(0));
+                                writer.println(texturalPropertiesNew.getCoarness());
                             }else {
                                 for (int k = 0; k < Constans.NUMBER_OF_COLORS; k++) {
                                     listaGDTMOWNext.set(k, new GTDM(listaGDTMOWNext.get(k), true));
                                     listaGDTMOWNext.get(k).startNextColumnCalcualtions(true, false);
                                     tex.add(new TexturalProperties(listaGDTMOWNext.get(k)));
                                 }
+                                writer.println(tex.get(0).getCoarness());
                                 texturalPropertiesNew = Transformer.averageProperties(tex, list.get(0).getColor());
                             }
                             properties.add(texturalPropertiesNew.getProps());
@@ -465,7 +488,6 @@ public Long createTask( ArrayList<ImageMatrix> list) {
                     else
                         progress.put(gdtmNext.getInputDataMatrix().getImageName(),1);
                     System.out.println(progress);
-                   // System.out.println((String) progress.get(name));
                 }
             }
             return properties;

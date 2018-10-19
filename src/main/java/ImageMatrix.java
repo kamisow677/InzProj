@@ -1,4 +1,5 @@
 import java.awt.image.BufferedImage;
+import java.awt.image.DataBuffer;
 
 public class ImageMatrix implements Matrix {
     BufferedImage bufferedImage;
@@ -8,6 +9,7 @@ public class ImageMatrix implements Matrix {
     int startWidth = 0;
     int startHeight = 0;
     int d;
+    DataBuffer dataBuffer;
 
     public enum COLOR {RED, GREEN, BLUE, GREY, ALL}
 
@@ -21,6 +23,7 @@ public class ImageMatrix implements Matrix {
         height = bufferedImage.getHeight();
         startWidth = 0;
         startHeight = 0;
+        this.dataBuffer = bufferedImage.getData().getDataBuffer();
     }
     public ImageMatrix(ImageMatrix m) {
         this.bufferedImage = m.bufferedImage;
@@ -30,6 +33,7 @@ public class ImageMatrix implements Matrix {
         height = m.bufferedImage.getHeight();
         startWidth = 0;
         startHeight = 0;
+        this.dataBuffer = bufferedImage.getData().getDataBuffer();
     }
 
     public String getImageName() {
@@ -39,11 +43,18 @@ public class ImageMatrix implements Matrix {
     @Override
     public double get(int j, int i) {
         int argb = bufferedImage.getRGB(i+startWidth, j+startHeight);
-
         switch (color) {
             case GREY: {
+               // System.out.println((j+startHeight)*width + i + startWidth);
                 //return (((argb) & 0xFF + (argb >> 8) & 0xFF + (argb >> 16) & 0xFF)/3.0)/Constans.QUANTIZATION;
-                return ((argb) & 0xFF)/Constans.QUANTIZATION;
+               // return dataBuffer.getElem((i+startWidth)*height + j + startHeight);
+                Integer a = dataBuffer.getElem((j+startHeight)*width + i + startWidth);
+                int b;
+                if (a.byteValue()>0)
+                    b =a.byteValue()+128;
+                else
+                    b =a.byteValue()+256;
+                return  a;
             }
             case BLUE: {
                 return ((argb) & 0xFF)/Constans.QUANTIZATION;

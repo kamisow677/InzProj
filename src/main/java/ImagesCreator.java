@@ -96,7 +96,7 @@ public class ImagesCreator {
                 for (int j = 0; j < width-Constans.QUADRATIC_SIZE ; j++) {
                     for (int k = 0 ; k<5 ; k++) {
                         Integer grey = (int) Math.abs(((prop.get(i * (width - Constans.QUADRATIC_SIZE) + j).get(featuresNames[k])) / scalesValues[k]));
-                        newDates[k][i*(width-Constans.QUADRATIC_SIZE )+j] = grey.byteValue();
+                        newDates[k][i*(width-Constans.QUADRATIC_SIZE )+j] =(grey.byteValue()) ;
                     }
                 }
             }

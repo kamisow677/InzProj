@@ -12,7 +12,7 @@ public class TexturalProperties {
     private Double Complexity;
     private Double Strength;
     private String Color;
-    private Double Epsilon = 0.00000001;
+    private Double Epsilon = 0.0000001;
 
     private Double psiNumeratorBusyness;
 
@@ -93,7 +93,9 @@ public class TexturalProperties {
 
     @Override
     public String toString(){
-        return "\n\nCOLOR:  " + Color +
+        return
+        "\n\nImage Name: "+gtdm.getInputDataMatrix().getImageName()+
+        "\nCOLOR:  " + Color +
         "\nCoarness:  " + Coarness +
         "\nContrast:  " + Contrast +
         "\nBusyness:  " + Busyness +
