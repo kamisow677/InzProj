@@ -9,7 +9,7 @@ public class ImageMatrix implements Matrix {
     int startWidth = 0;
     int startHeight = 0;
     int d;
-    DataBuffer dataBuffer;
+    public DataBuffer dataBuffer;
 
     public enum COLOR {RED, GREEN, BLUE, GREY, ALL}
 
@@ -48,13 +48,15 @@ public class ImageMatrix implements Matrix {
                // System.out.println((j+startHeight)*width + i + startWidth);
                 //return (((argb) & 0xFF + (argb >> 8) & 0xFF + (argb >> 16) & 0xFF)/3.0)/Constans.QUANTIZATION;
                // return dataBuffer.getElem((i+startWidth)*height + j + startHeight);
-                Integer a = dataBuffer.getElem((j+startHeight)*width + i + startWidth);
+                Integer a = dataBuffer.getElem((j+startHeight)*bufferedImage.getWidth() + i + startWidth);
+              //  Integer a = dataBuffer
                 int b;
                 if (a.byteValue()>0)
                     b =a.byteValue()+128;
                 else
                     b =a.byteValue()+256;
                 return  a;
+//                return ((argb) & 0xFF)/Constans.QUANTIZATION;
             }
             case BLUE: {
                 return ((argb) & 0xFF)/Constans.QUANTIZATION;

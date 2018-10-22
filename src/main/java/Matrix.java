@@ -1,3 +1,5 @@
+import java.awt.image.DataBuffer;
+
 public interface Matrix {
 
     public double get(int j, int i);

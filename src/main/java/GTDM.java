@@ -1,3 +1,4 @@
+import java.awt.image.DataBuffer;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -373,19 +374,21 @@ public class GTDM {
 
         PrintWriter writer = null;
         try {
-            writer = new PrintWriter(Constans.FOLDER_PATH + "\\" + nameFromPath(imageName) + ".txt", "UTF-8");
+            writer = new PrintWriter(Constans.FOLDER_PATH + "\\" + nameFromPath(imageName) + inputDataMatrix.getColor() +  ".txt", "UTF-8");
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
-        for (int k = d; 2*k < height - d; k++) {
-            for (int l = d; l < width - d; l++) {
-               // System.out.print(inputDataMatrix.get(k, l));
-                writer.println(inputDataMatrix.get(k, l));
+        for (int k = 0; 30*k < height - d; k++) {
+            for (int l = 0; l < width - d; l++) {
+                System.out.print(inputDataMatrix.get(k, l)+ " ");
+//                System.out.print(matrixA.get(k,l)+" ");
+               // writer.println(inputDataMatrix.get(k, l));
                // System.out.print(" ");
+//                if (String.valueOf(inputDataMatrix.get(k, l)).equals("8.0"))
             }
-           // System.out.println();
+            System.out.println();
         }
         writer.close();
     }
@@ -470,7 +473,7 @@ public class GTDM {
         }
     }
 
-    private void printfP() {
+    public void printfP() {
         System.out.println("Tablica z p");
         for (int i = 0; i<p.size(); i++) {
             System.out.println( i +":  " + p.get(i));
@@ -486,13 +489,14 @@ public class GTDM {
                     iNumber = 0.0;
                 iNumber += 1;
                 p.set((int) inputDataMatrix.get(k, l), iNumber);
-            }
+            }//((int) inputDataMatrix.get(k, l))==83 && k>2
         }
         pRaw = new ArrayList<>(p);
         originRawP = new ArrayList<>(p);
         for (int i = 0 ; i< Constans.PIXEL_NUMBER_PLUS_1 ; i++) {
             p.set( i ,p.get(i) / n2);
         }
+        int a = 0 ;
     }
 
     public void computeNextColumnP() {
@@ -521,6 +525,7 @@ public class GTDM {
             p.set( i ,pRaw.get(i) / n2);
         }
     }
+
     public void computeNextRowP() {
         /**
          * First remove remove old components associeted with old square
@@ -582,7 +587,6 @@ public class GTDM {
             p.set( i ,p.get(i) / n2/3.0);
         }
     }
-
 
     public  void saveToCSV(String part) {
         PrintWriter w = null;

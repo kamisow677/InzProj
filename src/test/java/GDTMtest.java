@@ -94,7 +94,7 @@ public class GDTMtest {
          */
         Matrix squareMAtrixData = new MatrixCommon(dane, SQUARE_SIZE ,SQUARE_SIZE,0,0);
         System.out.println(daneTestowe);
-
+        System.out.println(matrixA);
         gdtmFirst = new GTDM(squareMAtrixData,matrixA);
         gdtmFirst.startFirstCalcualtions(true, false);
         MatrixCommon matrixACalculated = gdtmFirst.getMatrixA();

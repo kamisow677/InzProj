@@ -53,8 +53,6 @@ public class TexturalProperties {
         }
         ArrayList<Double> p1 = new ArrayList<>(p);
         psiNumeratorBusyness = 0.0;
-
-
         partContrast = 0.0;
         Double denominatorBusyness = 0.0;
         partComplexity = 0.0;
@@ -64,11 +62,11 @@ public class TexturalProperties {
 
 
         for (int i = 0; i< p.size(); i++){
-            if (p.get(i)==0.0)
+            if (p.get(i).compareTo(0.0)==0)
                 continue;
             psiNumeratorBusyness += s.get(i)* p.get(i);
             for (int j = i; j< p1.size(); j++){
-                if (p1.get(j)==0.0)
+                if (p1.get(j).compareTo(0.0)==0)
                     continue;
                 denominatorBusyness += 2*Math.abs( i * p.get(i)- j * p1.get(j));
                 partContrast += 2*p.get(i) * p1.get(j) * Math.pow((i - j), 2);
@@ -83,7 +81,6 @@ public class TexturalProperties {
                 .stream()
                 .mapToDouble(s -> s)
                 .sum();
-
 
         Coarness = Math.pow(Epsilon + psiNumeratorBusyness, -1);
         Contrast = Contrast * siSum * 1 / n2;

@@ -48,8 +48,9 @@ public class Tester3 {
                     m.setStartWidth(0);
                     GTDM gdtmNowe = new GTDM(m);
                     gdtmNowe.startFirstCalcualtions(true, false);
+                   // System.out.println(gdtmNowe.getP());
                     gdtmNowe.saveToCSV("");
-                    gdtmNowe.writeAllValuesOfImage();
+                   // gdtmNowe.writeAllValuesOfImage();
                     TexturalProperties texturalProperties = new TexturalProperties(gdtmNowe);
                     System.out.println(texturalProperties);
                 }
@@ -271,7 +272,7 @@ public Long createTask( ArrayList<ImageMatrix> list) {
             l.setStartWidth(0);
             gdtmNowe = new GTDM(l);
             gdtmNowe.setD(Constans.D);
-            gdtmNowe.startFirstCalcualtions(true, false);
+            //gdtmNowe.startFirstCalcualtions(true, false);
             matrixesA.add(gdtmNowe.getMatrixA());
             l.setHeight(Constans.QUADRATIC_SIZE);
             l.setWidth(Constans.QUADRATIC_SIZE);
@@ -279,8 +280,8 @@ public Long createTask( ArrayList<ImageMatrix> list) {
         System.out.println(matrixesA.get(0).getStartHeight());
         System.out.println(matrixesA.get(0).get(2,3));
 
-       // int numberOfThreads = Runtime.getRuntime().availableProcessors()-2;
-        int numberOfThreads = 1;
+        int numberOfThreads = Runtime.getRuntime().availableProcessors()-2;
+//        int numberOfThreads = 1;
         ArrayList< ArrayList<ImageMatrix>> listParts = new ArrayList<>();
         int pla = (h - q) / numberOfThreads;
         for (int i =0 ; i< numberOfThreads ; i++) {
@@ -441,7 +442,7 @@ public Long createTask( ArrayList<ImageMatrix> list) {
                                 tex.add(new TexturalProperties(gdtmNext));
                                 k++;
                             }
-                            System.out.println(gdtmNext.getP());
+                            gdtmNext.printfP();
                             writer.println(tex.get(0).getCoarness());
                             texturalPropertiesNew = Transformer.averageProperties(tex, list.get(0).getColor());
                             properties.add(texturalPropertiesNew.getProps());
@@ -466,6 +467,7 @@ public Long createTask( ArrayList<ImageMatrix> list) {
                         } else {
                             if ((list.get(0).getBufferedImage().getType()==BufferedImage.TYPE_BYTE_GRAY)){
                                 listaGDTMOWNext.set(0, new GTDM(listaGDTMOWNext.get(0), true));
+                                Constans.a=99;
                                 listaGDTMOWNext.get(0).startNextColumnCalcualtions(true, false);
                                 texturalPropertiesNew = new TexturalProperties(listaGDTMOWNext.get(0));
                                 writer.println(texturalPropertiesNew.getCoarness());
