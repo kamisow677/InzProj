@@ -50,9 +50,11 @@ public class Tester3 {
                     gdtmNowe.startFirstCalcualtions(true, false);
                    // System.out.println(gdtmNowe.getP());
                     gdtmNowe.saveToCSV("");
-                   // gdtmNowe.writeAllValuesOfImage();
+                    //gdtmNowe.writeAllValuesOfImage();
                     TexturalProperties texturalProperties = new TexturalProperties(gdtmNowe);
                     System.out.println(texturalProperties);
+                    //gdtmNowe.printfP();
+                    //gdtmNowe.printfS();
                 }
             }
 
@@ -119,7 +121,7 @@ public class Tester3 {
 //                listFilesForFolder(fileEntry);
 //            } else {
                 String fullPathWithNameOfImage = Constans.FOLDER_PATH + fileEntry.getName();
-                if (fullPathWithNameOfImage.endsWith(".jpg") || fullPathWithNameOfImage.endsWith(".tiff")) {
+                if (fullPathWithNameOfImage.endsWith(".jpg") || fullPathWithNameOfImage.endsWith(".tiff") || fullPathWithNameOfImage.endsWith(".png")) {
                     listOfPathsToImagePlusName.add(Constans.FOLDER_PATH + fileEntry.getName());
                    // System.out.println(Constans.FOLDER_PATH + fileEntry.getName());
 //                }
@@ -277,8 +279,6 @@ public Long createTask( ArrayList<ImageMatrix> list) {
             l.setHeight(Constans.QUADRATIC_SIZE);
             l.setWidth(Constans.QUADRATIC_SIZE);
         }
-        System.out.println(matrixesA.get(0).getStartHeight());
-        System.out.println(matrixesA.get(0).get(2,3));
 
         int numberOfThreads = Runtime.getRuntime().availableProcessors()-2;
 //        int numberOfThreads = 1;
@@ -442,7 +442,6 @@ public Long createTask( ArrayList<ImageMatrix> list) {
                                 tex.add(new TexturalProperties(gdtmNext));
                                 k++;
                             }
-                            gdtmNext.printfP();
                             writer.println(tex.get(0).getCoarness());
                             texturalPropertiesNew = Transformer.averageProperties(tex, list.get(0).getColor());
                             properties.add(texturalPropertiesNew.getProps());

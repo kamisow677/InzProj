@@ -108,14 +108,13 @@ public class ZADANIE implements Command {
                         for (Map.Entry<String,Integer> progress : tester.progress.entrySet()) {
                             if (!(progress.getValue()==null && tester.progressMax.get(progress.getKey())!=0)) {
                                 percentage += (progress.getValue() * 100) / tester.progressMax.get(progress.getKey());
-
                             }
                         }
                         if (tester.progress.entrySet().size()!=0 &&  !String.valueOf(percentage/ tester.progress.entrySet().size()).equals("null") )
                             sts.showStatus("" + String.valueOf(percentage/ tester.progress.entrySet().size()) + "%  " + tester.progress.entrySet().size());
                         Thread.sleep(100);
                     }
-                    sts.showStatus("GOTOWE");
+                    //sts.showStatus("GOTOWE");
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }

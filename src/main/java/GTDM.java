@@ -380,8 +380,8 @@ public class GTDM {
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
-        for (int k = 0; 30*k < height - d; k++) {
-            for (int l = 0; l < width - d; l++) {
+        for (int k = 0; k < height ; k++) {
+            for (int l = 0; l < width ; l++) {
                 System.out.print(inputDataMatrix.get(k, l)+ " ");
 //                System.out.print(matrixA.get(k,l)+" ");
                // writer.println(inputDataMatrix.get(k, l));
@@ -459,7 +459,7 @@ public class GTDM {
         }
     }
 
-    private void printfS() {
+    public void printfS() {
         System.out.println("S(i)");
         for (int i = 0; i<s.size(); i++) {
             System.out.println( i +":  " + s.get(i));
