@@ -121,7 +121,8 @@ public class Tester3 {
 //                listFilesForFolder(fileEntry);
 //            } else {
                 String fullPathWithNameOfImage = Constans.FOLDER_PATH + fileEntry.getName();
-                if (fullPathWithNameOfImage.endsWith(".jpg") || fullPathWithNameOfImage.endsWith(".tiff") || fullPathWithNameOfImage.endsWith(".png")) {
+                if (fullPathWithNameOfImage.endsWith(".jpg") || fullPathWithNameOfImage.endsWith(".tif") || fullPathWithNameOfImage.endsWith(".tiff")
+                        || fullPathWithNameOfImage.endsWith(".png") || fullPathWithNameOfImage.endsWith(".gif")) {
                     listOfPathsToImagePlusName.add(Constans.FOLDER_PATH + fileEntry.getName());
                    // System.out.println(Constans.FOLDER_PATH + fileEntry.getName());
 //                }
