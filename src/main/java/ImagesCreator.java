@@ -64,26 +64,21 @@ public class ImagesCreator {
     static String nameFromPath(String path){
         return path.substring(path.lastIndexOf("\\"));
     }
-    public static void createTestPixelImage(){
-        byte [][] daneTestowe = new byte[][]{{1, 2, 3, 4, 5}, {2, 3, 1, 4, 1}, {5, 2, 2, 3, 3}, {3, 1, 4, 4, 5}, {1, 5, 4, 2, 2}};
-        String[] featuresNames = {Constans.COARNESS, Constans.CONTRAST, Constans.BUSYNESS, Constans.COMPLEXITY, Constans.STRENGTH};
+    public static void createTestPixelImage(byte [][] data, int size){
+       // byte [][] daneTestowe = new byte[][]{{1, 2, 3, 4, 5}, {2, 3, 1, 4, 1}, {5, 2, 2, 3, 3}, {3, 1, 4, 4, 5}, {1, 5, 4, 2, 2}};
         BufferedImage buffImage;
         try {
             byte [] newData ;
-            buffImage =  new BufferedImage(5, 5, BufferedImage.TYPE_BYTE_GRAY);
+            buffImage =  new BufferedImage(size, size, BufferedImage.TYPE_BYTE_GRAY);
             newData = ((DataBufferByte) buffImage.getRaster().getDataBuffer()).getData();
-
-            for (int i = 0 ; i<5 ; i++) {
-                for (int k = 0; k < 5; k++) {
-                    newData[i*5+k] = daneTestowe[i][k];
+            for (int i = 0 ; i<size ; i++) {
+                for (int k = 0; k < size; k++) {
+                    newData[i*size+k] = data[i][k];
                 }
             }
-
-            System.out.println("SAVED "  + ".tiff");
-            File f = new File(Constans.SAVE_PATH + nameFromPath("\\Test")  + ".tiff");
-            ImageIO.write(buffImage, "TIFF", f);
-
-
+            System.out.println("SAVED "+ nameFromPath("\\Test") + ".png");
+            File f = new File(Constans.SAVE_PATH + nameFromPath("\\Test")  + ".png");
+            ImageIO.write(buffImage, "PNG", f);
         } catch (IOException e) {
             e.printStackTrace();
         }

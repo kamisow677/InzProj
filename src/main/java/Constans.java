@@ -15,6 +15,10 @@ public class Constans {
     static int NUMBER_OF_COLORS = 3;
     static int PIXEL_NUMBER = 255;
     static int PIXEL_NUMBER_PLUS_1 = 256;
+    static String validationMessage;
+    static boolean validInputData = false;
+    static boolean validationEnd = false;
+    static boolean slowGTDMcalc = false;
 
     public static int getQuadraticSize() {
         return QUADRATIC_SIZE;

@@ -48,7 +48,8 @@ public class ImageMatrix implements Matrix {
                // System.out.println((j+startHeight)*width + i + startWidth);
                 //return (((argb) & 0xFF + (argb >> 8) & 0xFF + (argb >> 16) & 0xFF)/3.0)/Constans.QUANTIZATION;
                // return dataBuffer.getElem((i+startWidth)*height + j + startHeight);
-                Integer a = dataBuffer.getElem((j+startHeight)*bufferedImage.getWidth() + i + startWidth);
+              //  System.out.println("j: "+j+" i:"+i+ "startHeight: "+startHeight+ " startWidth:"+startWidth);
+                Integer a = dataBuffer.getElem((j+startHeight)*bufferedImage.getWidth() + i + startWidth)/Constans.QUANTIZATION;
               //  Integer a = dataBuffer
                 int b;
                 if (a.byteValue()>0)

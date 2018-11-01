@@ -297,16 +297,19 @@ public class GTDM {
      * @param calculateP
      */
     public void startNextColumnCalcualtions(Boolean calculateP, Boolean print){
-
-        calculateNextColumnS();
-        if (calculateP) {
-            computeNextColumnP();
-        }
-        if (print) {
-            System.out.println("Matrix A");
-            matrixA.printf();
-            printfS();
-            printfP();
+        if (Constans.slowGTDMcalc==true) {
+            startFirstCalcualtions(calculateP, print);
+        }else {
+            calculateNextColumnS();
+            if (calculateP) {
+                computeNextColumnP();
+            }
+            if (print) {
+                System.out.println("Matrix A");
+                matrixA.printf();
+                printfS();
+                printfP();
+            }
         }
     }
 
@@ -315,24 +318,29 @@ public class GTDM {
      * @param calculateP
      */
     public void startNextRowCalcualtions(Boolean calculateP, Boolean print){
+        if (Constans.slowGTDMcalc==true) {
+            startFirstCalcualtions(calculateP, print);
+        }else {
+            calculateNextRowS();
+            if (calculateP) {
+                computeNextRowP();
+            }
+            if (print) {
+                System.out.println("Matrix A");
+                matrixA.printf();
+                printfS();
+                printfP();
+            }
+            originRawP =  new ArrayList<>(pRaw);
+            originS = new ArrayList<>(s);
+            originP = new ArrayList<>(p);
+        }
 
-        calculateNextRowS();
-        if (calculateP) {
-            computeNextRowP();
-        }
-        if (print) {
-            System.out.println("Matrix A");
-            matrixA.printf();
-            printfS();
-            printfP();
-        }
-        originRawP =  new ArrayList<>(pRaw);
-        originS = new ArrayList<>(s);
-        originP = new ArrayList<>(p);
     }
 
 
     private void initializaS() {
+        s.clear();
         for (int i = 0; i<Constans.PIXEL_NUMBER_PLUS_1; i++) {
             s.add(0.0);
         }
@@ -468,6 +476,7 @@ public class GTDM {
     }
 
     private void initializaP() {
+        p.clear();
         for (int i = 0; i<Constans.PIXEL_NUMBER_PLUS_1; i++) {
             p.add(0.0);
         }

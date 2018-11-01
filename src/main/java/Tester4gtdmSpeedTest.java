@@ -11,7 +11,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.function.Consumer;
 
-public class Tester3 {
+public class Tester4gtdmSpeedTest {
 
     public ArrayList<String> listOfPathsToImagePlusName = new ArrayList<>();
     ArrayList<ArrayList<ImageMatrix>> listOfMatrixData = new ArrayList<>();
@@ -42,6 +42,7 @@ public class Tester3 {
         }
         Constans.validationEnd = true;
 
+
         /**
          * Now i only take one matrix
          */
@@ -57,24 +58,18 @@ public class Tester3 {
                 System.out.println(texturalProperties);
             }
         }
-//        if (Constans.slowGTDMcalc)
-//            showOld(listOfMatrixData.get(0).get(0));
-//        else {
-            Consumer<? super ArrayList<ImageMatrix>> consumer;
-
-            consumer = (array) -> createTask2(array);
-
-//        listOfMatrixData.parallelStream()
-//                .forEach(consumer);
-
-            listOfMatrixData.stream()
-                    .forEach(consumer);
 
 
-            Constans.NUMBER_OF_COLORS = 4;
-            progress.clear();
-            progressMax.clear();
-  //      }
+        Consumer<? super ArrayList<ImageMatrix>> consumer = (array) -> createTask2(array) ;
+
+
+        listOfMatrixData.parallelStream()
+                .forEach(consumer);
+
+        Constans.NUMBER_OF_COLORS = 4;
+        progress.clear();
+        progressMax.clear();
+
 
     }
 
@@ -273,14 +268,12 @@ public Long createTask( ArrayList<ImageMatrix> list) {
             l.setStartWidth(0);
             gdtmNowe = new GTDM(l);
             gdtmNowe.setD(Constans.D);
-            //gdtmNowe.startFirstCalcualtions(true, false);
             matrixesA.add(gdtmNowe.getMatrixA());
             l.setHeight(Constans.QUADRATIC_SIZE);
             l.setWidth(Constans.QUADRATIC_SIZE);
         }
 
-//        int numberOfThreads = Runtime.getRuntime().availableProcessors()-2;
-        int numberOfThreads = 1;
+        int numberOfThreads = Runtime.getRuntime().availableProcessors()-2;
         ArrayList< ArrayList<ImageMatrix>> listParts = new ArrayList<>();
         int pla = (h - q) / numberOfThreads;
         for (int i =0 ; i< numberOfThreads ; i++) {
@@ -297,7 +290,6 @@ public Long createTask( ArrayList<ImageMatrix> list) {
         }
 
         int rest = (h - q) % numberOfThreads;
-        System.out.println("ROZDZIELANIE");
 
         ExecutorService executor = Executors.newWorkStealingPool();
         for (int i = 0 ; i<listParts.size() -1; i++){
@@ -373,7 +365,6 @@ public Long createTask( ArrayList<ImageMatrix> list) {
                                     listaGDTMOWNext.add(gdtmNext);
                                     k++;
                                 }
-                                //if (!(list.get(0).getBufferedImage().getType()==BufferedImage.TYPE_BYTE_GRAY))
                                 if (!isGrey(list.get(0).getBufferedImage()))
                                     gdtmNext = new GTDM(listaGDTMOWNext.get(0), listaGDTMOWNext.get(1), listaGDTMOWNext.get(2));
                                 else
@@ -384,7 +375,6 @@ public Long createTask( ArrayList<ImageMatrix> list) {
 
                             } else if (j == q / 2) {
 
-                                //if ((list.get(0).getBufferedImage().getType()==BufferedImage.TYPE_BYTE_GRAY)){
                                 if (isGrey(list.get(0).getBufferedImage())){
                                     listaGDTMOWNext.set(0, new GTDM(listaGDTMOWNext.get(0), false));
                                     listaGDTMOWNext.get(0).startNextRowCalcualtions(true, false);
@@ -402,7 +392,6 @@ public Long createTask( ArrayList<ImageMatrix> list) {
                                 tex.clear();
 
                             } else {
-                                //if ((list.get(0).getBufferedImage().getType()==BufferedImage.TYPE_BYTE_GRAY)){
                                  if (isGrey(list.get(0).getBufferedImage())){
                                     listaGDTMOWNext.set(0, new GTDM(listaGDTMOWNext.get(0), true));
                                     listaGDTMOWNext.get(0).startNextColumnCalcualtions(true, false);
@@ -463,7 +452,6 @@ public Long createTask( ArrayList<ImageMatrix> list) {
                             properties.add(texturalPropertiesNew.getProps());
                             tex.clear();
                         } else if (j == q / 2) {
-                            //if ((list.get(0).getBufferedImage().getType()==BufferedImage.TYPE_BYTE_GRAY)){
                             if (isGrey(list.get(0).getBufferedImage())){
                                 listaGDTMOWNext.set(0, new GTDM(listaGDTMOWNext.get(0), false));
                                 listaGDTMOWNext.get(0).startNextRowCalcualtions(true, false);
@@ -481,7 +469,6 @@ public Long createTask( ArrayList<ImageMatrix> list) {
                             properties.add(texturalPropertiesNew.getProps());
                             tex.clear();
                         } else {
-                            //if ((list.get(0).getBufferedImage().getType()==BufferedImage.TYPE_BYTE_GRAY)){
                             if (isGrey(list.get(0).getBufferedImage())){
                                 listaGDTMOWNext.set(0, new GTDM(listaGDTMOWNext.get(0), true));
                                 Constans.a=99;
@@ -513,26 +500,5 @@ public Long createTask( ArrayList<ImageMatrix> list) {
         };
         return task;
     }
-    private void showOld(ImageMatrix matrix) {
-        long startTime = System.currentTimeMillis();
-        int q = Constans.QUADRATIC_SIZE;
-        int h = matrix.height;
-        int w = matrix.width;
-        matrix.height= Constans.QUADRATIC_SIZE;
-        matrix.width= Constans.QUADRATIC_SIZE;
-        GTDM gtdmNowe = null;
-        gtdmNowe = new GTDM(matrix);
-        MatrixCommon matrixA = gtdmNowe.getMatrixA();
-        for (int i = q / 2; i < h - q / 2; i++) {
-            for (int j = q / 2; j < w - q / 2; j++) {
-                gtdmNowe = new GTDM(matrix, matrixA);
-                gtdmNowe.startFirstCalcualtions(true, false);
-                TexturalProperties texturalProperties = new TexturalProperties(gtdmNowe);
-            }
-            System.out.println(" old: "+i);
-        }
-        long stopTime = System.currentTimeMillis();
-        long elapsedTime = stopTime - startTime;
-        System.out.println("WEWNATRZ" + elapsedTime);
-    }
+
 }
