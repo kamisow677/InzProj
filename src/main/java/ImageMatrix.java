@@ -51,6 +51,7 @@ public class ImageMatrix implements Matrix {
      */
     private COLOR color;
 
+
     /**
      * Konstruktoe
      * @param bufferedImage obraz buforowany

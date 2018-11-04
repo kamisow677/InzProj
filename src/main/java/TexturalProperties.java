@@ -153,14 +153,16 @@ public class TexturalProperties {
 
     @Override
     public String toString(){
-        return
-        "\n\nImage Name: "+gtdm.getInputDataMatrix().getImageName()+
-        "\nCOLOR:  " + Color +
-        "\nCoarness:  " + Coarness +
-        "\nContrast:  " + Contrast +
-        "\nBusyness:  " + Busyness +
-        "\nComplexity:  " + Complexity +
-        "\nStrength:  " + Strength;
+        String str = "\n";
+        if (gtdm!=null)
+            str = "\n\nImage Name: "+ gtdm.getInputDataMatrix().getImageName();
+        str +="\nCOLOR:  " + Color +
+            "\nCoarness:  " + Coarness +
+            "\nContrast:  " + Contrast +
+            "\nBusyness:  " + Busyness +
+            "\nComplexity:  " + Complexity +
+            "\nStrength:  " + Strength;
+        return  str;
     }
 
     public Double getCoarness() {

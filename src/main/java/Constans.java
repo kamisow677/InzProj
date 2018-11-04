@@ -4,7 +4,7 @@
 public class Constans {
     static int QUADRATIC_SIZE = 31;
     static int D = 1;
-    static boolean AVERAGE_MATRIXES = false;
+    static boolean AVERAGE_MATRIXES = true;
     static String COARNESS ="COARNESS";
     static String CONTRAST ="CONTRAST";
     static String BUSYNESS ="BUSYNESS";

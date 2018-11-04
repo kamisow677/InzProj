@@ -9,6 +9,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 
 /**
@@ -68,6 +69,8 @@ public class Tester3 {
         Constans.validationEnd = true;
 
         for (ArrayList<ImageMatrix> list : listOfMatrixData){
+            ArrayList<GTDM> arrTemp= new ArrayList<>();
+            ArrayList<TexturalProperties> propsTemp= new ArrayList<>();
             for (ImageMatrix m : list){
                 m.setStartHeight(0);
                 m.setStartWidth(0);
@@ -75,7 +78,21 @@ public class Tester3 {
                 gdtmNowe.startFirstCalcualtions(true, false);
                 gdtmNowe.saveToCSV("");
                 TexturalProperties texturalProperties = new TexturalProperties(gdtmNowe);
+                arrTemp.add(gdtmNowe);
+                propsTemp.add(texturalProperties);
                 System.out.println(texturalProperties);
+            }
+            if (list.size()==3){
+                if (Constans.AVERAGE_MATRIXES) {
+                    GTDM gdtmNowe = new GTDM(arrTemp.get(0), arrTemp.get(1), arrTemp.get(2));
+                    ((ImageMatrix) gdtmNowe.getInputDataMatrix()).setColor(ImageMatrix.COLOR.ALL);
+                    gdtmNowe.saveToCSV("");
+                    TexturalProperties texturalProperties = new TexturalProperties(gdtmNowe);
+                    System.out.println(texturalProperties);
+                } else{
+                    TexturalProperties texturalProperties = Transformer.averageProperties(propsTemp,"ALL");
+                    System.out.println(texturalProperties);
+                }
             }
         }
         Consumer<? super ArrayList<ImageMatrix>> consumer;
@@ -383,6 +400,7 @@ public Long createTask( ArrayList<ImageMatrix> list) {
      */
     public Callable<ArrayList<Map<String,Double>>> createCallable(int startRow, int endRow, int q, int w,
             ArrayList<ImageMatrix> list, ArrayList<MatrixCommon> matrixesA) {
+       // AtomicInteger numer = new AtomicInteger();
 
         Callable<ArrayList<Map<String, Double>>> task = () -> {
             ArrayList<Map<String, Double>> properties = new ArrayList<>();
@@ -463,7 +481,7 @@ public Long createTask( ArrayList<ImageMatrix> list) {
                         progress.put(gdtmNext.getInputDataMatrix().getImageName(),(int) progress.get(gdtmNext.getInputDataMatrix().getImageName())+1);
                     else
                         progress.put(gdtmNext.getInputDataMatrix().getImageName(),1);
-                    //System.out.println(progress);
+                    System.out.println(progress);
                 }
             } else {
 
@@ -541,6 +559,8 @@ public Long createTask( ArrayList<ImageMatrix> list) {
                     else
                         progress.put(gdtmNext.getInputDataMatrix().getImageName(),1);
                     System.out.println(progress);
+                  //  numer.getAndIncrement();
+                   // System.out.println(numer.get());
                 }
             }
             return properties;

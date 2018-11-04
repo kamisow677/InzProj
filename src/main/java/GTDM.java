@@ -373,6 +373,30 @@ public class GTDM {
         }
     }
 
+    private void calculateNextColumnSNowe() {
+        Double i = 0.0;
+
+        int startY = inputDataMatrix.getStartHeight();
+        int startX = inputDataMatrix.getStartWidth();
+        for (int k = d - Constans.QUADRATIC_SIZE/2 ; k < height - d +Constans.QUADRATIC_SIZE/2; k++) {
+            i = inputDataMatrix.get(k,  d - 1);
+            Double partSum = s.get(i.intValue());
+            if (partSum == null)
+                partSum = 0.0;
+            partSum -= Math.abs(i - matrixA.get(k + startY, d - 1 + startX));// |i-A|
+            s.set(i.intValue(), partSum);//s(i)= SIGMA |i-A|
+        }
+
+        for (int k = d -Constans.QUADRATIC_SIZE/2; k < height - d +Constans.QUADRATIC_SIZE/2 ; k++) {
+            i = inputDataMatrix.get(k, - d + width - 1);
+            Double partSum = s.get(i.intValue());
+            if (partSum == null)
+                partSum = 0.0;
+            partSum += Math.abs(i - matrixA.get(k + startY, - d + width + startX - 1));// |i-A|
+            s.set(i.intValue(), partSum);//s(i)= SIGMA |i-A|
+        }
+    }
+
 
     public void writeAllValuesOfImage(){
 
@@ -435,6 +459,24 @@ public class GTDM {
         for (int k = d; k < height - d; k++) {
             for (int l = d; l < width - d; l++) {
                 i = inputDataMatrix.get(k, l);
+                Double partSum = s.get(i.intValue());
+                if (partSum == null)
+                    partSum = 0.0;
+                partSum += Math.abs(i - matrixA.get(k + startY, l + startX));// |i-A|
+                s.set(i.intValue(), partSum);//s(i)= SIGMA |i-A|
+            }
+        }
+    }
+
+    private void calculateSNOWE() {
+        Double i=0.0;
+        int startY = inputDataMatrix.getStartHeight();
+        int startX = inputDataMatrix.getStartWidth();
+        for (int k = d - Constans.QUADRATIC_SIZE/2; k < height - d +Constans.QUADRATIC_SIZE/2; k++) {
+            for (int l = d - Constans.QUADRATIC_SIZE/2; l < width - d +Constans.QUADRATIC_SIZE/2; l++) {
+                i = inputDataMatrix.get(k, l);
+                if (i==null)
+                    continue;;
                 Double partSum = s.get(i.intValue());
                 if (partSum == null)
                     partSum = 0.0;
