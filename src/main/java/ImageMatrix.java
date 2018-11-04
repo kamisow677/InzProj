@@ -1,20 +1,62 @@
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBuffer;
 
+/**
+ * @author Kamil Sowa
+ * @version 1.0
+ * Klasa ta jest macierzą przechowującą dane o obrazie
+ *
+ */
 public class ImageMatrix implements Matrix {
+    /**
+     * Obraz buforowany
+     */
     BufferedImage bufferedImage;
+    /**
+     * nazwa obrazu wraz z ścieżka do obrazu
+     */
     String imageNameWithPathName;
+    /**
+     * szerokość obrazu
+     */
     int width = 0;
+    /**
+     * wysokość obrazu
+     */
     int height = 0;
+    /**
+     * Wartość x lewego górnego rogu początku obrazu lub kwadratowego regionu do przetwarzania
+     */
     int startWidth = 0;
+    /**
+     * Wartość y lewego górnego rogu początku obrazu lub kwadratowego regionu do przetwarzania
+     */
     int startHeight = 0;
+    /**
+     * szerokość sąsiedztwa
+     */
     int d;
+    /**
+     * bufor z danymi o obrazie
+     */
     public DataBuffer dataBuffer;
 
+    /**
+     * możliwe kolory kanałó
+     */
     public enum COLOR {RED, GREEN, BLUE, GREY, ALL}
 
+    /**
+     * kolor obrazu
+     */
     private COLOR color;
 
+    /**
+     * Konstruktoe
+     * @param bufferedImage obraz buforowany
+     * @param color kolor obrazu
+     * @param imageNameWithPathName nazwa obrazu ze ścieżką
+     */
     public ImageMatrix(BufferedImage bufferedImage, COLOR color, String imageNameWithPathName) {
         this.bufferedImage = bufferedImage;
         this.color = color;
@@ -25,12 +67,17 @@ public class ImageMatrix implements Matrix {
         startHeight = 0;
         this.dataBuffer = bufferedImage.getData().getDataBuffer();
     }
-    public ImageMatrix(ImageMatrix m) {
-        this.bufferedImage = m.bufferedImage;
-        this.color = m.color;
-        this.imageNameWithPathName = m.imageNameWithPathName;
-        width = m.bufferedImage.getWidth();
-        height = m.bufferedImage.getHeight();
+
+    /**
+     * Konstruktor kopiujący
+     * @param matrix macierz z obrazem
+     */
+    public ImageMatrix(ImageMatrix matrix) {
+        this.bufferedImage = matrix.bufferedImage;
+        this.color = matrix.color;
+        this.imageNameWithPathName = matrix.imageNameWithPathName;
+        width = matrix.bufferedImage.getWidth();
+        height = matrix.bufferedImage.getHeight();
         startWidth = 0;
         startHeight = 0;
         this.dataBuffer = bufferedImage.getData().getDataBuffer();
@@ -40,6 +87,12 @@ public class ImageMatrix implements Matrix {
         return imageNameWithPathName;
     }
 
+    /**
+     * Pobranie wartości odpowiedniego piksela
+     * @param j kolumna piksela
+     * @param i wiersz piksela
+     * @return wartość piksela
+     */
     @Override
     public double get(int j, int i) {
         int argb = bufferedImage.getRGB(i+startWidth, j+startHeight);
@@ -76,6 +129,10 @@ public class ImageMatrix implements Matrix {
         return ((argb) & 0xFF)/Constans.QUANTIZATION;
     }
 
+    /**
+     *  Pobranie nazwy koloru
+     * @return nazwę koloru
+     */
     public String getColor() {
         switch (color) {
             case GREY: {
@@ -111,6 +168,9 @@ public class ImageMatrix implements Matrix {
         return width;
     }
 
+    /**
+     * Wyświetlenie obrazu
+     */
     public void printf() {
         for (int i = 0; i < bufferedImage.getHeight(); i++) {
             for (int j = 0; j < bufferedImage.getWidth(); j++) {

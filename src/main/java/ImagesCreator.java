@@ -7,9 +7,22 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.OptionalDouble;
 
+/**
+ * @author Kamil Sowa
+ * @version 1.0
+ * Klasa ta służy do tworzenia obrazów
+ *
+ */
 public class ImagesCreator {
 
 
+    /**
+     * Tworzy obraz RGB
+     * @param prop Lista map z wartościami 5 cech. Kluczami sąnazwy parametrów metody
+     * @param height wysokość obrazu
+     * @param width szerokośćobrazu
+     * @param imageName nazwa obrazu
+     */
     public static void createRGBPixelImage(ArrayList<Map<String,Double>> prop , int height, int width, String imageName){
         System.out.println("Width: "+(width-Constans.QUADRATIC_SIZE));
         System.out.println("Height: "+(height-Constans.QUADRATIC_SIZE));
@@ -61,9 +74,20 @@ public class ImagesCreator {
         }
     }
 
+    /**
+     * Pobranie nazwy ze ścieżki
+     * @param path ścieżka
+     * @return nazwę pliku
+     */
     static String nameFromPath(String path){
         return path.substring(path.lastIndexOf("\\"));
     }
+
+    /**
+     * Tworzy obraz wykorzystywany do testów jednostkowych
+     * @param data dane obrazu, macierz wartości
+     * @param size wielkość macierzy
+     */
     public static void createTestPixelImage(byte [][] data, int size){
        // byte [][] daneTestowe = new byte[][]{{1, 2, 3, 4, 5}, {2, 3, 1, 4, 1}, {5, 2, 2, 3, 3}, {3, 1, 4, 4, 5}, {1, 5, 4, 2, 2}};
         BufferedImage buffImage;
@@ -84,6 +108,13 @@ public class ImagesCreator {
         }
     }
 
+    /**
+     * Tworzy obraz w skali szarości
+     * @param prop Lista map z wartościami 5 cech. Kluczami sąnazwy parametrów metody
+     * @param height wysokość obrazu
+     * @param width szerokośćobrazu
+     * @param imageName nazwa obrazu
+     */
     public static void createGreyPixelImage(ArrayList<Map<String,Double>> prop , int height, int width, String imageName){
         //byte [][] daneTestowe = new byte[][]{{1, 2, 3, 4, 5}, {2, 3, 1, 4, 1}, {5, 2, 2, 3, 3}, {3, 1, 4, 4, 5}, {1, 5, 4, 2, 2}};
         System.out.println("Width: "+(width-Constans.QUADRATIC_SIZE));

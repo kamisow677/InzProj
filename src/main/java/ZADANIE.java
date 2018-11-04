@@ -57,7 +57,7 @@ public class ZADANIE implements Command {
     @Parameter
     UIService ui;
 
-    @Parameter (label="Path to folder with images")
+    @Parameter (label="Ścieżka do folderu z obrazami")
     private File pathLoad;
 
     @Parameter(min = "1" , max = "5")
@@ -66,24 +66,23 @@ public class ZADANIE implements Command {
     @Parameter(min = "9" , max = "101")
     private int quadraticRegionSize = 150;
 
-    @Parameter(label="Choose folder to which everything should be saved")
+    @Parameter(label="Ścieżka do folderu, gdzie mają być zapisane obrazy")
     private File pathSave;
 
-    @Parameter(label="Quantization factor", min = "1" , max = "8")
+    @Parameter(label="Współczynnik kwantyzacji", min = "1" , max = "8")
     private int quantization;
 
-    @Parameter(label="Average matrixes or average properties?",choices={"YES","NO"})
-    private String averageMatrixes = "YES";
+    @Parameter(label="Usredniać macierze czy obliczone cechy.",choices={"macierze","cechy"})
+    private String averageMatrixes = "macierze";
 
 
-    /*
-     * The run() method is where we do the actual 'work' of the command. In this
-     * case, it is fairly trivial because we are simply calling ImageJ Services.
+    /**
+     * Początek pracy wtyczki
      */
     @Override
     public void run() {
         Tester3 tester = new Tester3();
-        if (averageMatrixes.equals("YES"))
+        if (averageMatrixes.equals("macierze"))
             Constans.setAverageMatrixes(true);
         else
             Constans.setAverageMatrixes(false);
@@ -97,9 +96,6 @@ public class ZADANIE implements Command {
         Constans.SAVE_PATH = pathSave.getPath()+"\\";
         Constans.validationEnd = false;
 
-        /**
-         * Walidacja
-         */
         Constans.validInputData=true;
 
         if (quadraticRegionSize/2 <= neighbourhood){
@@ -117,7 +113,7 @@ public class ZADANIE implements Command {
                 Thread.sleep(100);
             }
         }catch (InterruptedException ex){
-            sts.showStatus("This shuld not show");
+            sts.showStatus("This should not show");
         }
 
         if (!Constans.validInputData) {
@@ -134,7 +130,7 @@ public class ZADANIE implements Command {
                                 }
                             }
                             if (tester.progress.entrySet().size() != 0 && !String.valueOf(percentage / tester.progress.entrySet().size()).equals("null"))
-                                sts.showStatus("" + String.valueOf(percentage / tester.progress.entrySet().size()) + "%  " + tester.progress.entrySet().size());
+                                sts.showStatus("" + String.valueOf(percentage / tester.getListOfMatrixData().size()) + "%  " + tester.progress.entrySet().size());
                             Thread.sleep(100);
                         }
                         sts.showStatus("GOTOWE");
@@ -148,26 +144,17 @@ public class ZADANIE implements Command {
 
     }
 
+    /**
+     * Metoda main wtyczki
+     * @param args
+     * @throws Exception
+     */
     public static void main(final String... args) throws Exception {
         // Launch ImageJ as usual.
         final ImageJ ij = new ImageJ();
         ij.launch(args);
         ij.command().run(ZADANIE.class, true);
     }
-    private static void createAndShowGUI() {
-        //Create and set up the window.
-        JFrame frame = new JFrame("HelloWorldSwing");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(500, 300);
 
-        //Add the ubiquitous "Hello World" label.
-        JLabel label = new JLabel("Hello World");
-        frame.getContentPane().add(label);
-
-        //Display the window.
-        frame.show();
-        frame.pack();
-        frame.setVisible(true);
-    }
 }
 

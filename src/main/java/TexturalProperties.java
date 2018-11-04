@@ -1,27 +1,78 @@
 import java.util.*;
 
+/**
+ * @author Kamil Sowa
+ * @version 1.0
+ * Klasa obliczająca 5 parametrów metody
+ *
+ */
 public class TexturalProperties {
 
+    /**
+     * obiekt klasy gtdm
+     */
     private GTDM gtdm;
+    /**
+     * wektor gtdm
+     */
     private ArrayList<Double> s;
+    /**
+     * wektor prawdopodobieństwa wystąpienia piksela w obrazie
+     */
     private ArrayList<Double> p;
+    /**
+     * współczynnik n2
+     */
     private Double n2;
+    /**
+     * parametr Coarness
+     */
     private Double Coarness;
+    /**
+     * parametr Contrast
+     */
     private Double Contrast;
+    /**
+     * parametr Busyness
+     */
     private Double Busyness;
+    /**
+     * parametr Complexity
+     */
     private Double Complexity;
+    /**
+     * parametr Strength
+     */
     private Double Strength;
+    /**
+     * kolor obrazu
+     */
     private String Color;
+    /**
+     * wartość epsilon zabezpiecza przed uzyskiwaniem 0 w mianownikach wzorów
+     */
     private Double Epsilon = 0.0000001;
-
+    /**
+     * Mianownik parametru Busyness
+     */
     private Double psiNumeratorBusyness;
-
+    /**
+     * częściowe obliczenia Contrastu
+     */
     private Double partContrast;
-
+    /**
+     * częściowe obliczenia Strength
+     */
     private Double partStrength;
-
+    /**
+     * częściowe obliczenia Complexity
+     */
     private Double partComplexity;
 
+    /**
+     * Konstruktor
+     * @param gtdm macierz różnic poziomów szarości
+     */
     public TexturalProperties(GTDM gtdm)  {
         this.gtdm = gtdm;
         this.s = new ArrayList<>( gtdm.getS());
@@ -29,9 +80,18 @@ public class TexturalProperties {
         this.n2 = gtdm.getN2();
         this.Color = gtdm.getInputDataMatrix().getColor();
 
-        testSpeedFirst();
+        calculateProperties();
     }
 
+    /**
+     * Konstruktor
+     * @param coarness coarness
+     * @param contrast contrast
+     * @param busyness busyness
+     * @param complexity complexity
+     * @param strength strength
+     * @param color kolor
+     */
     public TexturalProperties(Double coarness, Double contrast, Double busyness, Double complexity, Double strength, String color)  {
         this.Coarness = coarness;
         this.Contrast = contrast;
@@ -44,7 +104,10 @@ public class TexturalProperties {
         gtdm.saveToCSV(part);
     }
 
-    public void testSpeedFirst() {
+    /**
+     * Wyliczenie wszystkich parametrów metody
+     */
+    public void calculateProperties() {
         Double Ng = 0.0;
         for (int i = 0 ; i < p.size() ;i++){
             if (p.get(i)!=0.0){

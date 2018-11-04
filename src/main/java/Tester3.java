@@ -11,13 +11,38 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.function.Consumer;
 
+/**
+ * @author Kamil Sowa
+ * @version 1.0
+ * Główna klasa programu zarządzająca działąniem całego procesu tworzenia map cech
+ *
+ */
 public class Tester3 {
 
+    /**
+     * lista ścieżek do obrazów z ich nazwami
+     */
     public ArrayList<String> listOfPathsToImagePlusName = new ArrayList<>();
+    /**
+     * lista macierzy z danymi o obrazach
+     */
     ArrayList<ArrayList<ImageMatrix>> listOfMatrixData = new ArrayList<>();
+    /**
+     * dane o stopniu wykonania pracy
+     */
     public Map<String,Integer> progress = new HashMap();
+    /**
+     * całkowita ilość pracy do wykonania
+     */
     public Map<String,Integer> progressMax = new HashMap();
 
+    public ArrayList<ArrayList<ImageMatrix>> getListOfMatrixData() {
+        return listOfMatrixData;
+    }
+
+    /**
+     * metoda rozpoczynająca pracę procesu tworzenia map cech
+     */
     public void run() {
 
         System.out.println("D: " + Constans.getD());
@@ -42,10 +67,6 @@ public class Tester3 {
         }
         Constans.validationEnd = true;
 
-        /**
-         * Now i only take one matrix
-         */
-
         for (ArrayList<ImageMatrix> list : listOfMatrixData){
             for (ImageMatrix m : list){
                 m.setStartHeight(0);
@@ -57,29 +78,22 @@ public class Tester3 {
                 System.out.println(texturalProperties);
             }
         }
-//        if (Constans.slowGTDMcalc)
-//            showOld(listOfMatrixData.get(0).get(0));
-//        else {
-            Consumer<? super ArrayList<ImageMatrix>> consumer;
+        Consumer<? super ArrayList<ImageMatrix>> consumer;
 
-            consumer = (array) -> createTask2(array);
+        consumer = (array) -> createTask2(array);
 
-//        listOfMatrixData.parallelStream()
-//                .forEach(consumer);
-
-            listOfMatrixData.stream()
-                    .forEach(consumer);
+        listOfMatrixData.stream()
+            .forEach(consumer);
 
 
-            Constans.NUMBER_OF_COLORS = 4;
-            progress.clear();
-            progressMax.clear();
-  //      }
+        Constans.NUMBER_OF_COLORS = 4;
+        progress.clear();
+        progressMax.clear();
 
     }
 
     /**
-     * Transform path to new Matrix of data
+     * Zmienia listę ścieżek do obrazów na obiekty klasy ImageMatrix i zapisuje je w kolekcji
      */
     private void imagePathToMatrix() {
         for (String pathToImagePlusName : listOfPathsToImagePlusName) {
@@ -106,6 +120,11 @@ public class Tester3 {
             listOfMatrixData.add(listOfSingleColorImage);
         }
     }
+
+    /**
+     * Sprawdzenie czy obraz jest w skali szarości
+     * @return true jeśli obraz jest w skali szarości
+     */
     private boolean isGrey(BufferedImage buffImage){
         if ( buffImage.getType() == BufferedImage.TYPE_BYTE_GRAY || buffImage.getRaster().getNumBands() == 1)
             return true;
@@ -114,9 +133,8 @@ public class Tester3 {
     }
 
     /**
-     * Creates list of images paths + its name
-     *
-     * @param folder
+     * Generuje listę ścieżek do obrazów znajdujących się w folderze
+     * @param folder folder z obrazami
      */
     public void listFilesForFolder(final File folder) {
         for (final File fileEntry : folder.listFiles()) {
@@ -256,6 +274,13 @@ public Long createTask( ArrayList<ImageMatrix> list) {
         matrixesA.clear();
         return null;
     }
+
+
+    /**
+     * Tworzy zadania do wykonania. Dzieli obraz na części i rozdziela je do przetwarzania
+     * @param list lista macierzy obrazów do przetworzenia
+     * @return
+     */
     public Long createTask2( ArrayList<ImageMatrix> list) {
 
         ArrayList<Map<String, Double>> properties = new ArrayList<>();//final props all to write image
@@ -273,21 +298,23 @@ public Long createTask( ArrayList<ImageMatrix> list) {
             l.setStartWidth(0);
             gdtmNowe = new GTDM(l);
             gdtmNowe.setD(Constans.D);
-            //gdtmNowe.startFirstCalcualtions(true, false);
             matrixesA.add(gdtmNowe.getMatrixA());
             l.setHeight(Constans.QUADRATIC_SIZE);
             l.setWidth(Constans.QUADRATIC_SIZE);
         }
-
-//        int numberOfThreads = Runtime.getRuntime().availableProcessors()-2;
-        int numberOfThreads = 1;
+        int numberOfThreads;
+        if (Constans.parallel==true) {
+            numberOfThreads = Runtime.getRuntime().availableProcessors() - 2;
+        }else {
+            numberOfThreads = 1;
+        }
         ArrayList< ArrayList<ImageMatrix>> listParts = new ArrayList<>();
-        int pla = (h - q) / numberOfThreads;
+        int partheight = (h - q) / numberOfThreads;
         for (int i =0 ; i< numberOfThreads ; i++) {
             ArrayList<ImageMatrix> list2 = new ArrayList<>();
             for (ImageMatrix imageMatrix : list) {
                 ImageMatrix im = new ImageMatrix(imageMatrix);
-                im.setStartHeight(i*pla);
+                im.setStartHeight(i*partheight);
                 im.setStartWidth(0);
                 im.setHeight(Constans.QUADRATIC_SIZE);
                 im.setWidth(Constans.QUADRATIC_SIZE);
@@ -297,19 +324,18 @@ public Long createTask( ArrayList<ImageMatrix> list) {
         }
 
         int rest = (h - q) % numberOfThreads;
-        System.out.println("ROZDZIELANIE");
 
-        ExecutorService executor = Executors.newWorkStealingPool();
+        ExecutorService executorService = Executors.newWorkStealingPool(numberOfThreads);
         for (int i = 0 ; i<listParts.size() -1; i++){
-            callables.add(createCallable(i*pla, (i+1)*pla, q, w, new ArrayList<>(listParts.get(i)), new ArrayList<>(matrixesA)));
+            callables.add(createCallable(i*partheight, (i+1)*partheight, q, w, new ArrayList<>(listParts.get(i)), new ArrayList<>(matrixesA)));
         }
-        callables.add(createCallable((listParts.size() -1)*pla, (listParts.size())*pla + rest, q, w, new ArrayList<>(listParts.get(listParts.size() -1)), new ArrayList<>(matrixesA)));
+        callables.add(createCallable((listParts.size() -1)*partheight, (listParts.size())*partheight + rest, q, w, new ArrayList<>(listParts.get(listParts.size() -1)), new ArrayList<>(matrixesA)));
 
         try {
-            List<Future<ArrayList<Map<String, Double>>>> futures = executor.invokeAll(callables);
-            while (!checkIfAllAreDone(futures)){
-                Thread.sleep(1000);
-            }
+            List<Future<ArrayList<Map<String, Double>>>> futures = executorService.invokeAll(callables);
+//            while (!checkIfAllAreDone(futures)){
+//                Thread.sleep(1000);
+//            }
             for (Future<ArrayList<Map<String, Double>>> future : futures) {
                 properties2.add(future.get());
             }
@@ -345,7 +371,16 @@ public Long createTask( ArrayList<ImageMatrix> list) {
         return  done;
     }
 
-
+    /**
+     * Metoda tworzy nowy obiekt Callable, który zajmie się przetwarzaniem części obrazu
+     * @param startRow początkowy wiersz
+     * @param endRow końcowy wiersz
+     * @param q wielkość kwadratowego regionu
+     * @param w szerokość całego obrazu
+     * @param list lista macierzy z danymi o obrazie
+     * @param matrixesA macierz lub macierze średniej wartości pikseli
+     * @return obiekt Callable
+     */
     public Callable<ArrayList<Map<String,Double>>> createCallable(int startRow, int endRow, int q, int w,
             ArrayList<ImageMatrix> list, ArrayList<MatrixCommon> matrixesA) {
 
@@ -358,9 +393,9 @@ public Long createTask( ArrayList<ImageMatrix> list) {
 
             if (Constans.AVERAGE_MATRIXES) {
                 for (int i = startRow; i < endRow; i++) {
-                    for (int j = q / 2; j < w - q / 2; j++) {
+                    for (int j = 0; j < w - q ; j++) {
                         try {
-                            if (i == startRow && j == q / 2) {
+                            if (i == startRow && j == 0) {
                                 /**
                                  * TO JEST TEN FIRST Z TESTU
                                  */
@@ -382,7 +417,7 @@ public Long createTask( ArrayList<ImageMatrix> list) {
                                 properties.add(texturalPropertiesNew.getProps());
                                 tex.clear();
 
-                            } else if (j == q / 2) {
+                            } else if (j == 0) {
 
                                 //if ((list.get(0).getBufferedImage().getType()==BufferedImage.TYPE_BYTE_GRAY)){
                                 if (isGrey(list.get(0).getBufferedImage())){
@@ -443,8 +478,8 @@ public Long createTask( ArrayList<ImageMatrix> list) {
 
 
                 for (int i = startRow; i < endRow; i++) {
-                    for (int j = q / 2; j < w - q / 2; j++) {
-                        if (i == startRow && j == q / 2) {
+                    for (int j = 0; j < w - q; j++) {
+                        if (i == startRow && j == 0) {
                             /**
                              * TO JEST TEN FIRST Z TESTU
                              */
@@ -462,7 +497,7 @@ public Long createTask( ArrayList<ImageMatrix> list) {
                             texturalPropertiesNew = Transformer.averageProperties(tex, list.get(0).getColor());
                             properties.add(texturalPropertiesNew.getProps());
                             tex.clear();
-                        } else if (j == q / 2) {
+                        } else if (j == 0) {
                             //if ((list.get(0).getBufferedImage().getType()==BufferedImage.TYPE_BYTE_GRAY)){
                             if (isGrey(list.get(0).getBufferedImage())){
                                 listaGDTMOWNext.set(0, new GTDM(listaGDTMOWNext.get(0), false));
@@ -484,7 +519,6 @@ public Long createTask( ArrayList<ImageMatrix> list) {
                             //if ((list.get(0).getBufferedImage().getType()==BufferedImage.TYPE_BYTE_GRAY)){
                             if (isGrey(list.get(0).getBufferedImage())){
                                 listaGDTMOWNext.set(0, new GTDM(listaGDTMOWNext.get(0), true));
-                                Constans.a=99;
                                 listaGDTMOWNext.get(0).startNextColumnCalcualtions(true, false);
                                 texturalPropertiesNew = new TexturalProperties(listaGDTMOWNext.get(0));
                                 writer.println(texturalPropertiesNew.getCoarness());

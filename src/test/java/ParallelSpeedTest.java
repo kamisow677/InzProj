@@ -1,6 +1,6 @@
 import org.junit.jupiter.api.Test;
 
-public class GTDMSpeedTest {
+public class ParallelSpeedTest {
 
     @Test
     public void test() {
@@ -15,17 +15,16 @@ public class GTDMSpeedTest {
 
         startTime = System.currentTimeMillis();
         Constans.parallel=true;
-        Constans.slowGTDMcalc=true;
         tester.run();
         stopTime = System.currentTimeMillis();
         elapsedTime1 = stopTime - startTime;
 
         startTime = System.currentTimeMillis();
-        Constans.slowGTDMcalc=false;
+        Constans.parallel=false;
         tester.run();
         stopTime = System.currentTimeMillis();
         elapsedTime2 = stopTime - startTime;
-        System.out.println("SLOW GTDM: " + elapsedTime1);
-        System.out.println("SPEED GTDM: " + elapsedTime2);
+        System.out.println("PARALELL: " + elapsedTime1);
+        System.out.println("NON PARALLEL: " + elapsedTime2);
     }
 }

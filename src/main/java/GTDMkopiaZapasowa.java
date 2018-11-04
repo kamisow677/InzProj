@@ -1,65 +1,37 @@
-import java.awt.image.DataBuffer;
-import java.io.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
-/**
- * @author Kamil Sowa
- * @version 1.0
- * Klasa ta jest odpowiedzialna za obliczanie macierzy różnic szarości
- * Oprócz tego wylicza wektor prawdopodobieństwa występowania piksela w obrazie lub jego kwadratowym regionie
- *
- */
-public class GTDM {
+public class GTDMkopiaZapasowa {
     /**
-     * wielkość okna obliczeń.
+     * neighbourhood size
      */
     private  int d = 1;
-    /**
-     * macierz z danymi o obrazie wejściowym
-     */
     private Matrix inputDataMatrix;
-    /**
-     * nazwa obrazu
-     */
     private  String imageName;
-    /**
-     * wysokość obrazu
-     */
     private int height;
-    /**
-     * szerokość obrazu
-     */
     private int width;
     /**
-     * macierz średniej wartości piksel
+     * average grey tone matrix
      */
     private MatrixCommon matrixA;
     /**
-     * wartości macierzy różnić poziomów szarości
+     * value of grey tone difference matrix
      */
     private ArrayList<Double> s;
     /**
-     *  wektor prawdopodobieństwa występowania piksela
+     * probabilty of occurence of value
      */
     private ArrayList<Double> p;
-    /**
-     *  wektor ilości pikseli o danej wartości
-     */
     private ArrayList<Double> pRaw;
-    /**
-     *  wektor ilości pikseli o danej wartości z pierwszej kolumny
-     */
     private ArrayList<Double> originRawP;
-    /**
-     * wartości macierzy różnić poziomów szarości 1 kolumny
-     */
     private ArrayList<Double> originS;
-    /**
-     *  wektor prawdopodobieństwa występowania piksela 1 kolumny
-     */
     private ArrayList<Double> originP;
+    private Set<Double> changedPixels;
 
     private double n2;
 
@@ -121,13 +93,15 @@ public class GTDM {
 
     public ArrayList<Double> getOriginS() { return originS; }
 
+    public Set<Double> getChangedPixels() { return changedPixels; }
+
     public ArrayList<Double> getOriginP() {   return originP;  }
 
     /**
-     * Konstruktor, najprostszy.
-     * @param inputData macierz z danymi o obrazie
+     * Just for matrix A
+     * @param inputData
      */
-    public GTDM(Matrix inputData){
+    public GTDMkopiaZapasowa(Matrix inputData){
         this.matrixA = new MatrixCommon(inputData.getHeight(), inputData.getWidth());
         this.s = new ArrayList<Double>(Constans.PIXEL_NUMBER_PLUS_1);
         this.p = new ArrayList<Double>(Constans.PIXEL_NUMBER_PLUS_1);
@@ -143,18 +117,20 @@ public class GTDM {
         n2 = (double) (height - 2 * d) * (width - 2 * d);
         calculateMatrixA();
 
+        //System.out.println("obliczylem A");
     }
 
     /**
-     * Konstruktor z macierzą średniej wartości pikseli
-     * @param inputData macierz z danymi o obrazie
-     * @param matrixA  macierz średniej wartości pikseli
+     * For first calculations
+     * @param inputData
+     * @param matrixA
      */
-    public GTDM(Matrix inputData, MatrixCommon matrixA){
+    public GTDMkopiaZapasowa(Matrix inputData, MatrixCommon matrixA){
         this.matrixA = matrixA;
         this.s = new ArrayList<Double>(Constans.PIXEL_NUMBER_PLUS_1);
         this.p = new ArrayList<Double>(Constans.PIXEL_NUMBER_PLUS_1);
         this.pRaw = new ArrayList<Double>(Constans.PIXEL_NUMBER_PLUS_1);
+        this.changedPixels = new HashSet<>(Constans.PIXEL_NUMBER_PLUS_1);
         this.imageName = inputData.getImageName();
         height = inputData.getHeight();
         width = inputData.getWidth();
@@ -168,16 +144,17 @@ public class GTDM {
     }
 
     /**
-     * Konstruktor dla kolejnej macierzy poziomów szarości
-     * @param previousGDTM poprednia macierz gtdm
-     * @param GoingRight jeżeli ustawione na true to wyliczane dla kolejnej kolumny, jeśli na false do dla kolejnego wiersza
+     * For next calculations in row and column
+     * @param previousGDTM
+     * @param GoingRight
      */
-    public GTDM(GTDM previousGDTM, boolean GoingRight){
+    public GTDMkopiaZapasowa(GTDMkopiaZapasowa previousGDTM, boolean GoingRight){
         this.d = previousGDTM.d;
         if (inputDataMatrix instanceof  ImageMatrix)
             this.inputDataMatrix =  new ImageMatrix((ImageMatrix) previousGDTM.getInputDataMatrix());
         else
             this.inputDataMatrix = previousGDTM.getInputDataMatrix();
+        this.changedPixels = new HashSet<>(Constans.PIXEL_NUMBER_PLUS_1);
         this.matrixA = previousGDTM.getMatrixA();
 
         if (GoingRight){
@@ -196,46 +173,80 @@ public class GTDM {
             this.pRaw = previousGDTM.getOriginRawP();
         }
 
+
         this.height = inputDataMatrix.getHeight();
         this.width = inputDataMatrix.getWidth();
         n2 = (double) (height - 2 * d) * (width - 2 * d);
 
     }
+    public GTDMkopiaZapasowa(GTDMkopiaZapasowa gdtm){
+        this.d = gdtm.d;
+        if (inputDataMatrix instanceof  ImageMatrix)
+            this.inputDataMatrix =  new ImageMatrix((ImageMatrix) gdtm.inputDataMatrix);
+        else
+            this.inputDataMatrix = gdtm.inputDataMatrix;
+        imageName = gdtm.imageName;
+        height = gdtm.height;
+        width = gdtm.width;
+        matrixA =gdtm.getMatrixA();
+        s = new ArrayList<>(gdtm.s);
+        p = new ArrayList<>(gdtm.p);
+        pRaw = new ArrayList<>(gdtm.pRaw);
+        originRawP = new ArrayList<>(gdtm.originRawP);
+        originS = new ArrayList<>(gdtm.originS);
+        originP = new ArrayList<>(gdtm.originP);
+        changedPixels = new HashSet<>(gdtm.changedPixels);
+    }
 
-    /**
-     * Konstruktor dla gdtm będącego średnią poszczególnych trzech kolorów
-     * @param gtdm1 gdtm koloru 1
-     * @param gtdm2 gdtm koloru 2
-     * @param gtdm3 gdtm koloru 3
-     */
-    public GTDM(GTDM gtdm1, GTDM gtdm2, GTDM gtdm3){
-        this.matrixA = gtdm1.getMatrixA();
-        this.d = gtdm1.d;
+
+    public GTDMkopiaZapasowa(GTDMkopiaZapasowa matrix1, GTDMkopiaZapasowa matrix2, GTDMkopiaZapasowa matrix3){
+        this.matrixA = matrix1.getMatrixA();
+        this.d = matrix1.d;
         this.s = new ArrayList<Double>(Constans.PIXEL_NUMBER_PLUS_1);
         this.p = new ArrayList<Double>(Constans.PIXEL_NUMBER_PLUS_1);
-        height = gtdm1.getInputDataMatrix().getHeight();
-        width = gtdm2.getInputDataMatrix().getWidth();
-        this.imageName = gtdm1.imageName;
+        height = matrix1.getInputDataMatrix().getHeight();
+        width = matrix2.getInputDataMatrix().getWidth();
+        this.imageName = matrix1.imageName;
 
+        //this.inputDataMatrix = matrix1.getInputDataMatrix();
         if (inputDataMatrix instanceof  ImageMatrix)
-            this.inputDataMatrix =  new ImageMatrix((ImageMatrix) gtdm1.getInputDataMatrix());
+            this.inputDataMatrix =  new ImageMatrix((ImageMatrix) matrix1.getInputDataMatrix());
         else
-            this.inputDataMatrix = gtdm1.getInputDataMatrix();
+            this.inputDataMatrix = matrix1.getInputDataMatrix();
         n2 = (double) (height - 2 * d) * (width - 2 * d);
+        //inputDataMatrix.printf();
 
         initializaS();
-        calculateS(gtdm1.getS(),gtdm2.getS(),gtdm3.getS());
+        calculateS(matrix1.getS(),matrix2.getS(),matrix3.getS());
+        //  printfS();
 
         initializaP();
-        computeP(gtdm1.getP(),gtdm2.getP(),gtdm3.getP());
+        //computeP(matrix1.getInputDataMatrix(),matrix2.getInputDataMatrix(),matrix3.getInputDataMatrix());
+        computeP(matrix1.getP(),matrix2.getP(),matrix3.getP());
+        //  printfP();
+    }
+
+    public GTDMkopiaZapasowa(ArrayList<GTDMkopiaZapasowa> matrixes, int heigth , int width) {
+        this.s = new ArrayList<Double>(Constans.PIXEL_NUMBER_PLUS_1);
+        this.p = new ArrayList<Double>(Constans.PIXEL_NUMBER_PLUS_1);
+        this.d = matrixes.get(0).getD();
+        height = heigth;
+        this.width = width;
+        this.imageName = imageName;
+
+        this.inputDataMatrix = matrixes.get(0).getInputDataMatrix();
+        n2 = (double) (height - 2 * d) * (this.width - 2 * d);
+
+        initializaS();
+        calculateS(matrixes);
+
+        initializaP();
+        computeP();
     }
 
 
     /**
-     * Obliczanie średnią wartość piksela w macierzy A
-     * @param k numer kolumny
-     * @param l numer wiersza
-     * @return zwraca średnią wartość piksela w oknie
+     * average gray-tone over a neighborhood centered at, but excluding ( k , I )
      */
     public double calculateA(int k, int l) {
         double suma = 0;
@@ -253,9 +264,6 @@ public class GTDM {
         return suma / (Math.pow(2 * d + 1, 2) - 1);
     }
 
-    /**
-     * Obliczanie macierzy A
-     */
     public void calculateMatrixA() {
         for (int k = d; k < height - d; k++) {
             for (int l = d; l < width - d; l++) {
@@ -265,10 +273,9 @@ public class GTDM {
     }
 
     /**
-     * Obliczanie gdtm oraz wektora prawdopodobieństwa dla całego obrazu lub regionu
-     * @param calculateP jeśli ustawione na true to oblicza p
-     * @param print jeśli true to wypisuje zawartość s i p
-      */
+     * Needs calculations made for the first squareRegion
+     * @param calculateP
+     */
     public void startFirstCalcualtions(Boolean calculateP, Boolean print){
         initializaS();
         calculateS();
@@ -288,9 +295,8 @@ public class GTDM {
     }
 
     /**
-     * Obliczanie gdtm oraz wektora prawdopodobieństwa dla następnej kolumny obrazu lub regionu
-     * @param calculateP jeśli ustawione na true to oblicza p
-     * @param print jeśli true to wypisuje zawartość s i p
+     * Needs calculations for rest
+     * @param calculateP
      */
     public void startNextColumnCalcualtions(Boolean calculateP, Boolean print){
         if (Constans.slowGTDMcalc==true) {
@@ -310,9 +316,8 @@ public class GTDM {
     }
 
     /**
-     * Obliczanie gdtm oraz wektora prawdopodobieństwa dla następnego wiersza obrazu lub regionu
-     * @param calculateP jeśli ustawione na true to oblicza p
-     * @param print jeśli true to wypisuje zawartość s i p
+     * Needs calculations for rest
+     * @param calculateP
      */
     public void startNextRowCalcualtions(Boolean calculateP, Boolean print){
         if (Constans.slowGTDMcalc==true) {
@@ -332,11 +337,10 @@ public class GTDM {
             originS = new ArrayList<>(s);
             originP = new ArrayList<>(p);
         }
+
     }
 
-    /**
-     * Initcalizacja gdtm
-     */
+
     private void initializaS() {
         s.clear();
         for (int i = 0; i<Constans.PIXEL_NUMBER_PLUS_1; i++) {
@@ -344,12 +348,11 @@ public class GTDM {
         }
     }
 
-    /**
-     * Obliczanie gdtm dla regionu będącego kolejną kolumną
-     */
     private void calculateNextColumnS() {
         Double i = 0.0;
-
+        /**
+         * First remove remove old components associeted with old square
+         */
         int startY = inputDataMatrix.getStartHeight();
         int startX = inputDataMatrix.getStartWidth();
         for (int k = d ; k < height - d ; k++) {
@@ -360,8 +363,12 @@ public class GTDM {
             partSum -= Math.abs(i - matrixA.get(k + startY, d - 1 + startX));// |i-A|
             s.set(i.intValue(), partSum);//s(i)= SIGMA |i-A|
 
+            changedPixels.add(i);
         }
 
+        /**
+         * Add new components associeted with new square
+         */
         for (int k = d ; k < height - d ; k++) {
             i = inputDataMatrix.get(k, - d + width - 1);
             Double partSum = s.get(i.intValue());
@@ -370,10 +377,9 @@ public class GTDM {
             partSum += Math.abs(i - matrixA.get(k + startY, - d + width + startX - 1));// |i-A|
             s.set(i.intValue(), partSum);//s(i)= SIGMA |i-A|
 
+            changedPixels.add(i);
         }
     }
-
-
     public void writeAllValuesOfImage(){
 
         PrintWriter writer = null;
@@ -396,12 +402,11 @@ public class GTDM {
         }
         writer.close();
     }
-
-    /**
-     * Obliczanie gdtm dla regionu będącego kolejnym wierszem
-     */
     private void calculateNextRowS() {
         Double i = 0.0;
+        /**
+         * First remove remove old components associeted with old square
+         */
         int startY = inputDataMatrix.getStartHeight();
         int startX = inputDataMatrix.getStartWidth();
         for (int k = d ; k < width - d ; k++) {
@@ -412,8 +417,12 @@ public class GTDM {
             partSum -= Math.abs(i - matrixA.get(d - 1 + startY, k + startX ));// |i-A|
             s.set(i.intValue(), partSum);//s(i)= SIGMA |i-A|
 
+            changedPixels.add(i);
         }
 
+        /**
+         * Add new components associeted with new square
+         */
         for (int k = d ; k < width - d ; k++) {
             i = inputDataMatrix.get(- d + height - 1, k);
             Double partSum = s.get(i.intValue());
@@ -422,12 +431,10 @@ public class GTDM {
             partSum += Math.abs(i - matrixA.get(- d + height - 1 + startY, k + startX));// |i-A|
             s.set(i.intValue(), partSum);//s(i)= SIGMA |i-A|
 
+            changedPixels.add(i);
         }
     }
 
-    /**
-     * Obliczanie gdtm dla całego regionu lub obrazu
-     */
     private void calculateS() {
         Double i=0.0;
         int startY = inputDataMatrix.getStartHeight();
@@ -444,18 +451,24 @@ public class GTDM {
         }
     }
 
-    /**
-     * Obliczanie gdtm dla całego regionu lub obrazu na podstawie trzech innych gdtm jako średnia
-     */
     private void calculateS(ArrayList<Double> s1, ArrayList<Double> s2, ArrayList<Double> s3) {
         for (int i = 0; i < Constans.PIXEL_NUMBER ; i++){
             s.set(i, (s1.get(i)+s2.get(i)+s3.get(i))/3.0);//s(i)= SIGMA |i-A|
         }
     }
 
-    /**
-     * Wypisanie gdtm na ekran
-     */
+    private void calculateS(ArrayList<GTDMkopiaZapasowa> matrixes) {
+        for (int i = 0; i <  Constans.PIXEL_NUMBER ; i++){
+            final int il = i;
+            s.set(i,matrixes
+                    .stream()
+                    .map(matrix -> matrix.getS())
+                    .mapToDouble(s -> s.get(il))
+                    .sum()/matrixes.size()
+            );
+        }
+    }
+
     public void printfS() {
         System.out.println("S(i)");
         for (int i = 0; i<s.size(); i++) {
@@ -464,18 +477,13 @@ public class GTDM {
         System.out.println();
     }
 
-    /**
-     * Inicjalizacja wektora prawdopodobieństwa
-     */
     private void initializaP() {
         p.clear();
         for (int i = 0; i<Constans.PIXEL_NUMBER_PLUS_1; i++) {
             p.add(0.0);
         }
     }
-    /**
-     * Wypisanie wektora prawdopodobieństwa na ekran
-     */
+
     public void printfP() {
         System.out.println("Tablica z p");
         for (int i = 0; i<p.size(); i++) {
@@ -484,9 +492,6 @@ public class GTDM {
         System.out.println("Suma: "+ p.stream().mapToDouble(x->x).sum());
     }
 
-    /**
-     * Obliczanie wektora prawdopodobieństwa
-     */
     public void computeP() {
         for (int k = d; k < height - d; k++) {
             for (int l = d; l < width - d; l++) {
@@ -502,12 +507,13 @@ public class GTDM {
         for (int i = 0 ; i< Constans.PIXEL_NUMBER_PLUS_1 ; i++) {
             p.set( i ,p.get(i) / n2);
         }
+        int a = 0 ;
     }
 
-    /**
-     * Obliczanie wektora prawdopodobieństwa dla regionu będącego w kolejnej kolumnie
-     */
     public void computeNextColumnP() {
+        /**
+         * First remove remove old components associeted with old square
+         */
         for (int k = d ; k < height - d ; k++) {
             Double iNumber = pRaw.get((int) inputDataMatrix.get(k, d -1));//i
             if (iNumber == null)
@@ -516,6 +522,9 @@ public class GTDM {
             pRaw.set((int) inputDataMatrix.get(k, d - 1), iNumber);
         }
 
+        /**
+         * Add new components associeted with new square
+         */
         for (int k = d ; k < height - d ; k++) {
             Double iNumber = pRaw.get((int) inputDataMatrix.get(k, width - d - 1));//i
             if (iNumber == null)
@@ -528,10 +537,10 @@ public class GTDM {
         }
     }
 
-    /**
-     * Obliczanie wektora prawdopodobieństwa dla regionu będącego w kolejnym wierszu
-     */
     public void computeNextRowP() {
+        /**
+         * First remove remove old components associeted with old square
+         */
         for (int k = d ; k < width - d ; k++) {
             Double iNumber = pRaw.get((int) inputDataMatrix.get(d - 1 , k ));//i
             if (iNumber == null)
@@ -540,6 +549,9 @@ public class GTDM {
             pRaw.set((int) inputDataMatrix.get(d - 1, k), iNumber);
         }
 
+        /**
+         * Add new components associeted with new square
+         */
         for (int k = d ; k < width - d ; k++) {
             Double iNumber = pRaw.get((int) inputDataMatrix.get(height - d - 1, k));//i
             if (iNumber == null)
@@ -552,9 +564,6 @@ public class GTDM {
         }
     }
 
-    /**
-     * Obliczanie wektora prawdopodobieństwa na podstwie trzech innych
-     */
     private void computeP(ArrayList<Double> p1, ArrayList<Double> p2, ArrayList<Double> p3) {
         int i=0;
         for (i = 0; i <  Constans.PIXEL_NUMBER ; i++){
@@ -562,9 +571,34 @@ public class GTDM {
         }
     }
 
-    /**
-     * Zapisanie gdtm do pliku .csv
-     */
+    public void computeP(Matrix inputDataMatrix1, Matrix inputDataMatrix2, Matrix inputDataMatrix3) {
+
+        for (int k = d; k < height - d; k++) {
+            for (int l = d; l < width - d; l++) {
+                Double iNumber = p.get((int) inputDataMatrix1.get(k, l));//i
+                if (iNumber == null)
+                    iNumber = 0.0;
+                iNumber += 1;
+                p.set((int) inputDataMatrix1.get(k, l), iNumber);
+
+                iNumber = p.get((int) inputDataMatrix2.get(k, l));//i
+                if (iNumber == null)
+                    iNumber = 0.0;
+                iNumber += 1;
+                p.set((int) inputDataMatrix1.get(k, l), iNumber);
+
+                iNumber = p.get((int) inputDataMatrix3.get(k, l));//i
+                if (iNumber == null)
+                    iNumber = 0.0;
+                iNumber += 1;
+                p.set((int) inputDataMatrix3.get(k, l), iNumber);
+            }
+        }
+        for (int i = 0 ; i< Constans.PIXEL_NUMBER_PLUS_1 ; i++) {
+            p.set( i ,p.get(i) / n2/3.0);
+        }
+    }
+
     public  void saveToCSV(String part) {
         PrintWriter w = null;
         File fileForCsv = new File(Constans.SAVE_PATH + nameFromPath(inputDataMatrix.getImageName()) + "CsvFiles\\");
@@ -587,10 +621,6 @@ public class GTDM {
         }
         w.close();
     }
-
-    /**
-     * Zapisanie gdtm do pliku .csv
-     */
     static String nameFromPath(String path){
         return path.substring(path.lastIndexOf("\\"));
     }

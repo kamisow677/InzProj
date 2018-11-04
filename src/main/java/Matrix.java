@@ -1,5 +1,11 @@
 import java.awt.image.DataBuffer;
 
+/**
+ * @author Kamil Sowa
+ * @version 1.0
+ * Interferj macierzy
+ *
+ */
 public interface Matrix {
 
     public double get(int j, int i);
