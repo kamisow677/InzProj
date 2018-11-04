@@ -1,24 +1,28 @@
+/**
+ *Klasa ze stałymi
+ */
 public class Constans {
-    static int QUADRATIC_SIZE = 16;
+    static int QUADRATIC_SIZE = 31;
     static int D = 1;
-    static boolean AVERAGE_MATRIXES = false;
+    static boolean AVERAGE_MATRIXES = true;
     static String COARNESS ="COARNESS";
     static String CONTRAST ="CONTRAST";
     static String BUSYNESS ="BUSYNESS";
     static String COMPLEXITY ="COMPLEXITY";
     static String STRENGTH ="STRENGTH";
     static String FOLDER_PATH = "C:\\Users\\Kamil Sowa\\Desktop\\obrazki21\\";
-    static String SAVE_PATH = "C:\\Users\\Kamil Sowa\\Desktop\\obrazki21\\";
+    static String SAVE_PATH = "C:\\Users\\Kamil Sowa\\Desktop\\obrazki21\\Results\\";
     static int QUANTIZATION = 1;
     static long  a = 0 ;
     static long  b = 0;
     static int NUMBER_OF_COLORS = 3;
     static int PIXEL_NUMBER = 255;
     static int PIXEL_NUMBER_PLUS_1 = 256;
-    static int PROGRESS = 1000;
-    static String temp1 = "asd";
-    static int temp2 = 100000000;
-    static int temp3 = 10;
+    static String validationMessage;
+    static boolean validInputData = false;
+    static boolean validationEnd = false;
+    static boolean slowGTDMcalc = false;
+    static boolean parallel = true;
 
     public static int getQuadraticSize() {
         return QUADRATIC_SIZE;

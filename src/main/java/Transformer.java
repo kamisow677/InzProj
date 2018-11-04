@@ -1,5 +1,7 @@
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Scanner;
 
 public class Transformer {
     public static ArrayList<Double>  mapToArrayList(HashMap<Double,Double> inputMap){
@@ -32,6 +34,25 @@ public class Transformer {
 //        System.out.println("Complexity:  " +  arr.stream().mapToDouble(asd -> asd.getComplexity()).sum());
 //        System.out.println("Strength:  " +  arr.stream().mapToDouble(asd -> asd.getStrength()).sum());
         return new TexturalProperties(coarness,contrast,busyness,complexity,strength, color);
+    }
+    public static void compareTwoFiles(){
+        try {
+            File file = new File(Constans.FOLDER_PATH + "Mona_Lisa_grey.tiff.txt");
+            Scanner scGrey = new Scanner(file);
+            file = new File(Constans.FOLDER_PATH + "Mona_Lisa_RGB.jpg.txt");
+            Scanner scRGB = new Scanner(file);
+
+            boolean allEqual = true;
+            while (scGrey.hasNextLine() && scRGB.hasNextLine()) {
+                if (!scGrey.nextLine().toString().equals(scRGB.nextLine().toString())) {
+                    allEqual = false;
+                    break;
+                }
+            }
+            System.out.println(allEqual);
+        } catch (Exception ex){
+            System.out.println(ex.getStackTrace());
+        }
     }
 
 }

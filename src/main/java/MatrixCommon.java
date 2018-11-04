@@ -1,10 +1,38 @@
+
+/**
+ * @author Kamil Sowa
+ * @version 1.0
+ * Zwykłą macierz z danymi
+ *
+ */
 public class MatrixCommon implements Matrix {
-    private double[][] data;
+    /**
+     * dane w macierzy
+     */
+    public double[][] data;
+    /**
+     * wysokość macierzy
+     */
     private int height;
+    /**
+     * szerokość macierzy
+     */
     private int width;
+    /**
+     * początkowa wysokość lewego górnego rogu kwadratowego regionu lub obrazu
+     */
     private int startHeight;
+    /**
+     * początkowa szerokość lewego górnego rogu kwadratowego regionu lub obrazu
+     */
     private int startWidth;
 
+    /**
+     * Konstruktor
+     * @param data dane macierzy
+     * @param height wysokość macierzy
+     * @param width szerokość macierzy
+     */
     public MatrixCommon(double[][] data, int height, int width ) {
         this.data = data;
         this.height = height;
@@ -13,6 +41,14 @@ public class MatrixCommon implements Matrix {
         this.startHeight = 0;
     }
 
+    /**
+     * Konstruktor
+     * @param data dane macierzy
+     * @param height wysokość macierzy
+     * @param width szerokość macierzy
+     * @param startHeight początkowa wysokość lewego górnego rogu kwadratowego regionu lub obrazu
+     * @param startWidth początkowa szerokość lewego górnego rogu kwadratowego regionu lub obrazu
+     */
     public MatrixCommon(double[][] data, int height, int width, int startHeight, int startWidth) {
         this(data,height,width);
         this.startHeight = startHeight;
@@ -20,6 +56,11 @@ public class MatrixCommon implements Matrix {
 
     }
 
+    /**
+     * Konstruktor
+     * @param height wysokość macierzy
+     * @param width szerokość macierzy
+     */
     public MatrixCommon(int height, int width) {
         this.data = new double[height][width];
         this.height = height;
@@ -63,6 +104,9 @@ public class MatrixCommon implements Matrix {
         return data[i+startHeight][j+startWidth];
     }
 
+    /**
+     * Wypisanie zawartości macierzy
+     */
     public void printf() {
 
         for (int i = 0; i < height; i++) {
@@ -74,16 +118,35 @@ public class MatrixCommon implements Matrix {
         System.out.println();
     }
 
+    /**
+     * Wypisanie zawartości macierzy
+     */
     @Override
     public String toString() {
         String str = new String();
-        for (int i = 0; i < height; i++) {
-            for (int j = 0; j < width; j++) {
-                str += (data[i+startWidth][j+getStartHeight()] + " ");
+        try {
+            for (int i = 0; i < height; i++) {
+                for (int j = 0; j < width; j++) {
+                    str += (data[i + startWidth][j + getStartHeight()] + " ");
+                }
+                str += "\n";
             }
             str += "\n";
+        } catch (Exception ex){
+            System.out.println(ex.getStackTrace());
         }
-        str += "\n";
+        return  str;
+    }
+    public String toString2(int num) {
+        String str = new String();
+        try {
+            for (int j = 0; j < width; j++) {
+                str += (data[num + startWidth][j + getStartHeight()] + " ");
+                str += "\n";
+            }
+        } catch (Exception ex){
+            System.out.println(ex.getStackTrace());
+        }
         return  str;
     }
 

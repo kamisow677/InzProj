@@ -1,5 +1,9 @@
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.BeforeAll;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
@@ -11,33 +15,38 @@ import static org.junit.Assert.assertEquals;
  */
 
 //@RunWith(MockitoJUnitRunner.class)
-public class GDTMtest {
-    int WIELKSC_MACIRZY = 6;
+public class GDTMTexturalPropertiestest {
+    static int WIELKSC_MACIRZY = 6;
     int SQUARE_SIZE = 4;
     GTDM gdtmNowe;
     GTDM gdtmFirst;
     GTDM gdtmNext;
 
+    @BeforeAll
+    public static void createImage(){
+        byte[][] dane = {{1, 2, 5, 1, 4, 4}, {1, 2, 3, 4, 1, 4}, {0, 1, 3, 1, 2, 3},
+                {4, 3, 1, 1, 2, 2}, {5, 5, 1, 2, 4, 2}, {2, 3, 1, 5, 4, 1}};
+        ImagesCreator.createTestPixelImage(dane,WIELKSC_MACIRZY);
+    }
+
     @Test
     public void customOnGDTM() {
+        System.out.println("------------------------------------------------");
         Constans.QUANTIZATION =1 ;
-        Random rand = new Random();
 
-        double[][] dane = {{1, 2, 5, 1, 4, 4}, {1, 2, 3, 4, 1, 4}, {0, 1, 3, 1, 2, 3},
-                {4, 3, 1, 1, 2, 2}, {5, 5, 1, 2, 4, 2}, {2, 3, 1, 5, 4, 1}};
         double[][] matrixAdate = {{0.0, 0.0, 0.0, 0.0, 0.0, 0.0}, {0.0, 2.0, 2.375, 2.5, 2.875, 0.0}, {0.0, 2.125, 2.0, 2.125, 2.25, 0.0},
                 {0.0, 2.5, 2.125, 2.0, 2.125, 0.0}, {0.0, 2.5, 2.625, 2.375, 2.375, 0.0}, {0.0, 0.0, 0.0, 0.0, 0.0, 0.0}};
 
-        int startPointX = 0;
-        int startPointY = 0;
-        Matrix daneTestowe = new MatrixCommon(dane, WIELKSC_MACIRZY, WIELKSC_MACIRZY, startPointY,startPointX );
-        System.out.println("TESTOWE");
-        System.out.println(daneTestowe);
+        File img = new File(Constans.SAVE_PATH + "Test.png");
+        ArrayList<ImageMatrix> listOfSingleColorImage = new ArrayList<>();
+        BufferedImage buffImage=null;
+        try {
+            buffImage = ImageIO.read(img);
+        }catch (Exception ex){
 
-        /**
-         * Tu jest wylicznie punktu startowego czyli pierwszego srodka z kwadratwego regionu
-         */
-
+        }
+        Matrix daneTestowe = new ImageMatrix(buffImage, ImageMatrix.COLOR.GREY,Constans.SAVE_PATH +"Test.png");
+        daneTestowe.printf();
 
         /**
          *Wpierw to obliczyc normalnie
@@ -81,7 +90,7 @@ public class GDTMtest {
                 {0.0, 2.5, 2.125, 2.0, 2.125, 0.0}, {0.0, 2.5, 2.625, 2.375, 2.375, 0.0}, {0.0, 0.0, 0.0, 0.0, 0.0, 0.0}};
 
         /**
-         * CREATION OF GDTM class for matrix A calculation
+         * CREATION OF TexturalPropertiesTest class for matrix A calculation
          */
         Matrix daneTestowe = new MatrixCommon(dane, WIELKSC_MACIRZY, WIELKSC_MACIRZY, 0,0 );
         gdtmNowe = new GTDM(daneTestowe);
@@ -94,7 +103,7 @@ public class GDTMtest {
          */
         Matrix squareMAtrixData = new MatrixCommon(dane, SQUARE_SIZE ,SQUARE_SIZE,0,0);
         System.out.println(daneTestowe);
-
+        System.out.println(matrixA);
         gdtmFirst = new GTDM(squareMAtrixData,matrixA);
         gdtmFirst.startFirstCalcualtions(true, false);
         MatrixCommon matrixACalculated = gdtmFirst.getMatrixA();
@@ -298,7 +307,7 @@ public class GDTMtest {
             }
         }
         sCalculated = gdtmNext.getS();
-        expectedS = new Double[]{0.0,2.75,0.0,0.5,0.0};
+        expectedS = new Double[]{0.0,2.75,0.0,0.5,0.0, 2.5};
         for (int i = 0; i < expectedS.length; i++){
             assertEquals(sCalculated.get(i), expectedS[i], 0.01);
         }
