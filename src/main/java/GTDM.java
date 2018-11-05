@@ -271,10 +271,10 @@ public class GTDM {
       */
     public void startFirstCalcualtions(Boolean calculateP, Boolean print){
         initializaS();
-        calculateS();
+        calculateSNOWE();
         if (calculateP) {
             initializaP();
-            computeP();
+            computePNOWE();
         }
         if (print) {
             System.out.println("Matrix A");
@@ -296,9 +296,9 @@ public class GTDM {
         if (Constans.slowGTDMcalc==true) {
             startFirstCalcualtions(calculateP, print);
         }else {
-            calculateNextColumnS();
+            calculateNextColumnSNowe();
             if (calculateP) {
-                computeNextColumnP();
+                computeNextColumnPNOWE();
             }
             if (print) {
                 System.out.println("Matrix A");
@@ -318,9 +318,9 @@ public class GTDM {
         if (Constans.slowGTDMcalc==true) {
             startFirstCalcualtions(calculateP, print);
         }else {
-            calculateNextRowS();
+            calculateNextRowSNOWE();
             if (calculateP) {
-                computeNextRowP();
+                computeNextRowPNOWE();
             }
             if (print) {
                 System.out.println("Matrix A");
@@ -378,8 +378,10 @@ public class GTDM {
 
         int startY = inputDataMatrix.getStartHeight();
         int startX = inputDataMatrix.getStartWidth();
-        for (int k = d - Constans.QUADRATIC_SIZE/2 ; k < height - d +Constans.QUADRATIC_SIZE/2; k++) {
+        for (int k = d - Constans.QUADRATIC_SIZE/2 ; k < height - d +Constans.QUADRATIC_SIZE/2 +1; k++) {
             i = inputDataMatrix.get(k,  d - 1);
+            if ( i.compareTo(-1.0)==0)
+                continue;
             Double partSum = s.get(i.intValue());
             if (partSum == null)
                 partSum = 0.0;
@@ -387,8 +389,10 @@ public class GTDM {
             s.set(i.intValue(), partSum);//s(i)= SIGMA |i-A|
         }
 
-        for (int k = d -Constans.QUADRATIC_SIZE/2; k < height - d +Constans.QUADRATIC_SIZE/2 ; k++) {
+        for (int k = d -Constans.QUADRATIC_SIZE/2; k < height - d +Constans.QUADRATIC_SIZE/2 +1; k++) {
             i = inputDataMatrix.get(k, - d + width - 1);
+            if ( i.compareTo(-1.0)==0)
+                continue;
             Double partSum = s.get(i.intValue());
             if (partSum == null)
                 partSum = 0.0;
@@ -424,6 +428,36 @@ public class GTDM {
     /**
      * Obliczanie gdtm dla regionu będącego kolejnym wierszem
      */
+    private void calculateNextRowSNOWE() {
+        Double i = 0.0;
+        int startY = inputDataMatrix.getStartHeight();
+        int startX = inputDataMatrix.getStartWidth();
+        for (int k = d - Constans.QUADRATIC_SIZE/2; k < width - d +Constans.QUADRATIC_SIZE/2+1; k++) {
+            i = inputDataMatrix.get(d - 1,  k);
+            if ( i.compareTo(-1.0)==0)
+                continue;;
+            Double partSum = s.get(i.intValue());
+            if (partSum == null)
+                partSum = 0.0;
+            partSum -= Math.abs(i - matrixA.get(d - 1 + startY, k + startX ));// |i-A|
+            s.set(i.intValue(), partSum);//s(i)= SIGMA |i-A|
+
+        }
+
+        for (int k = d -Constans.QUADRATIC_SIZE/2; k < width - d +Constans.QUADRATIC_SIZE/2+1; k++) {
+            i = inputDataMatrix.get(- d + height - 1, k);
+            if ( i.compareTo(-1.0)==0)
+                continue;;
+            Double partSum = s.get(i.intValue());
+            if (partSum == null)
+                partSum = 0.0;
+            partSum += Math.abs(i - matrixA.get(- d + height - 1 + startY, k + startX));// |i-A|
+            s.set(i.intValue(), partSum);//s(i)= SIGMA |i-A|
+
+        }
+    }
+
+
     private void calculateNextRowS() {
         Double i = 0.0;
         int startY = inputDataMatrix.getStartHeight();
@@ -472,10 +506,10 @@ public class GTDM {
         Double i=0.0;
         int startY = inputDataMatrix.getStartHeight();
         int startX = inputDataMatrix.getStartWidth();
-        for (int k = d - Constans.QUADRATIC_SIZE/2; k < height - d +Constans.QUADRATIC_SIZE/2; k++) {
-            for (int l = d - Constans.QUADRATIC_SIZE/2; l < width - d +Constans.QUADRATIC_SIZE/2; l++) {
+        for (int k = d - Constans.QUADRATIC_SIZE/2; k < height - d +Constans.QUADRATIC_SIZE/2+1; k++) {
+            for (int l = d - Constans.QUADRATIC_SIZE/2; l < width - d +Constans.QUADRATIC_SIZE/2+1; l++) {
                 i = inputDataMatrix.get(k, l);
-                if (i==null)
+                if ( i.compareTo(-1.0)==0)
                     continue;;
                 Double partSum = s.get(i.intValue());
                 if (partSum == null)
@@ -546,6 +580,26 @@ public class GTDM {
         }
     }
 
+    public void computePNOWE() {
+        for (int k = d -Constans.QUADRATIC_SIZE/2; k < height - d +Constans.QUADRATIC_SIZE/2+1; k++) {
+            for (int l = d; l < width - d; l++) {
+                Double  s = inputDataMatrix.get(k, l);
+                if ( s.compareTo(-1.0)==0)
+                    continue;
+                Double iNumber = p.get((int) inputDataMatrix.get(k, l));//i
+                if (iNumber == null)
+                    iNumber = 0.0;
+                iNumber += 1;
+                p.set((int) inputDataMatrix.get(k, l), iNumber);
+            }//((int) inputDataMatrix.get(k, l))==83 && k>2
+        }
+        pRaw = new ArrayList<>(p);
+        originRawP = new ArrayList<>(p);
+        for (int i = 0 ; i< Constans.PIXEL_NUMBER_PLUS_1 ; i++) {
+            p.set( i ,p.get(i) / n2);
+        }
+    }
+
     /**
      * Obliczanie wektora prawdopodobieństwa dla regionu będącego w kolejnej kolumnie
      */
@@ -559,6 +613,32 @@ public class GTDM {
         }
 
         for (int k = d ; k < height - d ; k++) {
+            Double iNumber = pRaw.get((int) inputDataMatrix.get(k, width - d - 1));//i
+            if (iNumber == null)
+                iNumber = 0.0;
+            iNumber += 1;
+            pRaw.set((int) inputDataMatrix.get(k, width - d - 1), iNumber);
+        }
+        for (int i = 0 ; i< Constans.PIXEL_NUMBER_PLUS_1 ; i++) {
+            p.set( i ,pRaw.get(i) / n2);
+        }
+    }
+    public void computeNextColumnPNOWE() {
+        for (int k = d -Constans.QUADRATIC_SIZE/2; k < height - d +Constans.QUADRATIC_SIZE/2+1; k++) {
+            Double  s = inputDataMatrix.get(k, d -1);
+            if ( s.compareTo(-1.0)==0)
+                continue;
+            Double iNumber = pRaw.get((int) inputDataMatrix.get(k, d -1));//i
+            if (iNumber == null)
+                iNumber = 0.0;
+            iNumber -= 1;
+            pRaw.set((int) inputDataMatrix.get(k, d - 1), iNumber);
+        }
+
+        for (int k = d -Constans.QUADRATIC_SIZE/2; k < height - d +Constans.QUADRATIC_SIZE/2+1; k++) {
+            Double  s = inputDataMatrix.get(k, width - d - 1);
+            if ( s.compareTo(-1.0)==0)
+                continue;
             Double iNumber = pRaw.get((int) inputDataMatrix.get(k, width - d - 1));//i
             if (iNumber == null)
                 iNumber = 0.0;
@@ -583,6 +663,32 @@ public class GTDM {
         }
 
         for (int k = d ; k < width - d ; k++) {
+            Double iNumber = pRaw.get((int) inputDataMatrix.get(height - d - 1, k));//i
+            if (iNumber == null)
+                iNumber = 0.0;
+            iNumber += 1;
+            pRaw.set((int) inputDataMatrix.get(height - d - 1, k), iNumber);
+        }
+        for (int i = 0 ; i< Constans.PIXEL_NUMBER_PLUS_1 ; i++) {
+            p.set( i ,pRaw.get(i) / n2);
+        }
+    }
+    public void computeNextRowPNOWE() {
+        for (int k = d - Constans.QUADRATIC_SIZE/2; k < width - d +Constans.QUADRATIC_SIZE/2+1; k++) {
+            Double  s = inputDataMatrix.get(d - 1 , k );
+            if ( s.compareTo(-1.0)==0)
+                continue;
+            Double iNumber = pRaw.get((int) inputDataMatrix.get(d - 1 , k ));//i
+            if (iNumber == null)
+                iNumber = 0.0;
+            iNumber -= 1;
+            pRaw.set((int) inputDataMatrix.get(d - 1, k), iNumber);
+        }
+
+        for (int k = d -Constans.QUADRATIC_SIZE/2; k < width - d +Constans.QUADRATIC_SIZE/2+1; k++) {
+            Double  s = inputDataMatrix.get(height - d - 1, k);
+            if ( s.compareTo(-1.0)==0)
+                continue;
             Double iNumber = pRaw.get((int) inputDataMatrix.get(height - d - 1, k));//i
             if (iNumber == null)
                 iNumber = 0.0;

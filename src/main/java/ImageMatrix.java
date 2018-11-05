@@ -96,6 +96,11 @@ public class ImageMatrix implements Matrix {
      */
     @Override
     public double get(int j, int i) {
+        if (j+startHeight<0 || i+startWidth<0)
+            return -1;
+        if (j+startHeight>639 || i+startWidth>639)
+            return -1;
+        //System.out.println(i+" "+j);
         int argb = bufferedImage.getRGB(i+startWidth, j+startHeight);
         switch (color) {
             case GREY: {

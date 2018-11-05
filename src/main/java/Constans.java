@@ -2,7 +2,7 @@
  *Klasa ze stałymi
  */
 public class Constans {
-    static int QUADRATIC_SIZE = 31;
+    static int QUADRATIC_SIZE = 15;
     static int D = 1;
     static boolean AVERAGE_MATRIXES = true;
     static String COARNESS ="COARNESS";
@@ -22,7 +22,7 @@ public class Constans {
     static boolean validInputData = false;
     static boolean validationEnd = false;
     static boolean slowGTDMcalc = false;
-    static boolean parallel = true;
+    static boolean parallel = false;
 
     public static int getQuadraticSize() {
         return QUADRATIC_SIZE;

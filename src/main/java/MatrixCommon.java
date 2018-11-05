@@ -101,6 +101,11 @@ public class MatrixCommon implements Matrix {
 
     @Override
     public double get(int i, int j) {
+        if (j<0 || i<0)
+            return -1;
+        if (j>639 || i>639)
+            return -1;
+
         return data[i+startHeight][j+startWidth];
     }
 

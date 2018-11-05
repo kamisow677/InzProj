@@ -149,6 +149,7 @@ public class TexturalProperties {
         Contrast = Contrast * siSum * 1 / n2;
         Busyness = psiNumeratorBusyness / denominatorBusyness;
         Strength = partStrength / siSum;
+       // System.out.println(Coarness);
     }
 
     @Override

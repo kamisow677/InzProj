@@ -120,7 +120,7 @@ public class Tester3 {
             try {
                 buffImage = ImageIO.read(img);
                 System.out.println( pathToImagePlusName+ "  TYPE: "+buffImage.getType());
-                progressMax.put(pathToImagePlusName,buffImage.getHeight()-Constans.QUADRATIC_SIZE);
+                progressMax.put(pathToImagePlusName,buffImage.getHeight());
 
 
                 if (isGrey(buffImage)) {
@@ -326,7 +326,7 @@ public Long createTask( ArrayList<ImageMatrix> list) {
             numberOfThreads = 1;
         }
         ArrayList< ArrayList<ImageMatrix>> listParts = new ArrayList<>();
-        int partheight = (h - q) / numberOfThreads;
+        int partheight = (h) / numberOfThreads;
         for (int i =0 ; i< numberOfThreads ; i++) {
             ArrayList<ImageMatrix> list2 = new ArrayList<>();
             for (ImageMatrix imageMatrix : list) {
@@ -340,7 +340,7 @@ public Long createTask( ArrayList<ImageMatrix> list) {
             listParts.add(list2);
         }
 
-        int rest = (h - q) % numberOfThreads;
+        int rest = (h ) % numberOfThreads;
 
         ExecutorService executorService = Executors.newWorkStealingPool(numberOfThreads);
         for (int i = 0 ; i<listParts.size() -1; i++){
@@ -411,7 +411,8 @@ public Long createTask( ArrayList<ImageMatrix> list) {
 
             if (Constans.AVERAGE_MATRIXES) {
                 for (int i = startRow; i < endRow; i++) {
-                    for (int j = 0; j < w - q ; j++) {
+                    System.out.println(i);
+                    for (int j = 0; j < w  ; j++) {
                         try {
                             if (i == startRow && j == 0) {
                                 /**
@@ -496,7 +497,7 @@ public Long createTask( ArrayList<ImageMatrix> list) {
 
 
                 for (int i = startRow; i < endRow; i++) {
-                    for (int j = 0; j < w - q; j++) {
+                    for (int j = 0; j < w ; j++) {
                         if (i == startRow && j == 0) {
                             /**
                              * TO JEST TEN FIRST Z TESTU

@@ -135,24 +135,49 @@ public class ImagesCreator {
         }
 
         try {
+//            byte [] newData ;
+//            byte [][] newDates = new byte[5][(height-Constans.QUADRATIC_SIZE)*(width-Constans.QUADRATIC_SIZE)];
+//            for (int i = 0 ; i<5 ; i++){
+//                buffImages[i] =  new BufferedImage(width-Constans.QUADRATIC_SIZE, height-Constans.QUADRATIC_SIZE, BufferedImage.TYPE_BYTE_GRAY);
+//                newData = ((DataBufferByte) buffImages[i].getRaster().getDataBuffer()).getData();
+//                newDates[i] = newData;
+//            }
             byte [] newData ;
-            byte [][] newDates = new byte[5][(height-Constans.QUADRATIC_SIZE)*(width-Constans.QUADRATIC_SIZE)];
+            byte [][] newDates = new byte[5][(height)*(width)];
             for (int i = 0 ; i<5 ; i++){
-                buffImages[i] =  new BufferedImage(width-Constans.QUADRATIC_SIZE, height-Constans.QUADRATIC_SIZE, BufferedImage.TYPE_BYTE_GRAY);
+                buffImages[i] =  new BufferedImage(width, height, BufferedImage.TYPE_BYTE_GRAY);
                 newData = ((DataBufferByte) buffImages[i].getRaster().getDataBuffer()).getData();
                 newDates[i] = newData;
             }
+            System.out.println("POSUYPASD");
 
-            for (int i = 0; i < height-Constans.QUADRATIC_SIZE ; i++) {
-                for (int j = 0; j < width-Constans.QUADRATIC_SIZE ; j++) {
-                    for (int k = 0 ; k<5 ; k++) {
-                        Integer grey = (int) Math.abs(((prop.get(i * (width - Constans.QUADRATIC_SIZE) + j).get(featuresNames[k])) / scalesValues[k]));
-                        newDates[k][i*(width-Constans.QUADRATIC_SIZE )+j] =(grey.byteValue()) ;
+//            for (int i = 0; i < height-Constans.QUADRATIC_SIZE ; i++) {
+//                for (int j = 0; j < width-Constans.QUADRATIC_SIZE ; j++) {
+//                    for (int k = 0 ; k<5 ; k++) {
+//                        Integer grey = (int) Math.abs(((prop.get(i * (width - Constans.QUADRATIC_SIZE) + j).get(featuresNames[k])) / scalesValues[k]));
+//                        newDates[k][i*(width-Constans.QUADRATIC_SIZE )+j] =(grey.byteValue()) ;
+//                    }
+//                }
+//            }
+            int i= 0;
+            int j=0;
+            try {
+                for (i = 0; i < height; i++) {
+                    int a = 2;
+                    for ( j = 0; j < width; j++) {
+                        for (int k = 0; k < 5; k++) {
+                            Integer grey = (int) Math.abs(((prop.get(i * (width) + j).get(featuresNames[k])) / scalesValues[k]));
+                            newDates[k][i * (width) + j] = (grey.byteValue());
+                        }
+
                     }
+                    System.out.println(i);
                 }
+            }catch (Exception ex){
+                System.out.println(i+" "+j);
             }
 
-            for (int i = 0 ; i < 5 ; i++) {
+            for ( i = 0 ; i < 5 ; i++) {
                 System.out.println("SAVED " + featuresNames[i] + ".png");
                 File f = new File(Constans.SAVE_PATH + nameFromPath(imageName) + featuresNames[i] + ".png");
                 ImageIO.write(buffImages[i], "PNG", f);
