@@ -21,8 +21,9 @@ public class Constans {
     static String validationMessage;
     static boolean validInputData = false;
     static boolean validationEnd = false;
-    static boolean slowGTDMcalc = false;
+    static boolean slowGTDMcalc = true;
     static boolean parallel = false;
+    static  int n22 ;
 
     public static int getQuadraticSize() {
         return QUADRATIC_SIZE;

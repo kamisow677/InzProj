@@ -123,6 +123,7 @@ public class GTDM {
 
     public ArrayList<Double> getOriginP() {   return originP;  }
 
+    public int n22;
     /**
      * Konstruktor, najprostszy.
      * @param inputData macierz z danymi o obrazie
@@ -378,7 +379,7 @@ public class GTDM {
 
         int startY = inputDataMatrix.getStartHeight();
         int startX = inputDataMatrix.getStartWidth();
-        for (int k = d - Constans.QUADRATIC_SIZE/2 ; k < height - d +Constans.QUADRATIC_SIZE/2 +1; k++) {
+        for (int k = d - Constans.QUADRATIC_SIZE/2 ; k < height - d -Constans.QUADRATIC_SIZE/2 +1; k++) {
             i = inputDataMatrix.get(k,  d - 1);
             if ( i.compareTo(-1.0)==0)
                 continue;
@@ -389,7 +390,7 @@ public class GTDM {
             s.set(i.intValue(), partSum);//s(i)= SIGMA |i-A|
         }
 
-        for (int k = d -Constans.QUADRATIC_SIZE/2; k < height - d +Constans.QUADRATIC_SIZE/2 +1; k++) {
+        for (int k = d -Constans.QUADRATIC_SIZE/2; k < height - d -Constans.QUADRATIC_SIZE/2 +1; k++) {
             i = inputDataMatrix.get(k, - d + width - 1);
             if ( i.compareTo(-1.0)==0)
                 continue;
@@ -432,7 +433,7 @@ public class GTDM {
         Double i = 0.0;
         int startY = inputDataMatrix.getStartHeight();
         int startX = inputDataMatrix.getStartWidth();
-        for (int k = d - Constans.QUADRATIC_SIZE/2; k < width - d +Constans.QUADRATIC_SIZE/2+1; k++) {
+        for (int k = d - Constans.QUADRATIC_SIZE/2; k < width - d -Constans.QUADRATIC_SIZE/2+1; k++) {
             i = inputDataMatrix.get(d - 1,  k);
             if ( i.compareTo(-1.0)==0)
                 continue;;
@@ -444,7 +445,7 @@ public class GTDM {
 
         }
 
-        for (int k = d -Constans.QUADRATIC_SIZE/2; k < width - d +Constans.QUADRATIC_SIZE/2+1; k++) {
+        for (int k = d -Constans.QUADRATIC_SIZE/2; k < width - d -Constans.QUADRATIC_SIZE/2+1; k++) {
             i = inputDataMatrix.get(- d + height - 1, k);
             if ( i.compareTo(-1.0)==0)
                 continue;;
@@ -506,8 +507,8 @@ public class GTDM {
         Double i=0.0;
         int startY = inputDataMatrix.getStartHeight();
         int startX = inputDataMatrix.getStartWidth();
-        for (int k = d - Constans.QUADRATIC_SIZE/2; k < height - d +Constans.QUADRATIC_SIZE/2+1; k++) {
-            for (int l = d - Constans.QUADRATIC_SIZE/2; l < width - d +Constans.QUADRATIC_SIZE/2+1; l++) {
+        for (int k = d - Constans.QUADRATIC_SIZE/2; k < height - d -Constans.QUADRATIC_SIZE/2+1; k++) {
+            for (int l = d - Constans.QUADRATIC_SIZE/2; l < width - d -Constans.QUADRATIC_SIZE/2+1; l++) {
                 i = inputDataMatrix.get(k, l);
                 if ( i.compareTo(-1.0)==0)
                     continue;;
@@ -579,13 +580,14 @@ public class GTDM {
             p.set( i ,p.get(i) / n2);
         }
     }
-
     public void computePNOWE() {
-        for (int k = d -Constans.QUADRATIC_SIZE/2; k < height - d +Constans.QUADRATIC_SIZE/2+1; k++) {
-            for (int l = d; l < width - d; l++) {
+        n22=0;
+        for (int k = d -Constans.QUADRATIC_SIZE/2; k < height - d -Constans.QUADRATIC_SIZE/2+1; k++) {
+            for (int l = d -Constans.QUADRATIC_SIZE/2; l < width - d -Constans.QUADRATIC_SIZE/2+1; l++) {
                 Double  s = inputDataMatrix.get(k, l);
                 if ( s.compareTo(-1.0)==0)
                     continue;
+                n22++;
                 Double iNumber = p.get((int) inputDataMatrix.get(k, l));//i
                 if (iNumber == null)
                     iNumber = 0.0;
@@ -596,8 +598,9 @@ public class GTDM {
         pRaw = new ArrayList<>(p);
         originRawP = new ArrayList<>(p);
         for (int i = 0 ; i< Constans.PIXEL_NUMBER_PLUS_1 ; i++) {
-            p.set( i ,p.get(i) / n2);
+            p.set( i ,p.get(i) / n22);
         }
+   //     System.out.println(p.stream().mapToDouble(x->x).sum());
     }
 
     /**
@@ -624,7 +627,7 @@ public class GTDM {
         }
     }
     public void computeNextColumnPNOWE() {
-        for (int k = d -Constans.QUADRATIC_SIZE/2; k < height - d +Constans.QUADRATIC_SIZE/2+1; k++) {
+        for (int k = d -Constans.QUADRATIC_SIZE/2; k < height - d -Constans.QUADRATIC_SIZE/2+1; k++) {
             Double  s = inputDataMatrix.get(k, d -1);
             if ( s.compareTo(-1.0)==0)
                 continue;
@@ -635,7 +638,7 @@ public class GTDM {
             pRaw.set((int) inputDataMatrix.get(k, d - 1), iNumber);
         }
 
-        for (int k = d -Constans.QUADRATIC_SIZE/2; k < height - d +Constans.QUADRATIC_SIZE/2+1; k++) {
+        for (int k = d -Constans.QUADRATIC_SIZE/2; k < height - d -Constans.QUADRATIC_SIZE/2+1; k++) {
             Double  s = inputDataMatrix.get(k, width - d - 1);
             if ( s.compareTo(-1.0)==0)
                 continue;
@@ -646,8 +649,9 @@ public class GTDM {
             pRaw.set((int) inputDataMatrix.get(k, width - d - 1), iNumber);
         }
         for (int i = 0 ; i< Constans.PIXEL_NUMBER_PLUS_1 ; i++) {
-            p.set( i ,pRaw.get(i) / n2);
+            p.set( i ,pRaw.get(i) / n22);
         }
+       // System.out.println(p.stream().mapToDouble(x->x).sum());
     }
 
     /**
@@ -674,7 +678,7 @@ public class GTDM {
         }
     }
     public void computeNextRowPNOWE() {
-        for (int k = d - Constans.QUADRATIC_SIZE/2; k < width - d +Constans.QUADRATIC_SIZE/2+1; k++) {
+        for (int k = d - Constans.QUADRATIC_SIZE/2; k < width - d -Constans.QUADRATIC_SIZE/2+1; k++) {
             Double  s = inputDataMatrix.get(d - 1 , k );
             if ( s.compareTo(-1.0)==0)
                 continue;
@@ -685,7 +689,7 @@ public class GTDM {
             pRaw.set((int) inputDataMatrix.get(d - 1, k), iNumber);
         }
 
-        for (int k = d -Constans.QUADRATIC_SIZE/2; k < width - d +Constans.QUADRATIC_SIZE/2+1; k++) {
+        for (int k = d -Constans.QUADRATIC_SIZE/2; k < width - d -Constans.QUADRATIC_SIZE/2+1; k++) {
             Double  s = inputDataMatrix.get(height - d - 1, k);
             if ( s.compareTo(-1.0)==0)
                 continue;
@@ -696,8 +700,9 @@ public class GTDM {
             pRaw.set((int) inputDataMatrix.get(height - d - 1, k), iNumber);
         }
         for (int i = 0 ; i< Constans.PIXEL_NUMBER_PLUS_1 ; i++) {
-            p.set( i ,pRaw.get(i) / n2);
+            p.set( i ,pRaw.get(i) / n22);
         }
+       // System.out.println(p.stream().mapToDouble(x->x).sum());
     }
 
     /**
