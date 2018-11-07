@@ -344,6 +344,45 @@ public class GTDM {
         }
     }
 
+
+    /**
+     * Obliczanie gdtm dla całego regionu lub obrazu
+     */
+    private void calculateS() {
+        Double i=0.0;
+        int startY = inputDataMatrix.getStartHeight();
+        int startX = inputDataMatrix.getStartWidth();
+        for (int k = d; k < height - d; k++) {
+            for (int l = d; l < width - d; l++) {
+                i = inputDataMatrix.get(k, l);
+                Double partSum = s.get(i.intValue());
+                if (partSum == null)
+                    partSum = 0.0;
+                partSum += Math.abs(i - matrixA.get(k + startY, l + startX));// |i-A|
+                s.set(i.intValue(), partSum);//s(i)= SIGMA |i-A|
+            }
+        }
+    }
+
+    private void calculateSNOWE() {
+        Double i=0.0;
+        int startY = inputDataMatrix.getStartHeight();
+        int startX = inputDataMatrix.getStartWidth();
+        for (int k = d - Constans.QUADRATIC_SIZE/2; k < height - d +Constans.QUADRATIC_SIZE/2; k++) {
+            for (int l = d - Constans.QUADRATIC_SIZE/2; l < width - d +Constans.QUADRATIC_SIZE/2; l++) {
+                i = inputDataMatrix.get(k, l);
+                if (i==null)
+                    continue;
+                Double partSum = s.get(i.intValue());
+                if (partSum == null)
+                    partSum = 0.0;
+                partSum += Math.abs(i - matrixA.get(k + startY, l + startX));// |i-A|
+                s.set(i.intValue(), partSum);//s(i)= SIGMA |i-A|
+            }
+        }
+    }
+
+
     /**
      * Obliczanie gdtm dla regionu będącego kolejną kolumną
      */
@@ -449,42 +488,33 @@ public class GTDM {
         }
     }
 
-    /**
-     * Obliczanie gdtm dla całego regionu lub obrazu
-     */
-    private void calculateS() {
-        Double i=0.0;
+    private void calculateNextRowSNowe() {
+        Double i = 0.0;
         int startY = inputDataMatrix.getStartHeight();
         int startX = inputDataMatrix.getStartWidth();
-        for (int k = d; k < height - d; k++) {
-            for (int l = d; l < width - d; l++) {
-                i = inputDataMatrix.get(k, l);
-                Double partSum = s.get(i.intValue());
-                if (partSum == null)
-                    partSum = 0.0;
-                partSum += Math.abs(i - matrixA.get(k + startY, l + startX));// |i-A|
-                s.set(i.intValue(), partSum);//s(i)= SIGMA |i-A|
-            }
+        for (int k = d ; k < width - d ; k++) {
+            i = inputDataMatrix.get(d - 1,  k);
+            Double partSum = s.get(i.intValue());
+            if (partSum == null)
+                partSum = 0.0;
+            partSum -= Math.abs(i - matrixA.get(d - 1 + startY, k + startX ));// |i-A|
+            s.set(i.intValue(), partSum);//s(i)= SIGMA |i-A|
+
+        }
+
+        for (int k = d ; k < width - d ; k++) {
+            i = inputDataMatrix.get(- d + height - 1, k);
+            Double partSum = s.get(i.intValue());
+            if (partSum == null)
+                partSum = 0.0;
+            partSum += Math.abs(i - matrixA.get(- d + height - 1 + startY, k + startX));// |i-A|
+            s.set(i.intValue(), partSum);//s(i)= SIGMA |i-A|
+
         }
     }
 
-    private void calculateSNOWE() {
-        Double i=0.0;
-        int startY = inputDataMatrix.getStartHeight();
-        int startX = inputDataMatrix.getStartWidth();
-        for (int k = d - Constans.QUADRATIC_SIZE/2; k < height - d +Constans.QUADRATIC_SIZE/2; k++) {
-            for (int l = d - Constans.QUADRATIC_SIZE/2; l < width - d +Constans.QUADRATIC_SIZE/2; l++) {
-                i = inputDataMatrix.get(k, l);
-                if (i==null)
-                    continue;;
-                Double partSum = s.get(i.intValue());
-                if (partSum == null)
-                    partSum = 0.0;
-                partSum += Math.abs(i - matrixA.get(k + startY, l + startX));// |i-A|
-                s.set(i.intValue(), partSum);//s(i)= SIGMA |i-A|
-            }
-        }
-    }
+
+
 
     /**
      * Obliczanie gdtm dla całego regionu lub obrazu na podstawie trzech innych gdtm jako średnia

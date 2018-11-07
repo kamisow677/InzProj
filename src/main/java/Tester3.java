@@ -57,14 +57,14 @@ public class Tester3 {
 
         try {
             final File folder = new File(Constans.FOLDER_PATH);
-            listFilesForFolder(folder);
+            Constans.validInputData = listFilesForFolder(folder);
             imagePathToMatrix();
-            if (listOfPathsToImagePlusName.size()==0){
-                Constans.validationMessage = "There is no images in folder path";
+            if (listOfPathsToImagePlusName.size()==0 && Constans.validInputData==true){
+                Constans.validationMessage = "There are no images in selected path. Please correct selected path.";
                 Constans.validInputData = false;
             }
         } catch (Exception ex) {
-
+            System.out.println(ex);
         }
         Constans.validationEnd = true;
 
@@ -153,13 +153,19 @@ public class Tester3 {
      * Generuje listę ścieżek do obrazów znajdujących się w folderze
      * @param folder folder z obrazami
      */
-    public void listFilesForFolder(final File folder) {
-        for (final File fileEntry : folder.listFiles()) {
-            String fullPathWithNameOfImage = Constans.FOLDER_PATH + fileEntry.getName();
-            if (fullPathWithNameOfImage.endsWith(".jpg") || fullPathWithNameOfImage.endsWith(".tif") || fullPathWithNameOfImage.endsWith(".tiff")
-                    || fullPathWithNameOfImage.endsWith(".png") || fullPathWithNameOfImage.endsWith(".gif")) {
-                listOfPathsToImagePlusName.add(Constans.FOLDER_PATH + fileEntry.getName());
+    public boolean listFilesForFolder(final File folder) {
+        if (folder.listFiles() == null){
+            Constans.validationMessage = "Path you selected is incorrect. Please correct selected path.";
+            return  false;
+        }else {
+            for (final File fileEntry : folder.listFiles()) {
+                String fullPathWithNameOfImage = Constans.FOLDER_PATH + fileEntry.getName();
+                if (fullPathWithNameOfImage.endsWith(".jpg") || fullPathWithNameOfImage.endsWith(".tif") || fullPathWithNameOfImage.endsWith(".tiff")
+                        || fullPathWithNameOfImage.endsWith(".png") || fullPathWithNameOfImage.endsWith(".gif")) {
+                    listOfPathsToImagePlusName.add(Constans.FOLDER_PATH + fileEntry.getName());
+                }
             }
+            return true;
         }
     }
 

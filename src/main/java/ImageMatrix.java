@@ -96,6 +96,28 @@ public class ImageMatrix implements Matrix {
      */
     @Override
     public double get(int j, int i) {
+        int ileZa;
+        if (j+startHeight<0) {
+            ileZa=Math.abs(j + startHeight);
+            j=0-ileZa;
+            j-=startHeight;
+        }
+        if (j+startHeight>bufferedImage.getHeight()) {
+             ileZa=j + startHeight - bufferedImage.getHeight();
+             j= bufferedImage.getHeight() - ileZa;
+             j-=startHeight;
+        }
+        if (i+startWidth<0) {
+            ileZa=Math.abs(i + startWidth);
+            i=0-ileZa;
+            i-=startWidth;
+        }
+        if (i+startWidth>bufferedImage.getHeight()) {
+            ileZa=i + startWidth - bufferedImage.getWidth();
+            i= bufferedImage.getWidth() - ileZa;
+            i-=startWidth;
+        }
+
         int argb = bufferedImage.getRGB(i+startWidth, j+startHeight);
         switch (color) {
             case GREY: {

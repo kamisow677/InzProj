@@ -1,51 +1,12 @@
 
-import java.awt.*;
 import java.io.*;
-import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
-import java.util.function.Consumer;
-
-import ij.IJ;
-import ij.ImageStack;
-import ij.gui.ProgressBar;
-import ij.plugin.FolderOpener;
-import ij.process.ImageProcessor;
-import net.imagej.Dataset;
-import net.imagej.DatasetService;
 import net.imagej.ImageJ;
-
-import java.awt.image.BufferedImage;
-
-import ij.ImagePlus;
-import net.imagej.ImgPlus;
-import net.imagej.axis.Axes;
-import net.imagej.axis.AxisType;
-import net.imagej.ops.math.PrimitiveMath;
-import net.imglib2.Cursor;
-import net.imglib2.RandomAccess;
-import net.imglib2.converter.ChannelARGBConverter;
-import net.imglib2.converter.RealLUTConverter;
-import net.imglib2.display.ColorTable;
-import net.imglib2.type.NativeType;
-import net.imglib2.type.numeric.RealType;
-import net.imglib2.type.numeric.real.FloatType;
-import org.scijava.ItemIO;
 import org.scijava.app.StatusService;
 import org.scijava.command.Command;
-import org.scijava.convert.ConvertService;
-import org.scijava.display.DisplayService;
-import org.scijava.log.LogService;
 import org.scijava.plugin.Parameter;
-import net.imglib2.type.numeric.ARGBType;
 import org.scijava.plugin.Plugin;
-import io.scif.services.DatasetIOService;
 import org.scijava.ui.UIService;
-import org.scijava.ui.UserInterface;
-import sun.misc.Signal;
-
-import javax.swing.*;
 
 
 @Plugin(type = Command.class, menuPath = "Tutorials>ZADANIE")
@@ -60,21 +21,20 @@ public class ZADANIE implements Command {
     @Parameter (label="Ścieżka do folderu z obrazami")
     private File pathLoad;
 
-    @Parameter(min = "1" , max = "5")
+    @Parameter(label="Rozmiar okna obliczeń", min = "1" , max = "10")
     private int neighbourhood = 2;
 
-    @Parameter(min = "9" , max = "101")
+    @Parameter(label="Wielkość kwadratowego regionu", min = "5" , max = "101")
     private int quadraticRegionSize = 150;
 
-    @Parameter(label="Ścieżka do folderu, gdzie mają być zapisane obrazy")
+    @Parameter(label="Ścieżka do folderu, do którego będą zapisane obrazy")
     private File pathSave;
 
     @Parameter(label="Współczynnik kwantyzacji", min = "1" , max = "8")
     private int quantization;
 
-    @Parameter(label="Usredniać macierze czy obliczone cechy.",choices={"macierze","cechy"})
+    @Parameter(label="Dla obrazów kolorowych, uśredniać gtdm czy obliczone cechy tekstur",choices={"macierze","cechy"})
     private String averageMatrixes = "macierze";
-
 
     /**
      * Początek pracy wtyczki
@@ -87,7 +47,7 @@ public class ZADANIE implements Command {
         else
             Constans.setAverageMatrixes(false);
         Constans.setD(neighbourhood);
-        Constans.setQuadraticSize(quadraticRegionSize);
+        Constans.setQuadraticSize(quadraticRegionSize*2 +1);
         Constans.NUMBER_OF_COLORS = 3;
         Constans.QUANTIZATION = quantization;
         Constans.PIXEL_NUMBER = 255;
@@ -95,13 +55,8 @@ public class ZADANIE implements Command {
         Constans.FOLDER_PATH = pathLoad.getPath()+"\\";
         Constans.SAVE_PATH = pathSave.getPath()+"\\";
         Constans.validationEnd = false;
-
         Constans.validInputData=true;
 
-        if (quadraticRegionSize/2 <= neighbourhood){
-            Constans.validationMessage = "Please increase quadratic region or decrease neighbourhood dimension";
-            Constans.validInputData = false;
-        }
         new Thread(new Runnable() {
             public void run() {
                 tester.run();
@@ -114,6 +69,10 @@ public class ZADANIE implements Command {
             }
         }catch (InterruptedException ex){
             sts.showStatus("This should not show");
+        }
+        if (Constans.QUADRATIC_SIZE/2  <= neighbourhood){
+            Constans.validationMessage = "Please increase quadratic region or decrease neighbourhood dimension";
+            Constans.validInputData = false;
         }
 
         if (!Constans.validInputData) {
@@ -130,7 +89,7 @@ public class ZADANIE implements Command {
                                 }
                             }
                             if (tester.progress.entrySet().size() != 0 && !String.valueOf(percentage / tester.progress.entrySet().size()).equals("null"))
-                                sts.showStatus("" + String.valueOf(percentage / tester.getListOfMatrixData().size()) + "%  " + tester.progress.entrySet().size());
+                                sts.showStatus("" + String.valueOf(percentage / tester.getListOfMatrixData().size()) + "%  " + tester.progress.entrySet().size() + "/" +tester.getListOfMatrixData().size());
                             Thread.sleep(100);
                         }
                         sts.showStatus("GOTOWE");
@@ -141,7 +100,6 @@ public class ZADANIE implements Command {
             });
             t1.start();
         }
-
     }
 
     /**
