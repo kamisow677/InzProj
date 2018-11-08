@@ -130,8 +130,6 @@ public class GDTMTexturalPropertiestest {
         assertEquals(texturalPropertiesNew.getStrength(), 3.09090909, 0.0001);
 
 
-
-
         /**
          * 0,1
          */

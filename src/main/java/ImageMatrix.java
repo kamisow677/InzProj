@@ -96,57 +96,67 @@ public class ImageMatrix implements Matrix {
      */
     @Override
     public double get(int j, int i) {
+        if (i==13 && j==-6 && startWidth==1 && startHeight==0){
+            System.out.println("WSZEDLEDM");
+            int elo= 2;
+        }
         int ileZa;
+        int jw=j;
+        int iw= i;
         if (j+startHeight<0) {
-            ileZa=Math.abs(j + startHeight);
-            j=0-ileZa;
+            j=Math.abs(j + startHeight +1);
             j-=startHeight;
         }
-        if (j+startHeight>bufferedImage.getHeight()) {
-             ileZa=j + startHeight - bufferedImage.getHeight();
+        if (j+startHeight>=bufferedImage.getHeight()) {
+             ileZa=Math.abs(j + startHeight - (bufferedImage.getHeight() - 1));
              j= bufferedImage.getHeight() - ileZa;
              j-=startHeight;
         }
         if (i+startWidth<0) {
-            ileZa=Math.abs(i + startWidth);
-            i=0-ileZa;
+            i=Math.abs(i + startWidth +1);
             i-=startWidth;
         }
-        if (i+startWidth>bufferedImage.getHeight()) {
-            ileZa=i + startWidth - bufferedImage.getWidth();
+        if (i+startWidth>=bufferedImage.getWidth()) {
+            ileZa=Math.abs( i + startWidth - (bufferedImage.getWidth() - 1) );
             i= bufferedImage.getWidth() - ileZa;
             i-=startWidth;
         }
-
-        int argb = bufferedImage.getRGB(i+startWidth, j+startHeight);
-        switch (color) {
-            case GREY: {
-               // System.out.println((j+startHeight)*width + i + startWidth);
-                //return (((argb) & 0xFF + (argb >> 8) & 0xFF + (argb >> 16) & 0xFF)/3.0)/Constans.QUANTIZATION;
-               // return dataBuffer.getElem((i+startWidth)*height + j + startHeight);
-              //  System.out.println("j: "+j+" i:"+i+ "startHeight: "+startHeight+ " startWidth:"+startWidth);
-                Integer a = dataBuffer.getElem((j+startHeight)*bufferedImage.getWidth() + i + startWidth)/Constans.QUANTIZATION;
-              //  Integer a = dataBuffer
-                int b;
-                if (a.byteValue()>0)
-                    b =a.byteValue()+128;
-                else
-                    b =a.byteValue()+256;
-                return  a;
+        int argb= 0;
+        try {
+            argb = bufferedImage.getRGB(i + startWidth, j + startHeight);
+            switch (color) {
+                case GREY: {
+                    // System.out.println((j+startHeight)*width + i + startWidth);
+                    //return (((argb) & 0xFF + (argb >> 8) & 0xFF + (argb >> 16) & 0xFF)/3.0)/Constans.QUANTIZATION;
+                    // return dataBuffer.getElem((i+startWidth)*height + j + startHeight);
+                    //  System.out.println("j: "+j+" i:"+i+ "startHeight: "+startHeight+ " startWidth:"+startWidth);
+                    Integer a = dataBuffer.getElem((j + startHeight) * bufferedImage.getWidth() + i + startWidth) / Constans.QUANTIZATION;
+                    //  Integer a = dataBuffer
+                    int b;
+                    if (a.byteValue() > 0)
+                        b = a.byteValue() + 128;
+                    else
+                        b = a.byteValue() + 256;
+                    return a;
 //                return ((argb) & 0xFF)/Constans.QUANTIZATION;
+                }
+                case BLUE: {
+                    return ((argb) & 0xFF) / Constans.QUANTIZATION;
+                }
+                case GREEN: {
+                    return ((argb >> 8) & 0xFF) / Constans.QUANTIZATION;
+                }
+                case RED: {
+                    return ((argb >> 16) & 0xFF) / Constans.QUANTIZATION;
+                }
+                case ALL: {
+                    return (((argb) & 0xFF + (argb >> 8) & 0xFF + (argb >> 16) & 0xFF) / 3.0) / Constans.QUANTIZATION;
+                }
+
             }
-            case BLUE: {
-                return ((argb) & 0xFF)/Constans.QUANTIZATION;
-            }
-            case GREEN: {
-                return ((argb >> 8) & 0xFF)/Constans.QUANTIZATION;
-            }
-            case RED: {
-                return ((argb >> 16) & 0xFF)/Constans.QUANTIZATION;
-            }
-            case ALL:{
-                return (((argb) & 0xFF + (argb >> 8) & 0xFF + (argb >> 16) & 0xFF)/3.0)/Constans.QUANTIZATION;
-            }
+        }catch (IndexOutOfBoundsException ex){
+            System.out.println("BLAD "+i+" "+j+ "  "+iw+" "+jw);
+            System.out.println("StartHeight "+startHeight+" StartWIdth" +startWidth);
 
         }
         return ((argb) & 0xFF)/Constans.QUANTIZATION;

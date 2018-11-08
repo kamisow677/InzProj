@@ -133,11 +133,13 @@ public class TexturalProperties {
                     continue;
                 denominatorBusyness += 2*Math.abs( i * p.get(i)- j * p1.get(j));
                 partContrast += 2*p.get(i) * p1.get(j) * Math.pow((i - j), 2);
-                partComplexity += 2*(Math.abs(i - j) / (n2 * (p.get(i) + p1.get(j)))) * ((p.get(i) * s.get(i)) + (p1.get(j) * s.get(j)));
+                partComplexity += (2*(Math.abs(i - j)) / ((n2 * (p.get(i) + p1.get(j))) +0.000000) ) * ((p.get(i) * s.get(i)) + (p1.get(j) * s.get(j)));
                 partStrength += 2*Math.pow((i - j), 2) * (p.get(i) + p1.get(j));
                 Constans.b++;
             }
+
         }
+
         Complexity = partComplexity;
         Contrast = 1 / Ng / (Ng - 1) * partContrast;
         Double siSum = s
@@ -149,6 +151,9 @@ public class TexturalProperties {
         Contrast = Contrast * siSum * 1 / n2;
         Busyness = psiNumeratorBusyness / denominatorBusyness;
         Strength = partStrength / siSum;
+        //System.out.println(Complexity);
+        //System.out.println(gtdm.getInputDataMatrix().getStartHeight());
+       // System.out.println(gtdm.getInputDataMatrix().getStartWidth());
     }
 
     @Override

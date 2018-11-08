@@ -332,7 +332,7 @@ public Long createTask( ArrayList<ImageMatrix> list) {
             numberOfThreads = 1;
         }
         ArrayList< ArrayList<ImageMatrix>> listParts = new ArrayList<>();
-        int partheight = (h - q) / numberOfThreads;
+        int partheight = (h) / numberOfThreads;
         for (int i =0 ; i< numberOfThreads ; i++) {
             ArrayList<ImageMatrix> list2 = new ArrayList<>();
             for (ImageMatrix imageMatrix : list) {
@@ -346,7 +346,7 @@ public Long createTask( ArrayList<ImageMatrix> list) {
             listParts.add(list2);
         }
 
-        int rest = (h - q) % numberOfThreads;
+        int rest = (h) % numberOfThreads;
 
         ExecutorService executorService = Executors.newWorkStealingPool(numberOfThreads);
         for (int i = 0 ; i<listParts.size() -1; i++){
@@ -408,6 +408,7 @@ public Long createTask( ArrayList<ImageMatrix> list) {
             ArrayList<ImageMatrix> list, ArrayList<MatrixCommon> matrixesA) {
        // AtomicInteger numer = new AtomicInteger();
 
+
         Callable<ArrayList<Map<String, Double>>> task = () -> {
             ArrayList<Map<String, Double>> properties = new ArrayList<>();
             GTDM gdtmNext = null;
@@ -417,7 +418,7 @@ public Long createTask( ArrayList<ImageMatrix> list) {
 
             if (Constans.AVERAGE_MATRIXES) {
                 for (int i = startRow; i < endRow; i++) {
-                    for (int j = 0; j < w - q ; j++) {
+                    for (int j = 0; j < w  ; j++) {
                         try {
                             if (i == startRow && j == 0) {
                                 /**
@@ -432,6 +433,7 @@ public Long createTask( ArrayList<ImageMatrix> list) {
                                     listaGDTMOWNext.add(gdtmNext);
                                     k++;
                                 }
+                                progress.put(gdtmNext.getInputDataMatrix().getImageName(),(int) 0);
                                 //if (!(list.get(0).getBufferedImage().getType()==BufferedImage.TYPE_BYTE_GRAY))
                                 if (!isGrey(list.get(0).getBufferedImage()))
                                     gdtmNext = new GTDM(listaGDTMOWNext.get(0), listaGDTMOWNext.get(1), listaGDTMOWNext.get(2));
@@ -445,6 +447,10 @@ public Long createTask( ArrayList<ImageMatrix> list) {
 
                                 //if ((list.get(0).getBufferedImage().getType()==BufferedImage.TYPE_BYTE_GRAY)){
                                 if (isGrey(list.get(0).getBufferedImage())){
+                                    if (progress.get(gdtmNext.getInputDataMatrix().getImageName())==4){
+                                        int asddas=12;
+
+                                    }
                                     listaGDTMOWNext.set(0, new GTDM(listaGDTMOWNext.get(0), false));
                                     listaGDTMOWNext.get(0).startNextRowCalcualtions(true, false);
                                     gdtmNext = listaGDTMOWNext.get(0);
@@ -464,6 +470,7 @@ public Long createTask( ArrayList<ImageMatrix> list) {
                                 //if ((list.get(0).getBufferedImage().getType()==BufferedImage.TYPE_BYTE_GRAY)){
                                  if (isGrey(list.get(0).getBufferedImage())){
                                     listaGDTMOWNext.set(0, new GTDM(listaGDTMOWNext.get(0), true));
+
                                     listaGDTMOWNext.get(0).startNextColumnCalcualtions(true, false);
                                     gdtmNext = listaGDTMOWNext.get(0);
                                 }else{
@@ -488,6 +495,7 @@ public Long createTask( ArrayList<ImageMatrix> list) {
                     else
                         progress.put(gdtmNext.getInputDataMatrix().getImageName(),1);
                     System.out.println(progress);
+
                 }
             } else {
 
@@ -502,7 +510,7 @@ public Long createTask( ArrayList<ImageMatrix> list) {
 
 
                 for (int i = startRow; i < endRow; i++) {
-                    for (int j = 0; j < w - q; j++) {
+                    for (int j = 0; j < w ; j++) {
                         if (i == startRow && j == 0) {
                             /**
                              * TO JEST TEN FIRST Z TESTU
