@@ -33,7 +33,7 @@ public class ZADANIE implements Command {
     @Parameter(label="Współczynnik kwantyzacji", min = "1" , max = "8")
     private int quantization;
 
-    @Parameter(label="Dla obrazów kolorowych, uśredniać gtdm czy obliczone cechy tekstur",choices={"macierze","cechy"})
+    @Parameter(label="Dla obrazów kolorowych, uśredniać gtdm czy obliczone cechy tekstur ?",choices={"macierze","cechy"})
     private String averageMatrixes = "macierze";
 
     /**
@@ -41,7 +41,7 @@ public class ZADANIE implements Command {
      */
     @Override
     public void run() {
-        Tester3 tester = new Tester3();
+        Controller controller = new Controller();
         if (averageMatrixes.equals("macierze"))
             Constans.setAverageMatrixes(true);
         else
@@ -59,7 +59,7 @@ public class ZADANIE implements Command {
 
         new Thread(new Runnable() {
             public void run() {
-                tester.run();
+                controller.run();
             }
         }).start();
 
@@ -83,13 +83,13 @@ public class ZADANIE implements Command {
                     try {
                         while (Constans.NUMBER_OF_COLORS != 4) {
                             int percentage = 0;
-                            for (Map.Entry<String, Integer> progress : tester.progress.entrySet()) {
-                                if (!(progress.getValue() == null && tester.progressMax.get(progress.getKey()) != 0)) {
-                                    percentage += (progress.getValue() * 100) / tester.progressMax.get(progress.getKey());
+                            for (Map.Entry<String, Integer> progress : controller.progress.entrySet()) {
+                                if (!(progress.getValue() == null && controller.progressMax.get(progress.getKey()) != 0)) {
+                                    percentage += (progress.getValue() * 100) / controller.progressMax.get(progress.getKey());
                                 }
                             }
-                            if (tester.progress.entrySet().size() != 0 && !String.valueOf(percentage / tester.progress.entrySet().size()).equals("null"))
-                                sts.showStatus("" + String.valueOf(percentage / tester.getListOfMatrixData().size()) + "%  " + tester.progress.entrySet().size() + "/" +tester.getListOfMatrixData().size());
+                            if (controller.progress.entrySet().size() != 0 && !String.valueOf(percentage / controller.progress.entrySet().size()).equals("null"))
+                                sts.showStatus("" + String.valueOf(percentage / controller.getListOfMatrixData().size()) + "%  " + controller.progress.entrySet().size() + "/" + controller.getListOfMatrixData().size());
                             Thread.sleep(100);
                         }
                         sts.showStatus("GOTOWE");

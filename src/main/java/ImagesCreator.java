@@ -1,11 +1,16 @@
 import javax.imageio.ImageIO;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferByte;
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.OptionalDouble;
+import java.util.stream.Collectors;
 
 /**
  * @author Kamil Sowa
@@ -120,6 +125,8 @@ public class ImagesCreator {
         System.out.println("Width: "+(width-Constans.QUADRATIC_SIZE));
         System.out.println("Height: "+(height-Constans.QUADRATIC_SIZE));
 
+        //createChange(prop);
+
         System.out.println(prop.get(0).size());
         String[] featuresNames = {Constans.COARNESS, Constans.CONTRAST, Constans.BUSYNESS, Constans.COMPLEXITY, Constans.STRENGTH};
         Double[] scalesValues = new Double[5];
@@ -174,6 +181,35 @@ public class ImagesCreator {
 
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+    public static void createChange(ArrayList<Map<String,Double>> prop){
+        String[] featuresNames = {Constans.COARNESS, Constans.CONTRAST, Constans.BUSYNESS, Constans.COMPLEXITY, Constans.STRENGTH};
+        ArrayList<List<Prop>>  propsyAll =new ArrayList<>();
+
+        for (int k = 0 ; k<5 ; k++) {
+            ArrayList propsy = new ArrayList();
+            for (int i = 0; i < prop.size(); i++) {
+                propsy.add(new Prop(featuresNames[k], Math.abs(prop.get(i).get(featuresNames[k])), i));
+            }
+            propsyAll.add(propsy);
+        }
+        for (int k = 0 ; k<5 ; k++){
+            Collections.sort(propsyAll.get(k), (f1, f2) -> Double.compare(f2.value, f1.value));
+           // List<Prop> collect = propsyAll.get(k).stream().sorted((f1, f2) -> Double.compare(f2.value, f1.value)).collect(Collectors.toList());
+            int ile = propsyAll.get(k).size();
+            Double wsp = new Double(ile);
+            wsp*=0.9999;
+            Prop top = propsyAll.get(k).get( wsp.intValue() );
+            for (int i = wsp.intValue(); i<ile ; i++){
+                propsyAll.get(k).get(i).setValue(top.getValue());
+            }
+            Collections.sort(propsyAll.get(k), (f1, f2) -> Double.compare(f1.pos, f2.pos));
+            //propsyAll.get(k).stream().sorted((f1, f2) -> Double.compare(f2.pos, f1.pos));
+            for (int i = 0; i < prop.size(); i++) {
+
+                prop.get(i).put(featuresNames[k],propsyAll.get(k).get(i).getValue());
+            }
         }
     }
 
