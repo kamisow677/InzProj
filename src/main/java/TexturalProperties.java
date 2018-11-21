@@ -149,7 +149,7 @@ public class TexturalProperties {
 
         Coarness = Math.pow(Epsilon + psiNumeratorBusyness, -1);
         Contrast = Contrast * siSum * 1 / n2;
-        Busyness = psiNumeratorBusyness / denominatorBusyness;
+        Busyness = psiNumeratorBusyness / (denominatorBusyness + Epsilon);
         Strength = partStrength / siSum;
         //System.out.println(Complexity);
         //System.out.println(gtdm.getInputDataMatrix().getStartHeight());

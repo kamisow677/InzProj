@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.OptionalDouble;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * @author Kamil Sowa
@@ -125,7 +126,7 @@ public class ImagesCreator {
         System.out.println("Width: "+(width-Constans.QUADRATIC_SIZE));
         System.out.println("Height: "+(height-Constans.QUADRATIC_SIZE));
 
-        //createChange(prop);
+       // createChange(prop);
 
         System.out.println(prop.get(0).size());
         String[] featuresNames = {Constans.COARNESS, Constans.CONTRAST, Constans.BUSYNESS, Constans.COMPLEXITY, Constans.STRENGTH};
@@ -143,27 +144,13 @@ public class ImagesCreator {
 
         try {
             byte [] newData ;
-            //byte [][] newDates = new byte[5][(height-Constans.QUADRATIC_SIZE)*(width-Constans.QUADRATIC_SIZE)];
             byte [][] newDates = new byte[5][(height)*(width)];
-//            for (int i = 0 ; i<5 ; i++){
-//                buffImages[i] =  new BufferedImage(width-Constans.QUADRATIC_SIZE, height-Constans.QUADRATIC_SIZE, BufferedImage.TYPE_BYTE_GRAY);
-//                newData = ((DataBufferByte) buffImages[i].getRaster().getDataBuffer()).getData();
-//                newDates[i] = newData;
-//            }
             for (int i = 0 ; i<5 ; i++){
                 buffImages[i] =  new BufferedImage(width, height, BufferedImage.TYPE_BYTE_GRAY);
                 newData = ((DataBufferByte) buffImages[i].getRaster().getDataBuffer()).getData();
                 newDates[i] = newData;
             }
 
-//            for (int i = 0; i < height-Constans.QUADRATIC_SIZE ; i++) {
-//                for (int j = 0; j < width-Constans.QUADRATIC_SIZE ; j++) {
-//                    for (int k = 0 ; k<5 ; k++) {
-//                        Integer grey = (int) Math.abs(((prop.get(i * (width - Constans.QUADRATIC_SIZE) + j).get(featuresNames[k])) / scalesValues[k]));
-//                        newDates[k][i*(width-Constans.QUADRATIC_SIZE )+j] =(grey.byteValue()) ;
-//                    }
-//                }
-//            }
             for (int i = 0; i < height ; i++) {
                 for (int j = 0; j < width ; j++) {
                     for (int k = 0 ; k<5 ; k++) {
@@ -195,20 +182,20 @@ public class ImagesCreator {
             propsyAll.add(propsy);
         }
         for (int k = 0 ; k<5 ; k++){
-            Collections.sort(propsyAll.get(k), (f1, f2) -> Double.compare(f2.value, f1.value));
-           // List<Prop> collect = propsyAll.get(k).stream().sorted((f1, f2) -> Double.compare(f2.value, f1.value)).collect(Collectors.toList());
+//            Collections.sort(propsyAll.get(k), (f1, f2) -> Double.compare(f1.value, f2.value));
+            List<Prop> propsy = propsyAll.get(k).parallelStream().sorted((f1, f2) -> Double.compare(f1.value, f2.value)).collect(Collectors.toList());
+
             int ile = propsyAll.get(k).size();
             Double wsp = new Double(ile);
-            wsp*=0.9999;
-            Prop top = propsyAll.get(k).get( wsp.intValue() );
+            wsp*=0.999;
+            Prop top = propsy.get( wsp.intValue() );
             for (int i = wsp.intValue(); i<ile ; i++){
-                propsyAll.get(k).get(i).setValue(top.getValue());
+                propsy.get(i).setValue(top.getValue());
             }
-            Collections.sort(propsyAll.get(k), (f1, f2) -> Double.compare(f1.pos, f2.pos));
-            //propsyAll.get(k).stream().sorted((f1, f2) -> Double.compare(f2.pos, f1.pos));
+//            Collections.sort(propsy, (f1, f2) -> Double.compare(f1.pos, f2.pos));
+            List<Prop> collect = propsy.parallelStream().sorted((f1, f2) -> Double.compare(f1.pos, f2.pos)).collect(Collectors.toList());
             for (int i = 0; i < prop.size(); i++) {
-
-                prop.get(i).put(featuresNames[k],propsyAll.get(k).get(i).getValue());
+                prop.get(i).put(featuresNames[k],collect.get(i).getValue());
             }
         }
     }

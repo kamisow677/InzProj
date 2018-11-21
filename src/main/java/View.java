@@ -9,8 +9,8 @@ import org.scijava.plugin.Plugin;
 import org.scijava.ui.UIService;
 
 
-@Plugin(type = Command.class, menuPath = "Tutorials>ZADANIE")
-public class ZADANIE implements Command {
+@Plugin(type = Command.class, menuPath = "Plugins>Generowanie map cech")
+public class View implements Command {
 
     @Parameter
     private StatusService sts;
@@ -111,7 +111,7 @@ public class ZADANIE implements Command {
         // Launch ImageJ as usual.
         final ImageJ ij = new ImageJ();
         ij.launch(args);
-        ij.command().run(ZADANIE.class, true);
+        ij.command().run(View.class, true);
     }
 
 }

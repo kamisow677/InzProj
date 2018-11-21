@@ -237,7 +237,7 @@ public class GTDM {
      * @param l numer wiersza
      * @return zwraca średnią wartość piksela w oknie
      */
-    public double calculateA(int k, int l) {
+    private double calculateA(int k, int l) {
         double suma = 0;
         for (int m = -d; m <= d; m++) {
             for (int n = -d; n <= d; n++) {
@@ -257,7 +257,7 @@ public class GTDM {
     /**
      * Obliczanie macierzy A
      */
-    public void calculateMatrixA() {
+    private void calculateMatrixA() {
         for (int k = 0; k < height - 0; k++) {
             for (int l = 0; l < width - 0; l++) {
                 matrixA.set(k, l, calculateA(k, l));

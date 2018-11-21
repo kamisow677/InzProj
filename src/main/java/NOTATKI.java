@@ -26,6 +26,7 @@ public class NOTATKI {
      * http://jnm.snmjournals.org/content/suppl/2013/09/19/54.10.1703.DC1/119289_Supplemental_Data.pdf
      * http://www.ijcte.org/papers/639-W00023.pdf
      * http://www.eletel.p.lodz.pl/programy/cost/pdf_1.pdf
+     * NUCLEAR
      * http://www.guillemet.org/irene/article/BuvatJNM2015.pdf
      *
      *
@@ -35,11 +36,30 @@ public class NOTATKI {
      * http://icis.pcz.pl/~agrosser/wtest.pdf
      * http://staff.uz.zgora.pl/mpatan/materialy/tmp_z/druk10z.pdf
      *
+     * http://ijarcs.info/index.php/Ijarcs/article/view/127/119
+     *
      * REPOZYTORIUM BRODATZ
      *
      *https://multibandtexture.recherche.usherbrooke.ca/original_brodatz.html
      *
+     * TEXTURE ANALYSIS
+     * https://www.mathworks.com/help/images/texture-analysis-1.html
      *
+     * Pytanie testy gdzie wykonywane sciezki w testach
+     *
+     *
+     *
+     * 1.375 2.5 2.5 3.375 2.875 3.625
+     * 1.0 2.0 2.375 2.5 2.875 3.125
+     * 2.0 2.125 2.0 2.125 2.25 2.5
+     * 2.875 2.5 2.125 2.0 2.125 2.5
+     * 3.5 2.5 2.625 2.375 2.375 2.25
+     * 3.375 2.5 3.125 2.75 3.0 2.375
+     *
+     *
+     * PYTANIA
+     * bibliografia do stron z artykulami
+     *nazwenictwo sasiedztwo czy odleglos czy okno obliczen
      *
      */
 
