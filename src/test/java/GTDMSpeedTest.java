@@ -4,7 +4,7 @@ public class GTDMSpeedTest {
 
     @Test
     public void test() {
-        Tester3 tester = new Tester3();
+        Controller controller = new Controller();
         System.out.println("D: " + Constans.getD());
         System.out.println("Quadratic: " + Constans.getQuadraticSize());
         System.out.println("Average matrixes?: " + Constans.isAverageMatrixes());
@@ -16,13 +16,13 @@ public class GTDMSpeedTest {
         startTime = System.currentTimeMillis();
         Constans.parallel=true;
         Constans.slowGTDMcalc=true;
-        tester.run();
+        controller.run();
         stopTime = System.currentTimeMillis();
         elapsedTime1 = stopTime - startTime;
 
         startTime = System.currentTimeMillis();
         Constans.slowGTDMcalc=false;
-        tester.run();
+        controller.run();
         stopTime = System.currentTimeMillis();
         elapsedTime2 = stopTime - startTime;
         System.out.println("SLOW GTDM: " + elapsedTime1);

@@ -1,11 +1,17 @@
 import javax.imageio.ImageIO;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferByte;
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.OptionalDouble;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * @author Kamil Sowa
@@ -120,6 +126,8 @@ public class ImagesCreator {
         System.out.println("Width: "+(width-Constans.QUADRATIC_SIZE));
         System.out.println("Height: "+(height-Constans.QUADRATIC_SIZE));
 
+       // createChange(prop);
+
         System.out.println(prop.get(0).size());
         String[] featuresNames = {Constans.COARNESS, Constans.CONTRAST, Constans.BUSYNESS, Constans.COMPLEXITY, Constans.STRENGTH};
         Double[] scalesValues = new Double[5];
@@ -136,18 +144,18 @@ public class ImagesCreator {
 
         try {
             byte [] newData ;
-            byte [][] newDates = new byte[5][(height-Constans.QUADRATIC_SIZE)*(width-Constans.QUADRATIC_SIZE)];
+            byte [][] newDates = new byte[5][(height)*(width)];
             for (int i = 0 ; i<5 ; i++){
-                buffImages[i] =  new BufferedImage(width-Constans.QUADRATIC_SIZE, height-Constans.QUADRATIC_SIZE, BufferedImage.TYPE_BYTE_GRAY);
+                buffImages[i] =  new BufferedImage(width, height, BufferedImage.TYPE_BYTE_GRAY);
                 newData = ((DataBufferByte) buffImages[i].getRaster().getDataBuffer()).getData();
                 newDates[i] = newData;
             }
 
-            for (int i = 0; i < height-Constans.QUADRATIC_SIZE ; i++) {
-                for (int j = 0; j < width-Constans.QUADRATIC_SIZE ; j++) {
+            for (int i = 0; i < height ; i++) {
+                for (int j = 0; j < width ; j++) {
                     for (int k = 0 ; k<5 ; k++) {
-                        Integer grey = (int) Math.abs(((prop.get(i * (width - Constans.QUADRATIC_SIZE) + j).get(featuresNames[k])) / scalesValues[k]));
-                        newDates[k][i*(width-Constans.QUADRATIC_SIZE )+j] =(grey.byteValue()) ;
+                        Integer grey = (int) Math.abs(((prop.get(i * (width ) + j).get(featuresNames[k])) / scalesValues[k]));
+                        newDates[k][i*(width )+j] =(grey.byteValue()) ;
                     }
                 }
             }
@@ -160,6 +168,35 @@ public class ImagesCreator {
 
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+    public static void createChange(ArrayList<Map<String,Double>> prop){
+        String[] featuresNames = {Constans.COARNESS, Constans.CONTRAST, Constans.BUSYNESS, Constans.COMPLEXITY, Constans.STRENGTH};
+        ArrayList<List<Prop>>  propsyAll =new ArrayList<>();
+
+        for (int k = 0 ; k<5 ; k++) {
+            ArrayList propsy = new ArrayList();
+            for (int i = 0; i < prop.size(); i++) {
+                propsy.add(new Prop(featuresNames[k], Math.abs(prop.get(i).get(featuresNames[k])), i));
+            }
+            propsyAll.add(propsy);
+        }
+        for (int k = 0 ; k<5 ; k++){
+//            Collections.sort(propsyAll.get(k), (f1, f2) -> Double.compare(f1.value, f2.value));
+            List<Prop> propsy = propsyAll.get(k).parallelStream().sorted((f1, f2) -> Double.compare(f1.value, f2.value)).collect(Collectors.toList());
+
+            int ile = propsyAll.get(k).size();
+            Double wsp = new Double(ile);
+            wsp*=0.999;
+            Prop top = propsy.get( wsp.intValue() );
+            for (int i = wsp.intValue(); i<ile ; i++){
+                propsy.get(i).setValue(top.getValue());
+            }
+//            Collections.sort(propsy, (f1, f2) -> Double.compare(f1.pos, f2.pos));
+            List<Prop> collect = propsy.parallelStream().sorted((f1, f2) -> Double.compare(f1.pos, f2.pos)).collect(Collectors.toList());
+            for (int i = 0; i < prop.size(); i++) {
+                prop.get(i).put(featuresNames[k],collect.get(i).getValue());
+            }
         }
     }
 

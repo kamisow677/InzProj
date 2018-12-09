@@ -2,14 +2,14 @@
  *Klasa ze stałymi
  */
 public class Constans {
-    static int QUADRATIC_SIZE = 31;
+    static int QUADRATIC_SIZE = 45;//całkowita wielkość kwadratowego regionu
     static int D = 1;
     static boolean AVERAGE_MATRIXES = true;
-    static String COARNESS ="COARNESS";
-    static String CONTRAST ="CONTRAST";
-    static String BUSYNESS ="BUSYNESS";
-    static String COMPLEXITY ="COMPLEXITY";
-    static String STRENGTH ="STRENGTH";
+    static String COARNESS ="Szorstkosc";
+    static String CONTRAST ="Kontrast";
+    static String BUSYNESS ="Zajetosc";
+    static String COMPLEXITY ="Złozonosc";
+    static String STRENGTH ="Sila";
     static String FOLDER_PATH = "C:\\Users\\Kamil Sowa\\Desktop\\obrazki21\\";
     static String SAVE_PATH = "C:\\Users\\Kamil Sowa\\Desktop\\obrazki21\\Results\\";
     static int QUANTIZATION = 1;

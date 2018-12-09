@@ -101,6 +101,23 @@ public class MatrixCommon implements Matrix {
 
     @Override
     public double get(int i, int j) {
+        int ileZa;
+        if (j<0) {
+            j=Math.abs(j+1);
+        }
+        if (j>=width) {
+            ileZa=Math.abs( j- (width - 1));
+            j=width-ileZa;
+            j-=startWidth;
+        }
+        if (i<0) {
+            i=Math.abs(i+1);
+        }
+        if (i>=height) {
+            ileZa=Math.abs(i-(height- 1));
+            i=height-ileZa;
+            i-=startHeight;
+        }
         return data[i+startHeight][j+startWidth];
     }
 
@@ -108,7 +125,6 @@ public class MatrixCommon implements Matrix {
      * Wypisanie zawartości macierzy
      */
     public void printf() {
-
         for (int i = 0; i < height; i++) {
             for (int j = 0; j < width; j++) {
                 System.out.print(data[i+startHeight][j+getStartWidth()] + " ");
