@@ -5,8 +5,7 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Random;
+import java.nio.file.Paths;
 
 import static org.junit.Assert.assertEquals;
 
@@ -25,6 +24,7 @@ public class GTDMtest {
     public static void createImage(){
         byte[][] dane = {{1, 2, 5, 1, 4, 4}, {1, 2, 3, 4, 1, 4}, {0, 1, 3, 1, 2, 3},
                 {4, 3, 1, 1, 2, 2}, {5, 5, 1, 2, 4, 2}, {2, 3, 1, 5, 4, 1}};
+        Constans.SAVE_PATH=Paths.get(".").toAbsolutePath().normalize().toString();
         ImagesCreator.createTestPixelImage(dane, MATRIX_SIZE);
     }
 
@@ -88,7 +88,7 @@ public class GTDMtest {
                 {2.875, 2.5, 2.125, 2.0, 2.125, 2.5}, {3.5, 2.5, 2.625, 2.375, 2.375, 2.25}, {3.375, 2.5, 3.125, 2.75, 3.0, 2.375}};
 
 
-        File img = new File(Constans.SAVE_PATH + "Test.png");
+        File img = new File(Constans.SAVE_PATH + "\\Test.png");
         BufferedImage buffImage=null;
         try {
             buffImage = ImageIO.read(img);
@@ -98,7 +98,7 @@ public class GTDMtest {
         /**
          * CREATION OF TexturalPropertiesTestOld class for matrix A calculation
          */
-        Matrix daneTestowe = new ImageMatrix(buffImage, ImageMatrix.COLOR.GREY,Constans.SAVE_PATH +"Test.png");
+        Matrix daneTestowe = new ImageMatrix(buffImage, ImageMatrix.COLOR.GREY,Constans.SAVE_PATH +"\\Test.png");
         gdtmNowe = new GTDM(daneTestowe);
         MatrixCommon matrixA = gdtmNowe.getMatrixA();
         TexturalProperties texturalPropertiesNew;

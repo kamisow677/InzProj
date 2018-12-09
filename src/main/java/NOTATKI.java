@@ -58,8 +58,20 @@ public class NOTATKI {
      *
      *
      * PYTANIA
-     * bibliografia do stron z artykulami
-     *nazwenictwo sasiedztwo czy odleglos czy okno obliczen
+     * Co zapisywac macierz gtdm i mapy. Co jesczze czy parametry tez bo taki jest komentarz w rzdziale 3
+     * liczba slow jak sprawwdzic
+     * Roznica miedzy parametry metody a cechy tekstur
+     *
+     * W testach przeciez jest o mapie cech
+     * W bibliografi nie da sie dac duzych liter
+     * Testy bo ja mam testowane wyniiki dla map cech a nie dla calych obrazow (odnieniesie do komentarzy przy wykresach)
+     *
+     *Rozdzial 3 pierwszys konetarz o co chodzi?
+     * wstawianie kodu w pracy nie da sie zarzadzic spacja (int parallelism )
+     *section {Komponenty, moduły, biblioteki, przegląd ważniejszych klas}
+     *javadoc
+     * Co mam zapisywac , czy tylko GTDM i obrazy a co z zechami
+     * cudzyslowia zle wygladaja
      *
      */
 

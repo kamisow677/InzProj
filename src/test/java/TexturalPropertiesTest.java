@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -24,6 +25,7 @@ public class TexturalPropertiesTest {
     public static void createImage(){
         byte[][] dane = {{1, 2, 5, 1, 4, 4}, {1, 2, 3, 4, 1, 4}, {0, 1, 3, 1, 2, 3},
                 {4, 3, 1, 1, 2, 2}, {5, 5, 1, 2, 4, 2}, {2, 3, 1, 5, 4, 1}};
+        Constans.SAVE_PATH=Paths.get(".").toAbsolutePath().normalize().toString();
         ImagesCreator.createTestPixelImage(dane,WIELKSC_MACIRZY);
     }
 
@@ -34,14 +36,14 @@ public class TexturalPropertiesTest {
         Constans.QUADRATIC_SIZE=SQUARE_SIZE;
 
 
-        File img = new File(Constans.SAVE_PATH + "Test.png");
+        File img = new File(Constans.SAVE_PATH + "\\Test.png");
         BufferedImage buffImage=null;
         try {
             buffImage = ImageIO.read(img);
         }catch (Exception ex){
 
         }
-        Matrix testData = new ImageMatrix(buffImage, ImageMatrix.COLOR.GREY,Constans.SAVE_PATH +"Test.png");
+        Matrix testData = new ImageMatrix(buffImage, ImageMatrix.COLOR.GREY,Constans.SAVE_PATH +"\\Test.png");
         System.out.println("Dane testowe");
         testData.printf();
 
@@ -68,13 +70,13 @@ public class TexturalPropertiesTest {
         Double[] expectedS;
         Double[] expectedP;
 
-        double[][] expectedMatrixAdate = {{0.0, 0.0, 0.0, 0.0, 0.0, 0.0}, {0.0, 2.0, 2.375, 2.5, 2.875, 0.0}, {0.0, 2.125, 2.0, 2.125, 2.25, 0.0},
-                {0.0, 2.5, 2.125, 2.0, 2.125, 0.0}, {0.0, 2.5, 2.625, 2.375, 2.375, 0.0}, {0.0, 0.0, 0.0, 0.0, 0.0, 0.0}};
+        double[][] expectedMatrixAdate = {{1.375, 2.5, 2.5, 3.375, 2.875, 3.625}, {1.0, 2.0, 2.375, 2.5, 2.875, 3.125}, {2.0, 2.125, 2.0, 2.125, 2.25, 2.5},
+                {2.875, 2.5, 2.125, 2.0, 2.125, 2.5}, {3.5, 2.5, 2.625, 2.375, 2.375, 2.25}, {3.375, 2.5, 3.125, 2.75, 3.0, 2.375}};
 
         /**
          * CREATION OF TexturalPropertiesTestOld class for matrix A calculation
          */
-        File img = new File(Constans.SAVE_PATH + "Test.png");
+        File img = new File(Constans.SAVE_PATH + "\\Test.png");
         BufferedImage buffImage=null;
         try {
             buffImage = ImageIO.read(img);
@@ -86,7 +88,7 @@ public class TexturalPropertiesTest {
         /**
          * CALCULACTIONS OF SWIARES 0,0
          */
-        Matrix daneTestowe = new ImageMatrix(buffImage, ImageMatrix.COLOR.GREY,Constans.SAVE_PATH +"Test.png");
+        Matrix daneTestowe = new ImageMatrix(buffImage, ImageMatrix.COLOR.GREY,Constans.SAVE_PATH +"\\Test.png");
         daneTestowe.setHeight(SQUARE_SIZE);
         daneTestowe.setWidth(SQUARE_SIZE);
 

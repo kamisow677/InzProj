@@ -14,7 +14,7 @@ import java.util.function.Consumer;
 /**
  * @author Kamil Sowa
  * @version 1.0
- * Główna klasa programu zarządzająca działąniem całego procesu tworzenia map cech
+ * Klasa będąca modelem. Odpowiedzialna za sterowanie algorytmem wyliczającym cechy struktury oraz mapy cech
  *
  */
 public class Model {
@@ -112,7 +112,7 @@ public class Model {
         GTDM gdtmNowe = null;
         ArrayList<GTDM> listaGDTMOWNext = new ArrayList<>();
         ArrayList<Callable<ArrayList<Map<String, Double>>>> callables = new ArrayList<>();
-        ArrayList<ArrayList<Map<String, Double>>>properties2 = new ArrayList<>();//final props all to write image
+        ArrayList<ArrayList<Map<String, Double>>>listOfproperties = new ArrayList<>();
 
         int w = list.get(0).getWidth();
         int h = list.get(0).getHeight();
@@ -151,9 +151,11 @@ public class Model {
 
         ExecutorService executorService = Executors.newWorkStealingPool(numberOfThreads);
         for (int i = 0 ; i<listParts.size() -1; i++){
-            callables.add(createCallable(i*partheight, (i+1)*partheight, q, w, new ArrayList<>(listParts.get(i)), new ArrayList<>(matrixesA)));
+          //  callables.add(createCallable(i*partheight, (i+1)*partheight, w, new ArrayList<>(listParts.get(i)), new ArrayList<>(matrixesA)));
+            callables.add(createCallable(i*partheight, (i+1)*partheight, w, listParts.get(i), matrixesA));
         }
-        callables.add(createCallable((listParts.size() -1)*partheight, (listParts.size())*partheight + rest, q, w, new ArrayList<>(listParts.get(listParts.size() -1)), new ArrayList<>(matrixesA)));
+        //callables.add(createCallable((listParts.size() -1)*partheight, (listParts.size())*partheight + rest,  w, new ArrayList<>(listParts.get(listParts.size() -1)), new ArrayList<>(matrixesA)));
+        callables.add(createCallable((listParts.size() -1)*partheight, (listParts.size())*partheight + rest,  w, listParts.get(listParts.size() -1), matrixesA));
 
         try {
             List<Future<ArrayList<Map<String, Double>>>> futures = executorService.invokeAll(callables);
@@ -161,10 +163,10 @@ public class Model {
 //                Thread.sleep(1000);
 //            }
             for (Future<ArrayList<Map<String, Double>>> future : futures) {
-                properties2.add(future.get());
+                listOfproperties.add(future.get());
             }
 
-            for (List<Map<String, Double>> p : properties2) {
+            for (List<Map<String, Double>> p : listOfproperties) {
                 for (Map<String, Double> map : p) {
                     properties.add(map);
                 }
@@ -199,13 +201,12 @@ public class Model {
      * Metoda tworzy nowy obiekt Callable, który zajmie się przetwarzaniem części obrazu
      * @param startRow początkowy wiersz
      * @param endRow końcowy wiersz
-     * @param q wielkość kwadratowego regionu
      * @param w szerokość całego obrazu
      * @param list lista macierzy z danymi o obrazie
      * @param matrixesA macierz lub macierze średniej wartości pikseli
      * @return obiekt Callable
      */
-    public Callable<ArrayList<Map<String,Double>>> createCallable(int startRow, int endRow, int q, int w,
+    public Callable<ArrayList<Map<String,Double>>> createCallable(int startRow, int endRow, int w,
                                                                   ArrayList<ImageMatrix> list, ArrayList<MatrixCommon> matrixesA) {
         // AtomicInteger numer = new AtomicInteger();
 
@@ -300,14 +301,14 @@ public class Model {
                 }
             } else {
 
-                PrintWriter writer = null;
-                try {
-                    writer = new PrintWriter(Constans.FOLDER_PATH + "\\" + "Coarnesrgb" + ".txt", "UTF-8");
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
-                }
+//                PrintWriter writer = null;
+//                try {
+//                    writer = new PrintWriter(Constans.FOLDER_PATH + "\\" + "Coarnesrgb" + ".txt", "UTF-8");
+//                } catch (FileNotFoundException e) {
+//                    e.printStackTrace();
+//                } catch (UnsupportedEncodingException e) {
+//                    e.printStackTrace();
+//                }
 
 
                 for (int i = startRow; i < endRow; i++) {
@@ -326,7 +327,7 @@ public class Model {
                                 tex.add(new TexturalProperties(gdtmNext));
                                 k++;
                             }
-                            writer.println(tex.get(0).getCoarness());
+                          //  writer.println(tex.get(0).getCoarness());
                             texturalPropertiesNew = Transformer.averageProperties(tex, list.get(0).getColor());
                             properties.add(texturalPropertiesNew.getProps());
                             tex.clear();
@@ -336,14 +337,14 @@ public class Model {
                                 listaGDTMOWNext.set(0, new GTDM(listaGDTMOWNext.get(0), false));
                                 listaGDTMOWNext.get(0).startNextRowCalcualtions(true, false);
                                 texturalPropertiesNew = new TexturalProperties(listaGDTMOWNext.get(0));
-                                writer.println(texturalPropertiesNew.getCoarness());
+                          //      writer.println(texturalPropertiesNew.getCoarness());
                             } else {
                                 for (int k = 0; k < Constans.NUMBER_OF_COLORS; k++) {
                                     listaGDTMOWNext.set(k, new GTDM(listaGDTMOWNext.get(k), false));
                                     listaGDTMOWNext.get(k).startNextRowCalcualtions(true, false);
                                     tex.add(new TexturalProperties(listaGDTMOWNext.get(k)));
                                 }
-                                writer.println(tex.get(0).getCoarness());
+                           //     writer.println(tex.get(0).getCoarness());
                                 texturalPropertiesNew = Transformer.averageProperties(tex, list.get(0).getColor());
                             }
                             properties.add(texturalPropertiesNew.getProps());
@@ -354,14 +355,14 @@ public class Model {
                                 listaGDTMOWNext.set(0, new GTDM(listaGDTMOWNext.get(0), true));
                                 listaGDTMOWNext.get(0).startNextColumnCalcualtions(true, false);
                                 texturalPropertiesNew = new TexturalProperties(listaGDTMOWNext.get(0));
-                                writer.println(texturalPropertiesNew.getCoarness());
+                           //     writer.println(texturalPropertiesNew.getCoarness());
                             }else {
                                 for (int k = 0; k < Constans.NUMBER_OF_COLORS; k++) {
                                     listaGDTMOWNext.set(k, new GTDM(listaGDTMOWNext.get(k), true));
                                     listaGDTMOWNext.get(k).startNextColumnCalcualtions(true, false);
                                     tex.add(new TexturalProperties(listaGDTMOWNext.get(k)));
                                 }
-                                writer.println(tex.get(0).getCoarness());
+                           //     writer.println(tex.get(0).getCoarness());
                                 texturalPropertiesNew = Transformer.averageProperties(tex, list.get(0).getColor());
                             }
                             properties.add(texturalPropertiesNew.getProps());

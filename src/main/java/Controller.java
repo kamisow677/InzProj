@@ -14,7 +14,7 @@ import java.util.function.Consumer;
 /**
  * @author Kamil Sowa
  * @version 1.0
- * Główna klasa programu zarządzająca działąniem całego procesu tworzenia map cech
+ * Główna klasa programu będąca kontrolerem. Sprawuje łączność między View, a Model
  *
  */
 public class Controller {
@@ -81,7 +81,7 @@ public class Controller {
             try {
                 buffImage = ImageIO.read(img);
                 System.out.println( pathToImagePlusName+ "  TYPE: "+buffImage.getType());
-                progressMax.put(pathToImagePlusName,buffImage.getHeight()-Constans.QUADRATIC_SIZE);
+                progressMax.put(pathToImagePlusName,buffImage.getHeight());
 
 
                 if (isGrey(buffImage)) {
