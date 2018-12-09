@@ -61,6 +61,7 @@ public class Model {
                 arrTemp.add(gdtmNowe);
                 propsTemp.add(texturalProperties);
                 System.out.println(texturalProperties);
+                texturalProperties.saveToTXT();
             }
             if (list.size()==3){
                 if (Constans.AVERAGE_MATRIXES) {
@@ -69,6 +70,7 @@ public class Model {
                     gdtmNowe.saveToCSV("");
                     TexturalProperties texturalProperties = new TexturalProperties(gdtmNowe);
                     System.out.println(texturalProperties);
+                    texturalProperties.saveToTXT();
                 } else{
                     TexturalProperties texturalProperties = Transformer.averageProperties(propsTemp,"ALL");
                     System.out.println(texturalProperties);

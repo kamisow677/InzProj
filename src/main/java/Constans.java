@@ -2,9 +2,9 @@
  *Klasa ze stałymi
  */
 public class Constans {
-    static int QUADRATIC_SIZE = 45;//całkowita wielkość kwadratowego regionu
+    static int QUADRATIC_SIZE = 9;//całkowita wielkość kwadratowego regionu
     static int D = 1;
-    static boolean AVERAGE_MATRIXES = true;
+    static boolean AVERAGE_MATRIXES = false;
     static String COARNESS ="Szorstkosc";
     static String CONTRAST ="Kontrast";
     static String BUSYNESS ="Zajetosc";

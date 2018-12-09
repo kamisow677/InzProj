@@ -1,3 +1,7 @@
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.util.*;
 
 /**
@@ -202,5 +206,18 @@ public class TexturalProperties {
         map.put(Constans.COMPLEXITY,Complexity);
         map.put(Constans.STRENGTH,Strength);
         return  map;
+    }
+    public  void saveToTXT() {
+        PrintWriter w = null;
+        File fileForCsv = new File(Constans.SAVE_PATH + ImagesCreator.nameFromPath(gtdm.getInputDataMatrix().getImageName()) + "CsvFiles\\");
+        try {
+            w = new PrintWriter(fileForCsv.getAbsolutePath()+ "\\" +Color+ "Properties.txt", "UTF-8");
+            w.write(this.toString());
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        w.close();
     }
 }

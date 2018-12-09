@@ -1,17 +1,13 @@
 import javax.imageio.ImageIO;
-import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferByte;
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.OptionalDouble;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * @author Kamil Sowa
@@ -89,6 +85,7 @@ public class ImagesCreator {
         return path.substring(path.lastIndexOf("\\"));
     }
 
+
     /**
      * Tworzy obraz wykorzystywany do testów jednostkowych
      * @param data dane obrazu, macierz wartości
@@ -126,7 +123,7 @@ public class ImagesCreator {
         System.out.println("Width: "+(width-Constans.QUADRATIC_SIZE));
         System.out.println("Height: "+(height-Constans.QUADRATIC_SIZE));
 
-       // createChange(prop);
+       createChange(prop);
 
         System.out.println(prop.get(0).size());
         String[] featuresNames = {Constans.COARNESS, Constans.CONTRAST, Constans.BUSYNESS, Constans.COMPLEXITY, Constans.STRENGTH};
@@ -199,5 +196,6 @@ public class ImagesCreator {
             }
         }
     }
+
 
 }
