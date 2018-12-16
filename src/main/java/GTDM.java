@@ -703,7 +703,7 @@ public class GTDM {
      */
     public  void saveToCSV(String part) {
         PrintWriter w = null;
-        File fileForCsv = new File(Constans.SAVE_PATH + nameFromPath(inputDataMatrix.getImageName()) + "CsvFiles\\");
+        File fileForCsv = new File(Constans.SAVE_PATH + nameFromPath(inputDataMatrix.getImageName()) + "Files\\");
         boolean success = (fileForCsv).mkdirs();
         try {
             w = new PrintWriter(fileForCsv.getAbsolutePath()+ "\\" + inputDataMatrix.getColor() + part + ".csv", "UTF-8");

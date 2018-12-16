@@ -209,7 +209,7 @@ public class TexturalProperties {
     }
     public  void saveToTXT() {
         PrintWriter w = null;
-        File fileForCsv = new File(Constans.SAVE_PATH + ImagesCreator.nameFromPath(gtdm.getInputDataMatrix().getImageName()) + "CsvFiles\\");
+        File fileForCsv = new File(Constans.SAVE_PATH + ImagesCreator.nameFromPath(gtdm.getInputDataMatrix().getImageName()) + "Files\\");
         try {
             w = new PrintWriter(fileForCsv.getAbsolutePath()+ "\\" +Color+ "Properties.txt", "UTF-8");
             w.write(this.toString());
