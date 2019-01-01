@@ -7,23 +7,23 @@
  */
 public class MatrixCommon implements Matrix {
     /**
-     * dane w macierzy
+     * Dane w macierzy
      */
     public double[][] data;
     /**
-     * wysokość macierzy
+     * Wysokość macierzy
      */
     private int height;
     /**
-     * szerokość macierzy
+     * Szerokość macierzy
      */
     private int width;
     /**
-     * początkowa wysokość lewego górnego rogu kwadratowego regionu lub obrazu
+     * Początkowa wysokość lewego górnego rogu kwadratowego regionu lub obrazu
      */
     private int startHeight;
     /**
-     * początkowa szerokość lewego górnego rogu kwadratowego regionu lub obrazu
+     * Początkowa szerokość lewego górnego rogu kwadratowego regionu lub obrazu
      */
     private int startWidth;
 
@@ -53,7 +53,6 @@ public class MatrixCommon implements Matrix {
         this(data,height,width);
         this.startHeight = startHeight;
         this.startWidth = startWidth;
-
     }
 
     /**
@@ -68,29 +67,33 @@ public class MatrixCommon implements Matrix {
         this.startHeight = 0;
         this.startWidth = 0;
     }
-
-    public double[][] getData() {
-        return data;
-    }
-
-    public void setData(double[][] data) {
-        this.data = data;
-    }
-
+    /**
+     * Akcesor wysokości
+     * @return wysokość
+     */
     @Override
     public int getHeight() {
         return height;
     }
-
+    /**
+     * Mutator zmiennej height
+     * @param height wysokość obrazu
+     */
     public void setHeight(int height) {
         this.height = height;
     }
-
+    /**
+     * Akcesor szerokości
+     * @return szerokości
+     */
     @Override
     public int getWidth() {
         return width;
     }
-
+    /**
+     * Mutator zmiennej width
+     * @param width szerokość obrazu
+     */
     public void setWidth(int width) {
         this.width = width;
     }
@@ -99,6 +102,12 @@ public class MatrixCommon implements Matrix {
         data[i+startHeight][j+startWidth] = value;
     }
 
+    /**
+     *
+     * @param i wiersz piksela
+     * @param j kolumna piksela
+     * @return
+     */
     @Override
     public double get(int i, int j) {
         int ileZa;
@@ -153,44 +162,48 @@ public class MatrixCommon implements Matrix {
         }
         return  str;
     }
-    public String toString2(int num) {
-        String str = new String();
-        try {
-            for (int j = 0; j < width; j++) {
-                str += (data[num + startWidth][j + getStartHeight()] + " ");
-                str += "\n";
-            }
-        } catch (Exception ex){
-            System.out.println(ex.getStackTrace());
-        }
-        return  str;
-    }
-
+    /**
+     * Pobranie nazwy koloru
+     * @return nazwa koloru
+     */
     @Override
     public String getColor() {
         return "GREY";
     }
-
+    /**
+     * Pobranie nazwy obrazu
+     * @return nazwa obrazu
+     */
     @Override
     public String getImageName() {
         return null;
     }
-
+    /**
+     * Akcesor zmiennej startHeight
+     */
     @Override
     public int getStartHeight() {
         return startHeight;
     }
-
+    /**
+     * Mutator zmiennej startHeight
+     * @param startHeight początkowa wysokość
+     */
     @Override
     public void setStartHeight(int startHeight) {
         this.startHeight = startHeight;
     }
-
+    /**
+     * Akcesor zmiennej startWidth
+     */
     @Override
     public int getStartWidth() {
         return startWidth;
     }
-
+    /**
+     * Mutator zmiennej startWidth
+     * @param startWidth początkowa szerokość
+     */
     @Override
     public void setStartWidth(int startWidth) {
         this.startWidth = startWidth;

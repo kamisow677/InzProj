@@ -5,9 +5,9 @@ public class GTDMSpeedTest {
     @Test
     public void test() {
         Controller controller = new Controller();
-        System.out.println("D: " + Constans.getD());
-        System.out.println("Quadratic: " + Constans.getQuadraticSize());
-        System.out.println("Average matrixes?: " + Constans.isAverageMatrixes());
+        System.out.println("D: " + Constans.D);
+        System.out.println("Quadratic: " + Constans.QUADRATIC_SIZE);
+        System.out.println("Average matrixes?: " + Constans.AVERAGE_MATRIXES);
         long startTime;
         long stopTime;
         long elapsedTime1;

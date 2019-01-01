@@ -13,63 +13,63 @@ import java.util.*;
 public class TexturalProperties {
 
     /**
-     * obiekt klasy gtdm
+     * Obiekt klasy GTDM
      */
     private GTDM gtdm;
     /**
-     * wektor gtdm
+     * Wektor GTDM
      */
     private ArrayList<Double> s;
     /**
-     * wektor prawdopodobieństwa wystąpienia piksela w obrazie
+     * Wektor prawdopodobieństwa wystąpienia piksela w obrazie
      */
     private ArrayList<Double> p;
     /**
-     * współczynnik n2
+     * Współczynnik n2, pole obrazu lub kwadratowego regionu bez obszaru peryferyjnego
      */
     private Double n2;
     /**
-     * parametr Coarness
+     * Parametr szorstkość
      */
-    private Double Coarness;
+    private Double coarness;
     /**
-     * parametr Contrast
+     * Parametr kontrast
      */
-    private Double Contrast;
+    private Double contrast;
     /**
-     * parametr Busyness
+     * Parametr zajętość
      */
-    private Double Busyness;
+    private Double busyness;
     /**
-     * parametr Complexity
+     * Parametr złożoność
      */
-    private Double Complexity;
+    private Double complexity;
     /**
-     * parametr Strength
+     * Parametr siła
      */
-    private Double Strength;
+    private Double strength;
     /**
-     * kolor obrazu
+     * Lolor obrazu
      */
-    private String Color;
+    private String color;
     /**
-     * wartość epsilon zabezpiecza przed uzyskiwaniem 0 w mianownikach wzorów
+     * Wartość epsilon zabezpiecza przed uzyskiwaniem 0 w mianownikach wzorów
      */
-    private Double Epsilon = 0.0000001;
+    private Double epsilon = 0.0000001;
     /**
-     * Mianownik parametru Busyness
+     * Mianownik parametru zajętości
      */
     private Double psiNumeratorBusyness;
     /**
-     * częściowe obliczenia Contrastu
+     * Częściowe obliczenia kontrastu
      */
     private Double partContrast;
     /**
-     * częściowe obliczenia Strength
+     * Częściowe obliczenia siły
      */
     private Double partStrength;
     /**
-     * częściowe obliczenia Complexity
+     * Częściowe obliczenia złożoności
      */
     private Double partComplexity;
 
@@ -82,27 +82,27 @@ public class TexturalProperties {
         this.s = new ArrayList<>( gtdm.getS());
         this.p = new ArrayList<>( gtdm.getP());
         this.n2 = gtdm.getN2();
-        this.Color = gtdm.getInputDataMatrix().getColor();
+        this.color = gtdm.getInputDataMatrix().getColor();
 
         calculateProperties();
     }
 
     /**
      * Konstruktor
-     * @param coarness coarness
-     * @param contrast contrast
-     * @param busyness busyness
-     * @param complexity complexity
-     * @param strength strength
+     * @param coarness szorstkość
+     * @param contrast kontrast
+     * @param busyness zajętość
+     * @param complexity złożoność
+     * @param strength siła
      * @param color kolor
      */
     public TexturalProperties(Double coarness, Double contrast, Double busyness, Double complexity, Double strength, String color)  {
-        this.Coarness = coarness;
-        this.Contrast = contrast;
-        this.Busyness = busyness;
-        this.Complexity = complexity;
-        this.Strength = strength;
-        this.Color = color;
+        this.coarness = coarness;
+        this.contrast = contrast;
+        this.busyness = busyness;
+        this.complexity = complexity;
+        this.strength = strength;
+        this.color = color;
     }
     public void saveToCsv(String part){
         gtdm.saveToCSV(part);
@@ -123,8 +123,8 @@ public class TexturalProperties {
         partContrast = 0.0;
         Double denominatorBusyness = 0.0;
         partComplexity = 0.0;
-        Complexity = 0.0;
-        Strength = 0.0;
+        complexity = 0.0;
+        strength = 0.0;
         partStrength = 0.0;
 
 
@@ -139,80 +139,101 @@ public class TexturalProperties {
                 partContrast += 2*p.get(i) * p1.get(j) * Math.pow((i - j), 2);
                 partComplexity += (2*(Math.abs(i - j)) / ((n2 * (p.get(i) + p1.get(j))) +0.000000) ) * ((p.get(i) * s.get(i)) + (p1.get(j) * s.get(j)));
                 partStrength += 2*Math.pow((i - j), 2) * (p.get(i) + p1.get(j));
-                Constans.b++;
             }
-
         }
 
-        Complexity = partComplexity;
-        Contrast = 1 / Ng / (Ng - 1) * partContrast;
+        complexity = partComplexity;
+        contrast = 1 / Ng / (Ng - 1) * partContrast;
         Double siSum = s
                 .stream()
                 .mapToDouble(s -> s)
                 .sum();
 
-        Coarness = Math.pow(Epsilon + psiNumeratorBusyness, -1);
-        Contrast = Contrast * siSum * 1 / n2;
-        Busyness = psiNumeratorBusyness / (denominatorBusyness + Epsilon);
-        Strength = partStrength / siSum;
-        //System.out.println(Complexity);
-        //System.out.println(gtdm.getInputDataMatrix().getStartHeight());
-       // System.out.println(gtdm.getInputDataMatrix().getStartWidth());
+        coarness = Math.pow(epsilon + psiNumeratorBusyness, -1);
+        contrast = contrast * siSum * 1 / n2;
+        busyness = psiNumeratorBusyness / (denominatorBusyness + epsilon);
+        strength = partStrength / siSum;
     }
 
+    /**
+     * Opis obiektu klasy
+     * @return Łańcuch z opisem obiektu klasy
+     */
     @Override
     public String toString(){
         String str = "\n";
         if (gtdm!=null)
             str = "\n\nImage Name: "+ gtdm.getInputDataMatrix().getImageName();
-        str +="\nCOLOR:  " + Color +
-            "\nCoarness:  " + Coarness +
-            "\nContrast:  " + Contrast +
-            "\nBusyness:  " + Busyness +
-            "\nComplexity:  " + Complexity +
-            "\nStrength:  " + Strength;
+        str +="\nCOLOR:  " + color +
+            "\ncoarness:  " + coarness +
+            "\ncontrast:  " + contrast +
+            "\nbusyness:  " + busyness +
+            "\ncomplexity:  " + complexity +
+            "\nstrength:  " + strength;
         return  str;
     }
-
+    /**
+     * Akcesor zmiennej coarness
+     * @return
+     */
     public Double getCoarness() {
-        return Coarness;
+        return coarness;
     }
-
+    /**
+     * Akcesor zmiennej contrast
+     * @return zmienną
+     */
     public Double getContrast() {
-        return Contrast;
+        return contrast;
     }
-
+    /**
+     * Akcesor zmiennej busyness
+     * @return zmienna busyness
+     */
     public Double getBusyness() {
-        return Busyness;
+        return busyness;
     }
-
+    /**
+     * Akcesor zmiennej complexity
+     * @return zmienna complexity
+     */
     public Double getComplexity() {
-        return Complexity;
+        return complexity;
     }
-
+    /**
+     * Akcesor zmiennej strength
+     * @return zmiennej strength
+     */
     public Double getStrength() {
-        return Strength;
+        return strength;
     }
-
-    public String getColor(){
-        return Color;
-    }
-
+    /**
+     * Akcesor cech dla danego kwadratowego regionu lub obrazu
+     * @return mape gdzie klucze to nazwy cech, a wartości to wartości danej cechy
+     */
     public Map<String,Double> getProps(){
         Map map = new HashMap<String,Double>();
-        map.put(Constans.COARNESS,Coarness);
-        map.put(Constans.CONTRAST,Contrast);
-        map.put(Constans.BUSYNESS,Math.abs(Busyness));
-        map.put(Constans.COMPLEXITY,Complexity);
-        map.put(Constans.STRENGTH,Strength);
+        map.put(Constans.COARNESS, coarness);
+        map.put(Constans.CONTRAST, contrast);
+        map.put(Constans.BUSYNESS,Math.abs(busyness));
+        map.put(Constans.COMPLEXITY, complexity);
+        map.put(Constans.STRENGTH, strength);
         return  map;
     }
+    /**
+     * Zapisanie wartości cech tekstury do pliku txt
+     */
     public  void saveToTXT() {
         PrintWriter w = null;
         File fileForCsv = new File(Constans.SAVE_PATH + ImagesCreator.nameFromPath(gtdm.getInputDataMatrix().getImageName()) + "Files\\");
         try {
-            w = new PrintWriter(fileForCsv.getAbsolutePath()+ "\\" +Color+ "Properties.txt", "UTF-8");
-            w.write(this.toString());
+            w = new PrintWriter(fileForCsv.getAbsolutePath()+ "\\" + color + "Properties.txt", "UTF-8");
+            w.println( "Nazwa obrazu: "+ gtdm.getInputDataMatrix().getImageName());
+            w.println("Szorstkosc:  " + coarness );
+            w.println( "Kontrast:  " + contrast );
+            w.println( "Zajetosc:  " + busyness );
+            w.println( "Zlozonosc:  " + complexity );
+            w.println("Sila:  " + strength);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (UnsupportedEncodingException e) {

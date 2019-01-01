@@ -6,111 +6,107 @@ import java.util.ArrayList;
  * @version 1.0
  * Klasa ta jest odpowiedzialna za obliczanie macierzy różnic szarości
  * Oprócz tego wylicza wektor prawdopodobieństwa występowania piksela w obrazie lub jego kwadratowym regionie
- *
  */
 public class GTDM {
     /**
-     * wielkość okna obliczeń.
+     * Wielkość okna obliczeń, szerokość okna obliczeń
      */
     private  int d = 1;
     /**
-     * macierz z danymi o obrazie wejściowym
+     * Macierz z danymi o obrazie wejściowym
      */
     private Matrix inputDataMatrix;
     /**
-     * nazwa obrazu
+     * Nazwa obrazu
      */
     private  String imageName;
     /**
-     * wysokość obrazu
+     * Wysokość obrazu
      */
     private int height;
     /**
-     * szerokość obrazu
+     * Szerokość obrazu
      */
     private int width;
     /**
-     * macierz średniej wartości piksel
+     * Macierz średniej wartości pikseli
      */
     private MatrixCommon matrixA;
     /**
-     * wartości macierzy różnić poziomów szarości
+     * Wartości macierzy różnic poziomów szarości
      */
     private ArrayList<Double> s;
     /**
-     *  wektor prawdopodobieństwa występowania piksela
+     *  Wektor prawdopodobieństwa występowania piksela
      */
     private ArrayList<Double> p;
     /**
-     *  wektor ilości pikseli o danej wartości
+     *  Wektor ilości pikseli o danej wartości
      */
     private ArrayList<Double> pRaw;
     /**
-     *  wektor ilości pikseli o danej wartości z pierwszej kolumny
+     *  Wektor ilości pikseli o danej wartości z pierwszej kolumny
      */
     private ArrayList<Double> originRawP;
     /**
-     * wartości macierzy różnić poziomów szarości 1 kolumny
+     * Wartości macierzy różnić poziomów szarości jednej kolumny
      */
     private ArrayList<Double> originS;
     /**
-     *  wektor prawdopodobieństwa występowania piksela 1 kolumny
+     * Wektor prawdopodobieństwa występowania piksela jednej kolumny
      */
     private ArrayList<Double> originP;
-
+    /**
+     * Pole obrazu bez regionu peryferyjnego
+     */
     private double n2;
-
+    /**
+     * Akcesor zmiennej d
+     * @return
+     */
     public  int getD() {
         return d;
     }
-
+    /**
+     * Mutator zmiennej d
+     * @return
+     */
     public  void setD(int d) {
         this.d = d;
     }
-
-    public Matrix getInputDataMatrix() {
-        return inputDataMatrix;
-    }
-
-    public void setInputDataMatrix(Matrix inputDataMatrix) {
-        this.inputDataMatrix = inputDataMatrix;
-    }
-
-    public MatrixCommon getMatrixA() {
-        return matrixA;
-    }
-
-    public void setMatrixA(MatrixCommon matrixA) {
-        this.matrixA = matrixA;
-    }
-
-    public ArrayList<Double> getS() {
-        return s;
-    }
-
-    public void setS(ArrayList<Double> s) {
-        this.s = s;
-    }
-
-    public ArrayList<Double> getP() {
-        return p;
-    }
-
-    public void setP(ArrayList<Double> p) {
-        this.p = p;
-    }
-
-    public double getN2() {
-        return n2;
-    }
-
-    public void setN2(double n2) {
-        this.n2 = n2;
-    }
-
-    public void setImageName(String imageName) {
-        this.imageName = imageName;
-    }
+    /**
+     * Akcesor zmiennej inputDataMatrix
+     * @return zmienna inputDataMatrix
+     */
+    public Matrix getInputDataMatrix() { return inputDataMatrix;}
+    /**
+     * Akcesor zmiennej matrixA
+     * @return zmienna matrixA
+     */
+    public MatrixCommon getMatrixA() {return matrixA; }
+    /**
+     * Akcesor zmiennej s
+     * @return zmienna s
+     */
+    public ArrayList<Double> getS() { return s; }
+    /**
+     * Mutator zmiennej s
+     */
+    public void setS(ArrayList<Double> s) {this.s = s; }
+    /**
+     * Akcesor zmiennej p
+     * @return zmienna p
+     */
+    public ArrayList<Double> getP() { return p;}
+    /**
+     * Mutator zmiennej p
+     */
+    public void setP(ArrayList<Double> p) {this.p = p; }
+    /**
+     * Akcesor zmiennej n2
+     * @return zmienna n2
+     */
+    public double getN2() {return n2; }
 
     public ArrayList<Double> getpRaw() { return pRaw; }
 
@@ -166,7 +162,7 @@ public class GTDM {
 
     /**
      * Konstruktor dla kolejnej macierzy poziomów szarości
-     * @param previousGDTM poprednia macierz gtdm
+     * @param previousGDTM poprednia macierz GTDM
      * @param GoingRight jeżeli ustawione na true to wyliczane dla kolejnej kolumny, jeśli na false do dla kolejnego wiersza
      */
     public GTDM(GTDM previousGDTM, boolean GoingRight){
@@ -200,10 +196,10 @@ public class GTDM {
     }
 
     /**
-     * Konstruktor dla gdtm będącego średnią poszczególnych trzech kolorów
-     * @param gtdm1 gdtm koloru 1
-     * @param gtdm2 gdtm koloru 2
-     * @param gtdm3 gdtm koloru 3
+     * Konstruktor dla GTDM będącego średnią z poszczególnych trzech kolorów RGB
+     * @param gtdm1 GTDM koloru 1
+     * @param gtdm2 GTDM koloru 2
+     * @param gtdm3 GTDM koloru 3
      */
     public GTDM(GTDM gtdm1, GTDM gtdm2, GTDM gtdm3){
         this.matrixA = gtdm1.getMatrixA();
@@ -227,9 +223,8 @@ public class GTDM {
         computeP(gtdm1.getP(),gtdm2.getP(),gtdm3.getP());
     }
 
-
     /**
-     * Obliczanie średnią wartość piksela w macierzy A
+     * Obliczanie średniej wartość piksela w macierzy A
      * @param k numer kolumny
      * @param l numer wiersza
      * @return zwraca średnią wartość piksela w oknie
@@ -263,7 +258,7 @@ public class GTDM {
     }
 
     /**
-     * Obliczanie gdtm oraz wektora prawdopodobieństwa dla całego obrazu lub regionu
+     * Obliczanie GTDM oraz wektora prawdopodobieństwa dla całego obrazu lub regionu
      * @param calculateP jeśli ustawione na true to oblicza p
      * @param print jeśli true to wypisuje zawartość s i p
       */
@@ -286,7 +281,7 @@ public class GTDM {
     }
 
     /**
-     * Obliczanie gdtm oraz wektora prawdopodobieństwa dla następnej kolumny obrazu lub regionu
+     * Obliczanie GTDM oraz wektora prawdopodobieństwa dla następnej kolumny obrazu lub regionu
      * @param calculateP jeśli ustawione na true to oblicza p
      * @param print jeśli true to wypisuje zawartość s i p
      */
@@ -312,7 +307,7 @@ public class GTDM {
     }
 
     /**
-     * Obliczanie gdtm oraz wektora prawdopodobieństwa dla następnego wiersza obrazu lub regionu
+     * Obliczanie GTDM oraz wektora prawdopodobieństwa dla następnego wiersza obrazu lub regionu
      * @param calculateP jeśli ustawione na true to oblicza p
      * @param print jeśli true to wypisuje zawartość s i p
      */
@@ -337,7 +332,7 @@ public class GTDM {
     }
 
     /**
-     * Initcalizacja gdtm
+     * Inicjalizacja GTDM
      */
     private void initializaS() {
         s.clear();
@@ -346,9 +341,8 @@ public class GTDM {
         }
     }
 
-
     /**
-     * Obliczanie gdtm dla całego regionu lub obrazu
+     * Obliczanie GTDM dla całego regionu lub obrazu
      */
     private void calculateS() {
         Double i=0.0;
@@ -366,6 +360,9 @@ public class GTDM {
         }
     }
 
+    /**
+     * Obliczanie GTDM dla całego regionu lub obrazu
+     */
     private void calculateSNOWE() {
         Double i=0.0;
         int startY = inputDataMatrix.getStartHeight();
@@ -384,9 +381,8 @@ public class GTDM {
         }
     }
 
-
     /**
-     * Obliczanie gdtm dla regionu będącego kolejną kolumną
+     * Obliczanie GTDM dla regionu będącego kolejną kolumną
      */
     private void calculateNextColumnS() {
         Double i = 0.0;
@@ -414,6 +410,9 @@ public class GTDM {
         }
     }
 
+    /**
+     * Obliczanie GTDM dla regionu będącego kolejną kolumną
+     */
     private void calculateNextColumnSNowe() {
         Double i = 0.0;
 
@@ -452,10 +451,6 @@ public class GTDM {
         for (int k = 0; k < height ; k++) {
             for (int l = 0; l < width ; l++) {
                 System.out.print(inputDataMatrix.get(k, l)+ " ");
-//                System.out.print(matrixA.get(k,l)+" ");
-               // writer.println(inputDataMatrix.get(k, l));
-               // System.out.print(" ");
-//                if (String.valueOf(inputDataMatrix.get(k, l)).equals("8.0"))
             }
             System.out.println();
         }
@@ -463,7 +458,7 @@ public class GTDM {
     }
 
     /**
-     * Obliczanie gdtm dla regionu będącego kolejnym wierszem
+     * Obliczanie GTDM dla regionu będącego kolejnym wierszem
      */
     private void calculateNextRowS() {
         Double i = 0.0;
@@ -490,6 +485,9 @@ public class GTDM {
         }
     }
 
+    /**
+     * Obliczanie GTDM dla regionu będącego kolejnym wierszem
+     */
     private void calculateNextRowSNowe() {
         Double i = 0.0;
         int startY = inputDataMatrix.getStartHeight();
@@ -515,11 +513,8 @@ public class GTDM {
         }
     }
 
-
-
-
     /**
-     * Obliczanie gdtm dla całego regionu lub obrazu na podstawie trzech innych gdtm jako średnia
+     * Obliczanie GTDM dla całego regionu lub obrazu na podstawie trzech innych gdtm jako średnia
      */
     private void calculateS(ArrayList<Double> s1, ArrayList<Double> s2, ArrayList<Double> s3) {
         for (int i = 0; i < Constans.PIXEL_NUMBER ; i++){
@@ -528,7 +523,7 @@ public class GTDM {
     }
 
     /**
-     * Wypisanie gdtm na ekran
+     * Wypisanie GTDM na ekran
      */
     public void printfS() {
         System.out.println("S(i)");
@@ -578,6 +573,9 @@ public class GTDM {
         }
     }
 
+    /**
+     * Obliczanie wektora prawdopodobieństwa
+     */
     public void computePNowe() {
         for (int k = d - Constans.QUADRATIC_SIZE/2; k < height - d - Constans.QUADRATIC_SIZE/2 ; k++) {
             for (int l = d - Constans.QUADRATIC_SIZE/2; l < width - d - Constans.QUADRATIC_SIZE/2 ; l++) {
@@ -620,6 +618,9 @@ public class GTDM {
         }
     }
 
+    /**
+     * Obliczanie wektora prawdopodobieństwa dla regionu będącego w kolejnej kolumnie
+     */
     public void computeNextColumnPNowe() {
         for (int k = d - Constans.QUADRATIC_SIZE/2; k < height - d - Constans.QUADRATIC_SIZE/2 ; k++) {
             Double iNumber = pRaw.get((int) inputDataMatrix.get(k, d - 1 - Constans.QUADRATIC_SIZE/2));//i
@@ -665,6 +666,9 @@ public class GTDM {
         }
     }
 
+    /**
+     * Obliczanie wektora prawdopodobieństwa dla regionu będącego w kolejnym wierszu
+     */
     public void computeNextRowPNowe() {
         for (int k = d - Constans.QUADRATIC_SIZE/2; k < width - d - Constans.QUADRATIC_SIZE/2 ; k++) {
             Double iNumber = pRaw.get((int) inputDataMatrix.get(d - 1 - Constans.QUADRATIC_SIZE/2 , k ));//i
@@ -699,7 +703,7 @@ public class GTDM {
     }
 
     /**
-     * Zapisanie gdtm do pliku .csv
+     * Zapisanie GTDM do pliku .csv
      */
     public  void saveToCSV(String part) {
         PrintWriter w = null;
@@ -725,7 +729,7 @@ public class GTDM {
     }
 
     /**
-     * Zapisanie gdtm do pliku .csv
+     * Zwraca nazwę obrazu wraz z rozszerzeniem z pełnej ścieżki
      */
     static String nameFromPath(String path){
         return path.substring(path.lastIndexOf("\\"));

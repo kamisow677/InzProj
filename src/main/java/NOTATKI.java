@@ -62,6 +62,19 @@ public class NOTATKI {
      *
      */
 
+    /**
+     * DOD
+     * Macierz różnic poziomów szarości pozwala określić jak poszczególne piksele (woksele) w obrazie, różnią się od swoich sąsiadów ze względu na poziom szarości
+     * NUCLEAR NOWE
+     * http://jnm.snmjournals.org/content/56/11/1642
+     *
+     * o PET
+     * https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5689938/
+     * https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4465163/
+     *
+     *
+     */
+
 
 
 

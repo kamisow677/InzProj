@@ -20,19 +20,19 @@ import java.util.function.Consumer;
 public class Controller {
 
     /**
-     * lista ścieżek do obrazów z ich nazwami
+     * Lista ścieżek do obrazów z ich nazwami
      */
     public ArrayList<String> listOfPathsToImagePlusName = new ArrayList<>();
     /**
-     * lista macierzy z danymi o obrazach
+     * Lista macierzy z danymi o obrazach
      */
     ArrayList<ArrayList<ImageMatrix>> listOfMatrixData = new ArrayList<>();
     /**
-     * dane o stopniu wykonania pracy
+     * Dane o stopniu wykonania pracy
      */
     public Map<String,Integer> progress = new HashMap();
     /**
-     * całkowita ilość pracy do wykonania
+     * Całkowita ilość pracy do wykonania
      */
     public Map<String,Integer> progressMax = new HashMap();
 
@@ -41,13 +41,13 @@ public class Controller {
     }
 
     /**
-     * metoda rozpoczynająca pracę procesu tworzenia map cech
+     * Metoda rozpoczynająca pracę procesu tworzenia map cech
      */
     public void run() {
 
-        System.out.println("D: " + Constans.getD());
-        System.out.println("Quadratic: " + Constans.getQuadraticSize());
-        System.out.println("Average matrixes?: " + Constans.isAverageMatrixes());
+        System.out.println("D: " + Constans.D);
+        System.out.println("Quadratic: " + Constans.QUADRATIC_SIZE);
+        System.out.println("Average matrixes?: " + Constans.AVERAGE_MATRIXES);
         Constans.NUMBER_OF_COLORS = 3;
         Constans.PIXEL_NUMBER = Constans.PIXEL_NUMBER/Constans.QUANTIZATION;
         Constans.PIXEL_NUMBER_PLUS_1 = Constans.PIXEL_NUMBER_PLUS_1/Constans.QUANTIZATION;

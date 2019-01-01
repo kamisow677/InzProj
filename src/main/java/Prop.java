@@ -9,40 +9,31 @@ import java.util.Map;
  */
 public class Prop {
     /**
-     * nazwa cechy struktury
+     * Nazwa cechy struktury
      */
     String name;
     /**
-     * wartość cechy
+     * Wartość cechy
      */
     Double value;
     /**
-     * pozycja cechy
+     * Pozycja cechy
      */
     int pos;
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
+    /**
+     * Akcesor wartości cechy
+     * @return wartośćcechy
+     */
     public Double getValue() {
         return value;
     }
-
+    /**
+     * UStawienie nowe wartości cechy
+     * @param value wartość cechy
+     */
     public void setValue(Double value) {
         this.value = value;
-    }
-
-    public int getPos() {
-        return pos;
-    }
-
-    public void setPos(int pos) {
-        this.pos = pos;
     }
 
     /**
@@ -56,9 +47,5 @@ public class Prop {
         this.name = name;
         this.value = value;
         this.pos = pos;
-    }
-    public  Prop(Map<String,Double> m, int pos){
-        this.pos = pos;
-
     }
 }

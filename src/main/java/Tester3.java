@@ -46,9 +46,9 @@ public class Tester3 {
      */
     public void run() {
 
-        System.out.println("D: " + Constans.getD());
-        System.out.println("Quadratic: " + Constans.getQuadraticSize());
-        System.out.println("Average matrixes?: " + Constans.isAverageMatrixes());
+        System.out.println("D: " + Constans.D);
+        System.out.println("Quadratic: " + Constans.QUADRATIC_SIZE);
+        System.out.println("Average matrixes?: " + Constans.AVERAGE_MATRIXES);
         Constans.NUMBER_OF_COLORS = 3;
         Constans.PIXEL_NUMBER = Constans.PIXEL_NUMBER/Constans.QUANTIZATION;
         Constans.PIXEL_NUMBER_PLUS_1 = Constans.PIXEL_NUMBER_PLUS_1/Constans.QUANTIZATION;

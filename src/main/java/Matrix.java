@@ -8,28 +8,65 @@ import java.awt.image.DataBuffer;
  */
 public interface Matrix {
 
-    public double get(int j, int i);
+    /**
+     * Pobranie wartości odpowiedniego piksela
+     * @param j wiersz piksela
+     * @param i kolumna piksela
+     * @return wartość piksela
+     */
+    double get(int j, int i);
+    /**
+     * Akcesor wysokości
+     * @return wysokość
+     */
+    int getHeight();
+    /**
+     * Akcesor szerokości
+     * @return szerokości
+     */
+    int getWidth();
+    /**
+     * Wyświetlenie obrazu
+     */
+    void printf();
+    /**
+     * Pobranie nazwy koloru
+     * @return nazwa koloru
+     */
+    String getColor();
+    /**
+     * Pobranie nazwy obrazu
+     * @return nazwa obrazu
+     */
+    String getImageName();
+    /**
+     * Akcesor zmiennej startWidth
+     */
+    int getStartWidth();
+    /**
+     * Akcesor zmiennej startHeight
+     */
+    int getStartHeight();
+    /**
+     * Mutator zmiennej startWidth
+     * @param width początkowa szerokość
+     */
+    void setStartWidth(int width);
+    /**
+     * Mutator zmiennej startHeight
+     * @param height początkowa wysokość
+     */
+    void setStartHeight(int height);
 
-    public int getHeight();
-
-    public int getWidth();
-
-    public void printf();
-
-    public String getColor();
-
-    public String getImageName();
-
-    public int getStartWidth();
-
-    public int getStartHeight();
-
-    public void setStartWidth(int width);
-
-    public void setStartHeight(int height);
-
-    public void setWidth(int width);
-
-    public void setHeight(int height);
+    /**
+     * Mutator zmiennej width
+     * @param width szerokość obrazu
+     */
+    void setWidth(int width);
+    /**
+     * Mutator zmiennej height
+     * @param height wysokość obrazu
+     */
+    void setHeight(int height);
 
 }

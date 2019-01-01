@@ -101,10 +101,10 @@ public class TexturalPropertiesTest {
 
         texturalPropertiesNew = new TexturalProperties(gdtmFirst);
         assertEquals(texturalPropertiesNew.getCoarness(), 0.75, 0.0001);
-//        assertEquals(texturalPropertiesNew.getContrast(), 0.15755208333, 0.0001);
+        assertEquals(texturalPropertiesNew.getContrast(), 0.06172827160499999, 0.0001);
           assertEquals(texturalPropertiesNew.getBusyness(),1.333332*10000000,0.01);
-//        assertEquals(texturalPropertiesNew.getComplexity(), 2.28125, 0.0001);
-//        assertEquals(texturalPropertiesNew.getStrength(), 3.09090909, 0.0001);
+        assertEquals(texturalPropertiesNew.getComplexity(), 0.29629629629629634, 0.0001);
+        assertEquals(texturalPropertiesNew.getStrength(), 0.7999992, 0.0001);
 
         /**
          * 0,1
@@ -118,10 +118,10 @@ public class TexturalPropertiesTest {
 
         texturalPropertiesNew = new TexturalProperties(gdtmNext);
         assertEquals(texturalPropertiesNew.getCoarness(), 0.56692913385, 0.0001);
-//        assertEquals(texturalPropertiesNew.getContrast(), 0.42057291666, 0.0001);
+        assertEquals(texturalPropertiesNew.getContrast(), 0.3068695629, 0.0001);
          assertEquals(texturalPropertiesNew.getBusyness(), 0.33072916667, 0.0001);
-//        assertEquals(texturalPropertiesNew.getComplexity(), 4.21875, 0.0001);
-//        assertEquals(texturalPropertiesNew.getStrength(), 3.8823529411764706, 0.0001);
+        assertEquals(texturalPropertiesNew.getComplexity(), 6.200462550636283, 0.0001);
+        assertEquals(texturalPropertiesNew.getStrength(), 4.911483091525424, 0.0001);
 
         /**
          * 0,2
@@ -183,9 +183,9 @@ public class TexturalPropertiesTest {
 
         texturalPropertiesNew = new TexturalProperties(gdtmNext);
         assertEquals(texturalPropertiesNew.getCoarness(), 0.48979591836, 0.001);
-//        assertEquals(texturalPropertiesNew.getContrast(), 0.9375, 0.0001);
-//        assertEquals(texturalPropertiesNew.getComplexity(), 1.875, 0.0001);
-//        assertEquals(texturalPropertiesNew.getStrength(), 2.1333333333333333, 0.0001);
+        assertEquals(texturalPropertiesNew.getContrast(), 0.1049380617285, 0.0001);
+        assertEquals(texturalPropertiesNew.getComplexity(), 1.8809523809523807, 0.0001);
+        assertEquals(texturalPropertiesNew.getStrength(), 1.0457505882352942, 0.0001);
 
 
         /**
@@ -201,9 +201,9 @@ public class TexturalPropertiesTest {
 
         texturalPropertiesNew = new TexturalProperties(gdtmNext);
         assertEquals(texturalPropertiesNew.getCoarness(), 0.67924528301, 0.001);
-//        assertEquals(texturalPropertiesNew.getContrast(), 0.796875, 0.0001);
-//        assertEquals(texturalPropertiesNew.getComplexity(), 2.6875, 0.0001);
-//        assertEquals(texturalPropertiesNew.getStrength(), 1.8823529411764706, 0.0001);
+        assertEquals(texturalPropertiesNew.getContrast(), 0.1805552486112375, 0.0001);
+        assertEquals(texturalPropertiesNew.getComplexity(), 8.82685179232406, 0.0001);
+        assertEquals(texturalPropertiesNew.getStrength(), 6.153840886153847, 0.0001);
 
 
         /**
@@ -219,10 +219,10 @@ public class TexturalPropertiesTest {
 
 
         texturalPropertiesNew = new TexturalProperties(gdtmNext);
-//        assertEquals(texturalPropertiesNew.getCoarness(), 0.37209302325, 0.001);
-//        assertEquals(texturalPropertiesNew.getContrast(), 0.796875, 0.0001);
-//        assertEquals(texturalPropertiesNew.getComplexity(), 2.6875, 0.0001);
-//        assertEquals(texturalPropertiesNew.getStrength(), 1.8823529411764706, 0.0001);
+        assertEquals(texturalPropertiesNew.getCoarness(), 0.5423728519390996, 0.001);
+        assertEquals(texturalPropertiesNew.getContrast(), 0.2604166666666667, 0.0001);
+        assertEquals(texturalPropertiesNew.getComplexity(), 0.81944444, 0.0001);
+        assertEquals(texturalPropertiesNew.getStrength(), 2.56, 0.0001);
 
 
         /**
@@ -239,10 +239,10 @@ public class TexturalPropertiesTest {
 
 //        texturalPropertiesNew = new TexturalProperties(gdtmNext,texturalPropertiesNew, false);
         texturalPropertiesNew = new TexturalProperties(gdtmNext);
-//        assertEquals(texturalPropertiesNew.getCoarness(), 0.4705882330795848, 0.001);
-//        assertEquals(texturalPropertiesNew.getContrast(), 1.3177083333, 0.0001);
-//        assertEquals(texturalPropertiesNew.getComplexity(), 8.8333333, 0.0001);
-//        assertEquals(texturalPropertiesNew.getStrength(), 5.91304347826, 0.0001);
+        assertEquals(texturalPropertiesNew.getCoarness(), 0.47058821314879, 0.001);
+        assertEquals(texturalPropertiesNew.getContrast(), 0.5856481481481481, 0.0001);
+        assertEquals(texturalPropertiesNew.getComplexity(), 3.9259259259259256, 0.0001);
+        assertEquals(texturalPropertiesNew.getStrength(), 5.91304347826, 0.0001);
 
     }
 }

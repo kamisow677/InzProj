@@ -1,6 +1,4 @@
-import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -20,23 +18,23 @@ import java.util.function.Consumer;
 public class Model {
 
     /**
-     * lista macierzy z danymi o obrazach
+     * Lista macierzy z danymi o obrazach
      */
     ArrayList<ArrayList<ImageMatrix>> listOfMatrixData = new ArrayList<>();
     /**
-     * dane o stopniu wykonania pracy
+     * Dane o stopniu wykonania pracy
      */
     public Map<String,Integer> progress = new HashMap();
     /**
-     * całkowita ilość pracy do wykonania
+     * Całkowita ilość pracy do wykonania
      */
     public Map<String,Integer> progressMax = new HashMap();
 
-
-    public Model(ArrayList<ArrayList<ImageMatrix>> listOfMatrixData) {
-        this.listOfMatrixData = listOfMatrixData;
-    }
-
+    /**
+     * @param listOfMatrixData Lista macierzy z danymi o obrazach
+     * @param progress Dane o stopniu wykonania pracy
+     * @param progressMax Całkowita ilość pracy do wykonania
+     */
     public Model(ArrayList<ArrayList<ImageMatrix>> listOfMatrixData, Map<String, Integer> progress, Map<String, Integer> progressMax) {
         this.listOfMatrixData = listOfMatrixData;
         this.progress = progress;
@@ -44,7 +42,7 @@ public class Model {
     }
 
     /**
-     * metoda rozpoczynająca pracę procesu tworzenia map cech
+     * Metoda rozpoczynająca pracę procesu tworzenia map cech
      */
     public void run() {
 
@@ -79,7 +77,7 @@ public class Model {
         }
         Consumer<? super ArrayList<ImageMatrix>> consumer;
 
-        consumer = (array) -> createTask2(array);
+        consumer = (array) -> createTask(array);
 
         listOfMatrixData.stream()
                 .forEach(consumer);
@@ -107,7 +105,7 @@ public class Model {
      * @param list lista macierzy obrazów do przetworzenia
      * @return
      */
-    public Long createTask2( ArrayList<ImageMatrix> list) {
+    public Long createTask(ArrayList<ImageMatrix> list) {
 
         ArrayList<Map<String, Double>> properties = new ArrayList<>();//final props all to write image
         ArrayList<MatrixCommon> matrixesA = new ArrayList<>();
@@ -186,17 +184,6 @@ public class Model {
             System.out.println(ex.toString());
         }
         return null;
-    }
-
-    private boolean checkIfAllAreDone(List<Future<ArrayList<Map<String,Double>>>> futures) {
-        boolean done = true;
-        for (Future<ArrayList<Map<String, Double>>> future : futures) {
-            if (!future.isDone()) {
-                done = false;
-                break;
-            }
-        }
-        return  done;
     }
 
     /**
@@ -303,14 +290,6 @@ public class Model {
                 }
             } else {
 
-//                PrintWriter writer = null;
-//                try {
-//                    writer = new PrintWriter(Constans.FOLDER_PATH + "\\" + "Coarnesrgb" + ".txt", "UTF-8");
-//                } catch (FileNotFoundException e) {
-//                    e.printStackTrace();
-//                } catch (UnsupportedEncodingException e) {
-//                    e.printStackTrace();
-//                }
 
 
                 for (int i = startRow; i < endRow; i++) {

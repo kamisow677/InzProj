@@ -13,47 +13,45 @@ public class ImageMatrix implements Matrix {
      */
     BufferedImage bufferedImage;
     /**
-     * nazwa obrazu wraz z ścieżka do obrazu
+     * Nazwa obrazu wraz z ścieżka do obrazu
      */
     String imageNameWithPathName;
     /**
-     * szerokość obrazu
+     * Szerokość obrazu
      */
     int width = 0;
     /**
-     * wysokość obrazu
+     * Wysokość obrazu
      */
     int height = 0;
     /**
-     * Wartość x lewego górnego rogu początku obrazu lub kwadratowego regionu do przetwarzania
+     * Wartość x lewego górnego rogu początku obrazu lub kwadratowego regionu w obrazie
      */
     int startWidth = 0;
     /**
-     * Wartość y lewego górnego rogu początku obrazu lub kwadratowego regionu do przetwarzania
+     * Wartość y lewego górnego rogu początku obrazu lub kwadratowego regionu w obrazie
      */
     int startHeight = 0;
     /**
-     * szerokość sąsiedztwa
+     * Szerokość sąsiedztwa, regionu peryferyjnego
      */
     int d;
     /**
-     * bufor z danymi o obrazie
+     * Bufor z danymi o obrazie
      */
     public DataBuffer dataBuffer;
 
     /**
-     * możliwe kolory kanałó
+     * Możliwe kolory kanałów
      */
     public enum COLOR {RED, GREEN, BLUE, GREY, ALL}
-
     /**
-     * kolor obrazu
+     * Kolor obrazu
      */
     private COLOR color;
 
-
     /**
-     * Konstruktoe
+     * Konstruktor
      * @param bufferedImage obraz buforowany
      * @param color kolor obrazu
      * @param imageNameWithPathName nazwa obrazu ze ścieżką
@@ -90,8 +88,8 @@ public class ImageMatrix implements Matrix {
 
     /**
      * Pobranie wartości odpowiedniego piksela
-     * @param j kolumna piksela
-     * @param i wiersz piksela
+     * @param j wiersz piksela
+     * @param i kolumna piksela
      * @return wartość piksela
      */
     @Override
@@ -163,7 +161,7 @@ public class ImageMatrix implements Matrix {
     }
 
     /**
-     *  Pobranie nazwy koloru
+     * Pobranie nazwy koloru
      * @return nazwę koloru
      */
     public String getColor() {
@@ -187,15 +185,25 @@ public class ImageMatrix implements Matrix {
         return "???";
     }
 
+    /**
+     * UStawienie koloru
+     * @param color
+     */
     public void setColor(COLOR color) {
         this.color = color;
     }
-
+    /**
+     * Akcesor wysokości
+     * @return wysokość
+     */
     @Override
     public int getHeight() {
         return height;
     }
-
+    /**
+     * Akcesor szerokości
+     * @return szerokości
+     */
     @Override
     public int getWidth() {
         return width;
@@ -214,38 +222,49 @@ public class ImageMatrix implements Matrix {
         System.out.println();
     }
 
-    public void setBufferedImage(BufferedImage bufferedImage) {
-        this.bufferedImage = bufferedImage;
-    }
-
-    public void setImageName(String imageName) {
-        this.imageNameWithPathName = imageName;
-    }
-
+    /**
+     * Mutator zmiennej width
+     * @param width szerokość obrazu
+     */
     public void setWidth(int width) {
         this.width = width;
     }
-
+    /**
+     * Mutator zmiennej height
+     * @param height wysokość obrazu
+     */
     public void setHeight(int height) {
         this.height = height;
     }
-
+    /**
+     * Mutator zmiennej startWidth
+     * @param startWidth początkowa szerokość
+     */
     public void setStartWidth(int startWidth) {
         this.startWidth = startWidth;
     }
-
+    /**
+     * Mutator zmiennej startHeight
+     * @param startHeight początkowa wysokość
+     */
     public void setStartHeight(int startHeight) {
         this.startHeight = startHeight;
     }
-
+    /**
+     * Akcesor zmiennej startWidth
+     */
     public int getStartWidth() {
         return startWidth;
     }
-
+    /**
+     * Akcesor zmiennej startHeight
+     */
     public int getStartHeight() {
         return startHeight;
     }
-
+    /**
+     * Akcesor zmiennej bufferedImage
+     */
     public BufferedImage getBufferedImage() {
         return bufferedImage;
     }

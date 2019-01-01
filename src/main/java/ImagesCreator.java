@@ -16,8 +16,6 @@ import java.util.stream.Collectors;
  *
  */
 public class ImagesCreator {
-
-
     /**
      * Tworzy obraz RGB
      * @param prop Lista map z wartościami 5 cech. Kluczami sąnazwy parametrów metody
@@ -167,6 +165,11 @@ public class ImagesCreator {
             e.printStackTrace();
         }
     }
+
+    /**
+     * Metoda pozwala odrzucić
+     * @param prop Lista map z wartościami 5 cech. Kluczami sąnazwy parametrów metody
+     */
     public static void createChange(ArrayList<Map<String,Double>> prop){
         String[] featuresNames = {Constans.COARNESS, Constans.CONTRAST, Constans.BUSYNESS, Constans.COMPLEXITY, Constans.STRENGTH};
         ArrayList<List<Prop>>  propsyAll =new ArrayList<>();

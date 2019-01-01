@@ -335,6 +335,20 @@ public class GTDMtest {
                 assertEquals(matrixANextCalculated.get(i, j), expectedMatrixAdate[i][j], 0.01);
             }
         }
+//        sCalculated = gdtmNext.getS();
+//        expectedS = new Double[]{0.0,4.625,0.5,1.625,1.5,2.5};
+//        for (int i = 0; i < expectedS.length; i++){
+//            assertEquals(sCalculated.get(i), expectedS[i], 0.01);
+//        }
+
+        pCalculated = gdtmNext.getP();
+        expectedP = new Double[]{0.0,0.333333,0.111111,0.222222,0.222222, 0.11111};
+        for (int i = 0; i < expectedP.length; i++){
+            assertEquals(pCalculated.get(i), expectedP[i], 0.01);
+        }
+
+
+
         /**
          * GOING DOWN 1,4
          */
@@ -370,24 +384,49 @@ public class GTDMtest {
         /**
          * GOING DOWN 2,0
          */
-//        gdtmNext = new GTDM(gdtmNext, false);
-//        gdtmNext.startNextRowCalcualtions(true, false);
-//        matrixANextCalculated = gdtmNext.getMatrixA();
-//        d = gdtmNext.getD();
-//        for (int i = d; i < SQUARE_SIZE - d; i++) {
-//            for (int j = d; j < SQUARE_SIZE - d; j++) {
-//                assertEquals(matrixANextCalculated.get(i, j), expectedMatrixAdate[i][j], 0.01);
-//            }
-//        }
-//        sCalculated = gdtmNext.getS();
-//        expectedS = new Double[]{0.0,2.75,0.0,0.5,0.0, 2.5};
-//        for (int i = 0; i < expectedS.length; i++){
-//            assertEquals(sCalculated.get(i), expectedS[i], 0.01);
-//        }
-//        pCalculated = gdtmNext.getP();
-//        expectedP = new Double[]{0.0,0.5,0.0,0.25,0.0, 0.25};
-//        for (int i = 0; i < expectedP.length; i++){
-//            assertEquals(pCalculated.get(i), expectedP[i], 0.01);
-//        }
+        gdtmNext = new GTDM(gdtmNext, false);
+        gdtmNext.startNextRowCalcualtions(true, false);
+        matrixANextCalculated = gdtmNext.getMatrixA();
+        d = gdtmNext.getD();
+        for (int i = d; i < SQUARE_SIZE - d; i++) {
+            for (int j = d; j < SQUARE_SIZE - d; j++) {
+                assertEquals(matrixANextCalculated.get(i, j), expectedMatrixAdate[i][j], 0.01);
+            }
+        }
+        sCalculated = gdtmNext.getS();
+        expectedS = new Double[]{4.0,1.125,0.0,0.5,2.25, 0.0};
+        for (int i = 0; i < expectedS.length; i++){
+            assertEquals(sCalculated.get(i), expectedS[i], 0.01);
+        }
+        pCalculated = gdtmNext.getP();
+        expectedP = new Double[]{0.22222,0.333333,0.11111,0.111111,0.22222, 0.0};
+        for (int i = 0; i < expectedP.length; i++){
+            assertEquals(pCalculated.get(i), expectedP[i], 0.01);
+        }
+
+
+        /**
+         * GOING DOWN 2,1
+         */
+        gdtmNext = new GTDM(gdtmNext, true);
+        gdtmNext.startNextColumnCalcualtions(true, false);
+        matrixANextCalculated = gdtmNext.getMatrixA();
+        d = gdtmNext.getD();
+        for (int i = d; i < SQUARE_SIZE - d; i++) {
+            for (int j = d; j < SQUARE_SIZE - d; j++) {
+                assertEquals(matrixANextCalculated.get(i, j), expectedMatrixAdate[i][j], 0.01);
+            }
+        }
+        sCalculated = gdtmNext.getS();
+        expectedS = new Double[]{2.0,2.25,0.0,2.125,1.125, 0.0};
+        for (int i = 0; i < expectedS.length; i++){
+            assertEquals(sCalculated.get(i), expectedS[i], 0.01);
+        }
+        pCalculated = gdtmNext.getP();
+        expectedP = new Double[]{0.11111,0.333333,0.11111,0.33333,0.11111, 0.0};
+        for (int i = 0; i < expectedP.length; i++){
+            assertEquals(pCalculated.get(i), expectedP[i], 0.01);
+        }
+
     }
 }

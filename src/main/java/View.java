@@ -8,7 +8,12 @@ import org.scijava.plugin.Parameter;
 import org.scijava.plugin.Plugin;
 import org.scijava.ui.UIService;
 
-
+/**
+ * @author Kamil Sowa
+ * @version 1.0
+ * Klasa ta służy do fabrykacji specyficznego zestawu cech tekstur zbudowanego na podstawie innego zestawu w opraciu o klasy TexturalProperties
+ *
+ */
 @Plugin(type = Command.class, menuPath = "Plugins>Generowanie map cech")
 public class View implements Command {
 
@@ -42,12 +47,14 @@ public class View implements Command {
     @Override
     public void run() {
         Controller controller = new Controller();
-        if (averageMatrixes.equals("macierze"))
-            Constans.setAverageMatrixes(true);
-        else
-            Constans.setAverageMatrixes(false);
-        Constans.setD(neighbourhood);
-        Constans.setQuadraticSize(quadraticRegionSize*2 +1);
+        if (averageMatrixes.equals("macierze")) {
+            Constans.AVERAGE_MATRIXES = true;
+        }
+        else {
+            Constans.AVERAGE_MATRIXES = false;
+        }
+        Constans.D = neighbourhood;
+        Constans.QUADRATIC_SIZE=quadraticRegionSize*2 +1;
         Constans.NUMBER_OF_COLORS = 3;
         Constans.QUANTIZATION = quantization;
         Constans.PIXEL_NUMBER = 255;
