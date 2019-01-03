@@ -12,8 +12,8 @@ import org.scijava.ui.UIService;
  * @author Kamil Sowa
  * @version 1.0
  * Klasa ta służy do fabrykacji specyficznego zestawu cech tekstur zbudowanego na podstawie innego zestawu w opraciu o klasy TexturalProperties
- *
  */
+
 @Plugin(type = Command.class, menuPath = "Plugins>Generowanie map cech")
 public class View implements Command {
 
@@ -115,11 +115,8 @@ public class View implements Command {
      * @throws Exception
      */
     public static void main(final String... args) throws Exception {
-        // Launch ImageJ as usual.
         final ImageJ ij = new ImageJ();
         ij.launch(args);
         ij.command().run(View.class, true);
     }
-
 }
-

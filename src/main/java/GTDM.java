@@ -264,10 +264,10 @@ public class GTDM {
       */
     public void startFirstCalcualtions(Boolean calculateP, Boolean print){
         initializaS();
-        calculateSNOWE();
+        calculateSN();
         if (calculateP) {
             initializaP();
-            computePNowe();
+            computePN();
         }
         if (print) {
             System.out.println("Matrix A");
@@ -290,9 +290,9 @@ public class GTDM {
             if (Constans.slowGTDMcalc == true) {
                 startFirstCalcualtions(calculateP, print);
             } else {
-                calculateNextColumnSNowe();
+                calculateNextColumnSN();
                 if (calculateP) {
-                    computeNextColumnPNowe();
+                    computeNextColumnPN();
                 }
                 if (print) {
                     System.out.println("Matrix A");
@@ -315,9 +315,9 @@ public class GTDM {
         if (Constans.slowGTDMcalc==true) {
             startFirstCalcualtions(calculateP, print);
         }else {
-            calculateNextRowSNowe();
+            calculateNextRowSN();
             if (calculateP) {
-                computeNextRowPNowe();
+                computeNextRowPN();
             }
             if (print) {
                 System.out.println("Matrix A");
@@ -344,26 +344,7 @@ public class GTDM {
     /**
      * Obliczanie GTDM dla całego regionu lub obrazu
      */
-    private void calculateS() {
-        Double i=0.0;
-        int startY = inputDataMatrix.getStartHeight();
-        int startX = inputDataMatrix.getStartWidth();
-        for (int k = d; k < height - d; k++) {
-            for (int l = d; l < width - d; l++) {
-                i = inputDataMatrix.get(k, l);
-                Double partSum = s.get(i.intValue());
-                if (partSum == null)
-                    partSum = 0.0;
-                partSum += Math.abs(i - matrixA.get(k + startY, l + startX));// |i-A|
-                s.set(i.intValue(), partSum);//s(i)= SIGMA |i-A|
-            }
-        }
-    }
-
-    /**
-     * Obliczanie GTDM dla całego regionu lub obrazu
-     */
-    private void calculateSNOWE() {
+    private void calculateSN() {
         Double i=0.0;
         int startY = inputDataMatrix.getStartHeight();
         int startX = inputDataMatrix.getStartWidth();
@@ -384,36 +365,7 @@ public class GTDM {
     /**
      * Obliczanie GTDM dla regionu będącego kolejną kolumną
      */
-    private void calculateNextColumnS() {
-        Double i = 0.0;
-
-        int startY = inputDataMatrix.getStartHeight();
-        int startX = inputDataMatrix.getStartWidth();
-        for (int k = d ; k < height - d ; k++) {
-            i = inputDataMatrix.get(k,  d - 1);
-            Double partSum = s.get(i.intValue());
-            if (partSum == null)
-                partSum = 0.0;
-            partSum -= Math.abs(i - matrixA.get(k + startY, d - 1 + startX));// |i-A|
-            s.set(i.intValue(), partSum);//s(i)= SIGMA |i-A|
-
-        }
-
-        for (int k = d ; k < height - d ; k++) {
-            i = inputDataMatrix.get(k, - d + width - 1);
-            Double partSum = s.get(i.intValue());
-            if (partSum == null)
-                partSum = 0.0;
-            partSum += Math.abs(i - matrixA.get(k + startY, - d + width + startX - 1));// |i-A|
-            s.set(i.intValue(), partSum);//s(i)= SIGMA |i-A|
-
-        }
-    }
-
-    /**
-     * Obliczanie GTDM dla regionu będącego kolejną kolumną
-     */
-    private void calculateNextColumnSNowe() {
+    private void calculateNextColumnSN() {
         Double i = 0.0;
 
         int startY = inputDataMatrix.getStartHeight();
@@ -438,57 +390,11 @@ public class GTDM {
     }
 
 
-    public void writeAllValuesOfImage(){
-
-        PrintWriter writer = null;
-        try {
-            writer = new PrintWriter(Constans.FOLDER_PATH + "\\" + nameFromPath(imageName) + inputDataMatrix.getColor() +  ".txt", "UTF-8");
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-        for (int k = 0; k < height ; k++) {
-            for (int l = 0; l < width ; l++) {
-                System.out.print(inputDataMatrix.get(k, l)+ " ");
-            }
-            System.out.println();
-        }
-        writer.close();
-    }
 
     /**
      * Obliczanie GTDM dla regionu będącego kolejnym wierszem
      */
-    private void calculateNextRowS() {
-        Double i = 0.0;
-        int startY = inputDataMatrix.getStartHeight();
-        int startX = inputDataMatrix.getStartWidth();
-        for (int k = d ; k < width - d ; k++) {
-            i = inputDataMatrix.get(d - 1,  k);
-            Double partSum = s.get(i.intValue());
-            if (partSum == null)
-                partSum = 0.0;
-            partSum -= Math.abs(i - matrixA.get(d - 1 + startY, k + startX ));// |i-A|
-            s.set(i.intValue(), partSum);//s(i)= SIGMA |i-A|
-
-        }
-
-        for (int k = d ; k < width - d ; k++) {
-            i = inputDataMatrix.get(- d + height - 1, k);
-            Double partSum = s.get(i.intValue());
-            if (partSum == null)
-                partSum = 0.0;
-            partSum += Math.abs(i - matrixA.get(- d + height - 1 + startY, k + startX));// |i-A|
-            s.set(i.intValue(), partSum);//s(i)= SIGMA |i-A|
-
-        }
-    }
-
-    /**
-     * Obliczanie GTDM dla regionu będącego kolejnym wierszem
-     */
-    private void calculateNextRowSNowe() {
+    private void calculateNextRowSN() {
         Double i = 0.0;
         int startY = inputDataMatrix.getStartHeight();
         int startX = inputDataMatrix.getStartWidth();
@@ -556,27 +462,7 @@ public class GTDM {
     /**
      * Obliczanie wektora prawdopodobieństwa
      */
-    public void computeP() {
-        for (int k = d; k < height - d; k++) {
-            for (int l = d; l < width - d; l++) {
-                Double iNumber = p.get((int) inputDataMatrix.get(k, l));//i
-                if (iNumber == null)
-                    iNumber = 0.0;
-                iNumber += 1;
-                p.set((int) inputDataMatrix.get(k, l), iNumber);
-            }//((int) inputDataMatrix.get(k, l))==83 && k>2
-        }
-        pRaw = new ArrayList<>(p);
-        originRawP = new ArrayList<>(p);
-        for (int i = 0 ; i< Constans.PIXEL_NUMBER_PLUS_1 ; i++) {
-            p.set( i ,p.get(i) / n2);
-        }
-    }
-
-    /**
-     * Obliczanie wektora prawdopodobieństwa
-     */
-    public void computePNowe() {
+    public void computePN() {
         for (int k = d - Constans.QUADRATIC_SIZE/2; k < height - d - Constans.QUADRATIC_SIZE/2 ; k++) {
             for (int l = d - Constans.QUADRATIC_SIZE/2; l < width - d - Constans.QUADRATIC_SIZE/2 ; l++) {
                 Double iNumber = p.get((int) inputDataMatrix.get(k, l));//i
@@ -597,31 +483,7 @@ public class GTDM {
     /**
      * Obliczanie wektora prawdopodobieństwa dla regionu będącego w kolejnej kolumnie
      */
-    public void computeNextColumnP() {
-        for (int k = d ; k < height - d ; k++) {
-            Double iNumber = pRaw.get((int) inputDataMatrix.get(k, d -1));//i
-            if (iNumber == null)
-                iNumber = 0.0;
-            iNumber -= 1;
-            pRaw.set((int) inputDataMatrix.get(k, d - 1), iNumber);
-        }
-
-        for (int k = d ; k < height - d ; k++) {
-            Double iNumber = pRaw.get((int) inputDataMatrix.get(k, width - d - 1));//i
-            if (iNumber == null)
-                iNumber = 0.0;
-            iNumber += 1;
-            pRaw.set((int) inputDataMatrix.get(k, width - d - 1), iNumber);
-        }
-        for (int i = 0 ; i< Constans.PIXEL_NUMBER_PLUS_1 ; i++) {
-            p.set( i ,pRaw.get(i) / n2);
-        }
-    }
-
-    /**
-     * Obliczanie wektora prawdopodobieństwa dla regionu będącego w kolejnej kolumnie
-     */
-    public void computeNextColumnPNowe() {
+    public void computeNextColumnPN() {
         for (int k = d - Constans.QUADRATIC_SIZE/2; k < height - d - Constans.QUADRATIC_SIZE/2 ; k++) {
             Double iNumber = pRaw.get((int) inputDataMatrix.get(k, d - 1 - Constans.QUADRATIC_SIZE/2));//i
             if (iNumber == null)
@@ -642,34 +504,12 @@ public class GTDM {
         }
     }
 
-    /**
-     * Obliczanie wektora prawdopodobieństwa dla regionu będącego w kolejnym wierszu
-     */
-    public void computeNextRowP() {
-        for (int k = d ; k < width - d ; k++) {
-            Double iNumber = pRaw.get((int) inputDataMatrix.get(d - 1 , k ));//i
-            if (iNumber == null)
-                iNumber = 0.0;
-            iNumber -= 1;
-            pRaw.set((int) inputDataMatrix.get(d - 1, k), iNumber);
-        }
 
-        for (int k = d ; k < width - d ; k++) {
-            Double iNumber = pRaw.get((int) inputDataMatrix.get(height - d - 1, k));//i
-            if (iNumber == null)
-                iNumber = 0.0;
-            iNumber += 1;
-            pRaw.set((int) inputDataMatrix.get(height - d - 1, k), iNumber);
-        }
-        for (int i = 0 ; i< Constans.PIXEL_NUMBER_PLUS_1 ; i++) {
-            p.set( i ,pRaw.get(i) / n2);
-        }
-    }
 
     /**
      * Obliczanie wektora prawdopodobieństwa dla regionu będącego w kolejnym wierszu
      */
-    public void computeNextRowPNowe() {
+    public void computeNextRowPN() {
         for (int k = d - Constans.QUADRATIC_SIZE/2; k < width - d - Constans.QUADRATIC_SIZE/2 ; k++) {
             Double iNumber = pRaw.get((int) inputDataMatrix.get(d - 1 - Constans.QUADRATIC_SIZE/2 , k ));//i
             if (iNumber == null)

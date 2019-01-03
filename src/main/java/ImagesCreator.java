@@ -182,7 +182,6 @@ public class ImagesCreator {
             propsyAll.add(propsy);
         }
         for (int k = 0 ; k<5 ; k++){
-//            Collections.sort(propsyAll.get(k), (f1, f2) -> Double.compare(f1.value, f2.value));
             List<Prop> propsy = propsyAll.get(k).parallelStream().sorted((f1, f2) -> Double.compare(f1.value, f2.value)).collect(Collectors.toList());
 
             int ile = propsyAll.get(k).size();
@@ -192,7 +191,6 @@ public class ImagesCreator {
             for (int i = wsp.intValue(); i<ile ; i++){
                 propsy.get(i).setValue(top.getValue());
             }
-//            Collections.sort(propsy, (f1, f2) -> Double.compare(f1.pos, f2.pos));
             List<Prop> collect = propsy.parallelStream().sorted((f1, f2) -> Double.compare(f1.pos, f2.pos)).collect(Collectors.toList());
             for (int i = 0; i < prop.size(); i++) {
                 prop.get(i).put(featuresNames[k],collect.get(i).getValue());

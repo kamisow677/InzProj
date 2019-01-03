@@ -129,6 +129,8 @@ public class Model {
         int numberOfThreads;
         if (Constans.parallel==true) {
             numberOfThreads = Runtime.getRuntime().availableProcessors() - 2;
+            if (numberOfThreads<1)
+                numberOfThreads =1;
         }else {
             numberOfThreads = 1;
         }
@@ -151,17 +153,13 @@ public class Model {
 
         ExecutorService executorService = Executors.newWorkStealingPool(numberOfThreads);
         for (int i = 0 ; i<listParts.size() -1; i++){
-          //  callables.add(createCallable(i*partheight, (i+1)*partheight, w, new ArrayList<>(listParts.get(i)), new ArrayList<>(matrixesA)));
             callables.add(createCallable(i*partheight, (i+1)*partheight, w, listParts.get(i), matrixesA));
         }
-        //callables.add(createCallable((listParts.size() -1)*partheight, (listParts.size())*partheight + rest,  w, new ArrayList<>(listParts.get(listParts.size() -1)), new ArrayList<>(matrixesA)));
-        callables.add(createCallable((listParts.size() -1)*partheight, (listParts.size())*partheight + rest,  w, listParts.get(listParts.size() -1), matrixesA));
 
+        callables.add(createCallable((listParts.size() -1)*partheight, (listParts.size())*partheight + rest,  w, listParts.get(listParts.size() -1), matrixesA));
         try {
             List<Future<ArrayList<Map<String, Double>>>> futures = executorService.invokeAll(callables);
-//            while (!checkIfAllAreDone(futures)){
-//                Thread.sleep(1000);
-//            }
+
             for (Future<ArrayList<Map<String, Double>>> future : futures) {
                 listOfproperties.add(future.get());
             }
@@ -197,8 +195,6 @@ public class Model {
      */
     public Callable<ArrayList<Map<String,Double>>> createCallable(int startRow, int endRow, int w,
                                                                   ArrayList<ImageMatrix> list, ArrayList<MatrixCommon> matrixesA) {
-        // AtomicInteger numer = new AtomicInteger();
-
 
         Callable<ArrayList<Map<String, Double>>> task = () -> {
             ArrayList<Map<String, Double>> properties = new ArrayList<>();
@@ -225,7 +221,6 @@ public class Model {
                                     k++;
                                 }
                                 progress.put(gdtmNext.getInputDataMatrix().getImageName(),(int) 0);
-                                //if (!(list.get(0).getBufferedImage().getType()==BufferedImage.TYPE_BYTE_GRAY))
                                 if (!isGrey(list.get(0).getBufferedImage()))
                                     gdtmNext = new GTDM(listaGDTMOWNext.get(0), listaGDTMOWNext.get(1), listaGDTMOWNext.get(2));
                                 else
@@ -236,12 +231,7 @@ public class Model {
 
                             } else if (j == 0) {
 
-                                //if ((list.get(0).getBufferedImage().getType()==BufferedImage.TYPE_BYTE_GRAY)){
                                 if (isGrey(list.get(0).getBufferedImage())){
-                                    if (progress.get(gdtmNext.getInputDataMatrix().getImageName())==4){
-                                        int asddas=12;
-
-                                    }
                                     listaGDTMOWNext.set(0, new GTDM(listaGDTMOWNext.get(0), false));
                                     listaGDTMOWNext.get(0).startNextRowCalcualtions(true, false);
                                     gdtmNext = listaGDTMOWNext.get(0);
@@ -258,7 +248,6 @@ public class Model {
                                 tex.clear();
 
                             } else {
-                                //if ((list.get(0).getBufferedImage().getType()==BufferedImage.TYPE_BYTE_GRAY)){
                                 if (isGrey(list.get(0).getBufferedImage())){
                                     listaGDTMOWNext.set(0, new GTDM(listaGDTMOWNext.get(0), true));
 
@@ -276,9 +265,7 @@ public class Model {
                                 properties.add(texturalPropertiesNew.getProps());
                                 tex.clear();
                             }
-                            //  System.out.println("i:" + i + " j:" + j);
                         } catch (ArrayIndexOutOfBoundsException ex) {
-                            // System.out.println("i:" + i + " j:" + j);
                         }
                     }
                     if (progress.get(gdtmNext.getInputDataMatrix().getImageName())!=null)
@@ -308,82 +295,50 @@ public class Model {
                                 tex.add(new TexturalProperties(gdtmNext));
                                 k++;
                             }
-                          //  writer.println(tex.get(0).getCoarness());
                             texturalPropertiesNew = Transformer.averageProperties(tex, list.get(0).getColor());
                             properties.add(texturalPropertiesNew.getProps());
                             tex.clear();
                         } else if (j == 0) {
-                            //if ((list.get(0).getBufferedImage().getType()==BufferedImage.TYPE_BYTE_GRAY)){
                             if (isGrey(list.get(0).getBufferedImage())){
                                 listaGDTMOWNext.set(0, new GTDM(listaGDTMOWNext.get(0), false));
                                 listaGDTMOWNext.get(0).startNextRowCalcualtions(true, false);
                                 texturalPropertiesNew = new TexturalProperties(listaGDTMOWNext.get(0));
-                          //      writer.println(texturalPropertiesNew.getCoarness());
                             } else {
                                 for (int k = 0; k < Constans.NUMBER_OF_COLORS; k++) {
                                     listaGDTMOWNext.set(k, new GTDM(listaGDTMOWNext.get(k), false));
                                     listaGDTMOWNext.get(k).startNextRowCalcualtions(true, false);
                                     tex.add(new TexturalProperties(listaGDTMOWNext.get(k)));
                                 }
-                           //     writer.println(tex.get(0).getCoarness());
                                 texturalPropertiesNew = Transformer.averageProperties(tex, list.get(0).getColor());
                             }
                             properties.add(texturalPropertiesNew.getProps());
                             tex.clear();
                         } else {
-                            //if ((list.get(0).getBufferedImage().getType()==BufferedImage.TYPE_BYTE_GRAY)){
                             if (isGrey(list.get(0).getBufferedImage())){
                                 listaGDTMOWNext.set(0, new GTDM(listaGDTMOWNext.get(0), true));
                                 listaGDTMOWNext.get(0).startNextColumnCalcualtions(true, false);
                                 texturalPropertiesNew = new TexturalProperties(listaGDTMOWNext.get(0));
-                           //     writer.println(texturalPropertiesNew.getCoarness());
                             }else {
                                 for (int k = 0; k < Constans.NUMBER_OF_COLORS; k++) {
                                     listaGDTMOWNext.set(k, new GTDM(listaGDTMOWNext.get(k), true));
                                     listaGDTMOWNext.get(k).startNextColumnCalcualtions(true, false);
                                     tex.add(new TexturalProperties(listaGDTMOWNext.get(k)));
                                 }
-                           //     writer.println(tex.get(0).getCoarness());
                                 texturalPropertiesNew = Transformer.averageProperties(tex, list.get(0).getColor());
                             }
                             properties.add(texturalPropertiesNew.getProps());
                             tex.clear();
                         }
-                        // System.out.println("i:" + i + " j:" + j);
                     }
                     if (progress.get(gdtmNext.getInputDataMatrix().getImageName())!=null)
                         progress.put(gdtmNext.getInputDataMatrix().getImageName(),(int) progress.get(gdtmNext.getInputDataMatrix().getImageName())+1);
                     else
                         progress.put(gdtmNext.getInputDataMatrix().getImageName(),1);
                     System.out.println(progress);
-                    //  numer.getAndIncrement();
-                    // System.out.println(numer.get());
                 }
             }
             return properties;
         };
         return task;
-    }
-    private void showOld(ImageMatrix matrix) {
-        long startTime = System.currentTimeMillis();
-        int q = Constans.QUADRATIC_SIZE;
-        int h = matrix.height;
-        int w = matrix.width;
-        matrix.height= Constans.QUADRATIC_SIZE;
-        matrix.width= Constans.QUADRATIC_SIZE;
-        GTDM gtdmNowe = null;
-        gtdmNowe = new GTDM(matrix);
-        MatrixCommon matrixA = gtdmNowe.getMatrixA();
-        for (int i = q / 2; i < h - q / 2; i++) {
-            for (int j = q / 2; j < w - q / 2; j++) {
-                gtdmNowe = new GTDM(matrix, matrixA);
-                gtdmNowe.startFirstCalcualtions(true, false);
-                TexturalProperties texturalProperties = new TexturalProperties(gtdmNowe);
-            }
-            System.out.println(" old: "+i);
-        }
-        long stopTime = System.currentTimeMillis();
-        long elapsedTime = stopTime - startTime;
-        System.out.println("WEWNATRZ" + elapsedTime);
     }
 }

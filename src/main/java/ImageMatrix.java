@@ -124,19 +124,8 @@ public class ImageMatrix implements Matrix {
             argb = bufferedImage.getRGB(i + startWidth, j + startHeight);
             switch (color) {
                 case GREY: {
-                    // System.out.println((j+startHeight)*width + i + startWidth);
-                    //return (((argb) & 0xFF + (argb >> 8) & 0xFF + (argb >> 16) & 0xFF)/3.0)/Constans.QUANTIZATION;
-                    // return dataBuffer.getElem((i+startWidth)*height + j + startHeight);
-                    //  System.out.println("j: "+j+" i:"+i+ "startHeight: "+startHeight+ " startWidth:"+startWidth);
                     Integer a = dataBuffer.getElem((j + startHeight) * bufferedImage.getWidth() + i + startWidth) / Constans.QUANTIZATION;
-                    //  Integer a = dataBuffer
-                    int b;
-                    if (a.byteValue() > 0)
-                        b = a.byteValue() + 128;
-                    else
-                        b = a.byteValue() + 256;
                     return a;
-//                return ((argb) & 0xFF)/Constans.QUANTIZATION;
                 }
                 case BLUE: {
                     return ((argb) & 0xFF) / Constans.QUANTIZATION;
