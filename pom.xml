@@ -4,9 +4,9 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.kamil.sowa</groupId>
-    <artifactId>com.kamil.sowa</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <groupId>kamil.sowa</groupId>
+    <artifactId>kamil.sowa</artifactId>
+    <version>1.0</version>
 
     <parent>
         <groupId>org.scijava</groupId>
@@ -17,7 +17,7 @@
 
     <name>Generation of features map based on GTDM</name>
     <description>This is project for generating features map</description>
-    <url>https://github.com/[MY-ORG]/[MY-REPO]</url>
+    <url>https://github.com/kamisow677/InzProj</url>
     <inceptionYear>2018</inceptionYear>
     <organization>
         <name>[MY-ORGANIZATION-NAME]</name>
@@ -38,7 +38,6 @@
             <name>None</name>
         </contributor>
     </contributors>
-
 
     <licenses>
         <license>
@@ -73,17 +72,16 @@
     </ciManagement>
 
     <properties>
-        <main-class>HelloWorld</main-class>
+        <main-class>View</main-class>
         <license.licenseName>cc0</license.licenseName>
         <license.copyrightOwners>N/A</license.copyrightOwners>
-        <license.projectName>ImageJ software for multidimensional image processing and analysis.</license.projectName>
+        <!--<license.projectName>ImageJ software for multidimensional image processing and analysis.</license.projectName>-->
     </properties>
 
     <repositories>
         <repository>
             <id>imagej.public</id>
-            <!--<url>http://maven.imagej.net/content/groups/public</url>-->
-            <url>http://github.com</url>
+            <url>http://maven.imagej.net/content/groups/public</url>
         </repository>
     </repositories>
 

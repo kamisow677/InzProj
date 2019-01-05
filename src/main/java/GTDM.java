@@ -254,22 +254,13 @@ public class GTDM {
 
     /**
      * Obliczanie GTDM oraz wektora prawdopodobieństwa dla całego obrazu lub regionu
-     * @param calculateP jeśli ustawione na true to oblicza p
-     * @param print jeśli true to wypisuje zawartość s i p
       */
-    public void startFirstCalcualtions(Boolean calculateP, Boolean print){
+    public void startFirstCalcualtions(){
         initializaS();
         calculateSN();
-        if (calculateP) {
-            initializaP();
-            computePN();
-        }
-        if (print) {
-            System.out.println("Matrix A");
-            matrixA.printf();
-            printfS();
-            printfP();
-        }
+        initializaP();
+        computePN();
+
         originRawP = new ArrayList<>(pRaw);
         originS = new ArrayList<>(s);
         originP = new ArrayList<>(p);
@@ -277,24 +268,14 @@ public class GTDM {
 
     /**
      * Obliczanie GTDM oraz wektora prawdopodobieństwa dla następnej kolumny obrazu lub regionu
-     * @param calculateP jeśli ustawione na true to oblicza p
-     * @param print jeśli true to wypisuje zawartość s i p
      */
-    public void startNextColumnCalcualtions(Boolean calculateP, Boolean print){
+    public void startNextColumnCalcualtions(){
         try {
             if (Constans.slowGTDMcalc == true) {
-                startFirstCalcualtions(calculateP, print);
+                startFirstCalcualtions();
             } else {
                 calculateNextColumnSN();
-                if (calculateP) {
-                    computeNextColumnPN();
-                }
-                if (print) {
-                    System.out.println("Matrix A");
-                    matrixA.printf();
-                    printfS();
-                    printfP();
-                }
+                computeNextColumnPN();
             }
         }catch (NullPointerException ex){
             System.out.println("MAM");
@@ -303,23 +284,13 @@ public class GTDM {
 
     /**
      * Obliczanie GTDM oraz wektora prawdopodobieństwa dla następnego wiersza obrazu lub regionu
-     * @param calculateP jeśli ustawione na true to oblicza p
-     * @param print jeśli true to wypisuje zawartość s i p
      */
-    public void startNextRowCalcualtions(Boolean calculateP, Boolean print){
+    public void startNextRowCalcualtions(){
         if (Constans.slowGTDMcalc==true) {
-            startFirstCalcualtions(calculateP, print);
+            startFirstCalcualtions();
         }else {
             calculateNextRowSN();
-            if (calculateP) {
                 computeNextRowPN();
-            }
-            if (print) {
-                System.out.println("Matrix A");
-                matrixA.printf();
-                printfS();
-                printfP();
-            }
             originRawP =  new ArrayList<>(pRaw);
             originS = new ArrayList<>(s);
             originP = new ArrayList<>(p);

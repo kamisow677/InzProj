@@ -53,7 +53,7 @@ public class Model {
                 m.setStartHeight(0);
                 m.setStartWidth(0);
                 GTDM gdtmNowe = new GTDM(m);
-                gdtmNowe.startFirstCalcualtions(true, false);
+                gdtmNowe.startFirstCalcualtions();
                 gdtmNowe.saveToCSV("");
                 TexturalProperties texturalProperties = new TexturalProperties(gdtmNowe);
                 arrTemp.add(gdtmNowe);
@@ -216,7 +216,7 @@ public class Model {
                                 for (ImageMatrix l : list) {
                                     gdtmNext = new GTDM(l, matrixesA.get(k));
                                     gdtmNext.setD(Constans.D);
-                                    gdtmNext.startFirstCalcualtions(true, false);
+                                    gdtmNext.startFirstCalcualtions();
                                     listaGDTMOWNext.add(gdtmNext);
                                     k++;
                                 }
@@ -233,13 +233,13 @@ public class Model {
 
                                 if (isGrey(list.get(0).getBufferedImage())){
                                     listaGDTMOWNext.set(0, new GTDM(listaGDTMOWNext.get(0), false));
-                                    listaGDTMOWNext.get(0).startNextRowCalcualtions(true, false);
+                                    listaGDTMOWNext.get(0).startNextRowCalcualtions();
                                     gdtmNext = listaGDTMOWNext.get(0);
                                 }
                                 else {
                                     for (int k = 0; k < Constans.NUMBER_OF_COLORS; k++) {
                                         listaGDTMOWNext.set(k, new GTDM(listaGDTMOWNext.get(k), false));
-                                        listaGDTMOWNext.get(k).startNextRowCalcualtions(true, false);
+                                        listaGDTMOWNext.get(k).startNextRowCalcualtions();
                                     }
                                     gdtmNext = new GTDM(listaGDTMOWNext.get(0), listaGDTMOWNext.get(1), listaGDTMOWNext.get(2));
                                 }
@@ -251,12 +251,12 @@ public class Model {
                                 if (isGrey(list.get(0).getBufferedImage())){
                                     listaGDTMOWNext.set(0, new GTDM(listaGDTMOWNext.get(0), true));
 
-                                    listaGDTMOWNext.get(0).startNextColumnCalcualtions(true, false);
+                                    listaGDTMOWNext.get(0).startNextColumnCalcualtions();
                                     gdtmNext = listaGDTMOWNext.get(0);
                                 }else{
                                     for (int k = 0; k < Constans.NUMBER_OF_COLORS; k++) {
                                         listaGDTMOWNext.set(k, new GTDM(listaGDTMOWNext.get(k), true));
-                                        listaGDTMOWNext.get(k).startNextColumnCalcualtions(true, false);
+                                        listaGDTMOWNext.get(k).startNextColumnCalcualtions();
                                     }
 
                                     gdtmNext = new GTDM(listaGDTMOWNext.get(0), listaGDTMOWNext.get(1), listaGDTMOWNext.get(2));
@@ -290,7 +290,7 @@ public class Model {
                             for (ImageMatrix l : list) {
                                 gdtmNext = new GTDM(l, matrixesA.get(k));
                                 gdtmNext.setD(Constans.D);
-                                gdtmNext.startFirstCalcualtions(true, false);
+                                gdtmNext.startFirstCalcualtions();
                                 listaGDTMOWNext.add(gdtmNext);
                                 tex.add(new TexturalProperties(gdtmNext));
                                 k++;
@@ -301,12 +301,12 @@ public class Model {
                         } else if (j == 0) {
                             if (isGrey(list.get(0).getBufferedImage())){
                                 listaGDTMOWNext.set(0, new GTDM(listaGDTMOWNext.get(0), false));
-                                listaGDTMOWNext.get(0).startNextRowCalcualtions(true, false);
+                                listaGDTMOWNext.get(0).startNextRowCalcualtions();
                                 texturalPropertiesNew = new TexturalProperties(listaGDTMOWNext.get(0));
                             } else {
                                 for (int k = 0; k < Constans.NUMBER_OF_COLORS; k++) {
                                     listaGDTMOWNext.set(k, new GTDM(listaGDTMOWNext.get(k), false));
-                                    listaGDTMOWNext.get(k).startNextRowCalcualtions(true, false);
+                                    listaGDTMOWNext.get(k).startNextRowCalcualtions();
                                     tex.add(new TexturalProperties(listaGDTMOWNext.get(k)));
                                 }
                                 texturalPropertiesNew = Transformer.averageProperties(tex, list.get(0).getColor());
@@ -316,12 +316,12 @@ public class Model {
                         } else {
                             if (isGrey(list.get(0).getBufferedImage())){
                                 listaGDTMOWNext.set(0, new GTDM(listaGDTMOWNext.get(0), true));
-                                listaGDTMOWNext.get(0).startNextColumnCalcualtions(true, false);
+                                listaGDTMOWNext.get(0).startNextColumnCalcualtions();
                                 texturalPropertiesNew = new TexturalProperties(listaGDTMOWNext.get(0));
                             }else {
                                 for (int k = 0; k < Constans.NUMBER_OF_COLORS; k++) {
                                     listaGDTMOWNext.set(k, new GTDM(listaGDTMOWNext.get(k), true));
-                                    listaGDTMOWNext.get(k).startNextColumnCalcualtions(true, false);
+                                    listaGDTMOWNext.get(k).startNextColumnCalcualtions();
                                     tex.add(new TexturalProperties(listaGDTMOWNext.get(k)));
                                 }
                                 texturalPropertiesNew = Transformer.averageProperties(tex, list.get(0).getColor());

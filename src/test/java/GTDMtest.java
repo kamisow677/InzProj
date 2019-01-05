@@ -113,7 +113,7 @@ public class GTDMtest {
         System.out.println(daneTestowe);
         System.out.println(matrixA);
         gdtmFirst = new GTDM(squareMAtrixData,matrixA);
-        gdtmFirst.startFirstCalcualtions(true, false);
+        gdtmFirst.startFirstCalcualtions();
         MatrixCommon matrixACalculated = gdtmFirst.getMatrixA();
         d = gdtmFirst.getD();
         System.out.println(matrixACalculated);
@@ -138,7 +138,7 @@ public class GTDMtest {
          */
         MatrixCommon matrixANextCalculated;
         gdtmNext = new GTDM(gdtmFirst, true);
-        gdtmNext.startNextColumnCalcualtions(true, false);
+        gdtmNext.startNextColumnCalcualtions();
         matrixANextCalculated = gdtmNext.getMatrixA();
         d = gdtmNext.getD();
         for (int i = d; i < SQUARE_SIZE - d; i++) {
@@ -161,7 +161,7 @@ public class GTDMtest {
          * 0,2
          */
         gdtmNext = new GTDM(gdtmNext, true);
-        gdtmNext.startNextColumnCalcualtions(true, false);
+        gdtmNext.startNextColumnCalcualtions();
         matrixANextCalculated = gdtmNext.getMatrixA();
         d = gdtmNext.getD();
         for (int i = d; i < SQUARE_SIZE - d; i++) {
@@ -185,7 +185,7 @@ public class GTDMtest {
          * 0,3
          */
         gdtmNext = new GTDM(gdtmNext, true);
-        gdtmNext.startNextColumnCalcualtions(true, false);
+        gdtmNext.startNextColumnCalcualtions();
         matrixANextCalculated = gdtmNext.getMatrixA();
         d = gdtmNext.getD();
         for (int i = d; i < SQUARE_SIZE - d; i++) {
@@ -208,7 +208,7 @@ public class GTDMtest {
          * 0,4
          */
         gdtmNext = new GTDM(gdtmNext, true);
-        gdtmNext.startNextColumnCalcualtions(true, false);
+        gdtmNext.startNextColumnCalcualtions();
         matrixANextCalculated = gdtmNext.getMatrixA();
         d = gdtmNext.getD();
         for (int i = d; i < SQUARE_SIZE - d; i++) {
@@ -231,7 +231,7 @@ public class GTDMtest {
          * 0,5
          */
         gdtmNext = new GTDM(gdtmNext, true);
-        gdtmNext.startNextColumnCalcualtions(true, false);
+        gdtmNext.startNextColumnCalcualtions();
         matrixANextCalculated = gdtmNext.getMatrixA();
         d = gdtmNext.getD();
         for (int i = d; i < SQUARE_SIZE - d; i++) {
@@ -255,7 +255,7 @@ public class GTDMtest {
          * GOING DOWN 1,0
          */
         gdtmNext = new GTDM(gdtmNext, false);
-        gdtmNext.startNextRowCalcualtions(true, false);
+        gdtmNext.startNextRowCalcualtions();
         matrixANextCalculated = gdtmNext.getMatrixA();
         d = gdtmNext.getD();
         for (int i = d; i < SQUARE_SIZE - d; i++) {
@@ -280,7 +280,7 @@ public class GTDMtest {
          * GOING DOWN 1,1
          */
         gdtmNext = new GTDM(gdtmNext, true);
-        gdtmNext.startNextColumnCalcualtions(true, false);
+        gdtmNext.startNextColumnCalcualtions();
         matrixANextCalculated = gdtmNext.getMatrixA();
         d = gdtmNext.getD();
         for (int i = d; i < SQUARE_SIZE - d; i++) {
@@ -303,7 +303,7 @@ public class GTDMtest {
          * GOING DOWN 1,2
          */
         gdtmNext = new GTDM(gdtmNext, true);
-        gdtmNext.startNextColumnCalcualtions(true, false);
+        gdtmNext.startNextColumnCalcualtions();
         matrixANextCalculated = gdtmNext.getMatrixA();
         d = gdtmNext.getD();
         for (int i = d; i < SQUARE_SIZE - d; i++) {
@@ -327,7 +327,7 @@ public class GTDMtest {
          * GOING DOWN 1,3
          */
         gdtmNext = new GTDM(gdtmNext, true);
-        gdtmNext.startNextColumnCalcualtions(true, false);
+        gdtmNext.startNextColumnCalcualtions();
         matrixANextCalculated = gdtmNext.getMatrixA();
         d = gdtmNext.getD();
         for (int i = d; i < SQUARE_SIZE - d; i++) {
@@ -335,11 +335,6 @@ public class GTDMtest {
                 assertEquals(matrixANextCalculated.get(i, j), expectedMatrixAdate[i][j], 0.01);
             }
         }
-//        sCalculated = gdtmNext.getS();
-//        expectedS = new Double[]{0.0,4.625,0.5,1.625,1.5,2.5};
-//        for (int i = 0; i < expectedS.length; i++){
-//            assertEquals(sCalculated.get(i), expectedS[i], 0.01);
-//        }
 
         pCalculated = gdtmNext.getP();
         expectedP = new Double[]{0.0,0.333333,0.111111,0.222222,0.222222, 0.11111};
@@ -353,7 +348,7 @@ public class GTDMtest {
          * GOING DOWN 1,4
          */
         gdtmNext = new GTDM(gdtmNext, true);
-        gdtmNext.startNextColumnCalcualtions(true, false);
+        gdtmNext.startNextColumnCalcualtions();
         matrixANextCalculated = gdtmNext.getMatrixA();
         d = gdtmNext.getD();
         for (int i = d; i < SQUARE_SIZE - d; i++) {
@@ -365,7 +360,7 @@ public class GTDMtest {
          * GOING DOWN 1,5
          */
         gdtmNext = new GTDM(gdtmNext, true);
-        gdtmNext.startNextColumnCalcualtions(true, false);
+        gdtmNext.startNextColumnCalcualtions();
         matrixANextCalculated = gdtmNext.getMatrixA();
         d = gdtmNext.getD();
         for (int i = d; i < SQUARE_SIZE - d; i++) {
@@ -385,7 +380,7 @@ public class GTDMtest {
          * GOING DOWN 2,0
          */
         gdtmNext = new GTDM(gdtmNext, false);
-        gdtmNext.startNextRowCalcualtions(true, false);
+        gdtmNext.startNextRowCalcualtions();
         matrixANextCalculated = gdtmNext.getMatrixA();
         d = gdtmNext.getD();
         for (int i = d; i < SQUARE_SIZE - d; i++) {
@@ -409,7 +404,7 @@ public class GTDMtest {
          * GOING DOWN 2,1
          */
         gdtmNext = new GTDM(gdtmNext, true);
-        gdtmNext.startNextColumnCalcualtions(true, false);
+        gdtmNext.startNextColumnCalcualtions();
         matrixANextCalculated = gdtmNext.getMatrixA();
         d = gdtmNext.getD();
         for (int i = d; i < SQUARE_SIZE - d; i++) {
