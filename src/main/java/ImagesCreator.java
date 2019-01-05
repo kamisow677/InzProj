@@ -90,7 +90,6 @@ public class ImagesCreator {
      * @param size wielkość macierzy
      */
     public static void createTestPixelImage(byte [][] data, int size){
-       // byte [][] daneTestowe = new byte[][]{{1, 2, 3, 4, 5}, {2, 3, 1, 4, 1}, {5, 2, 2, 3, 3}, {3, 1, 4, 4, 5}, {1, 5, 4, 2, 2}};
         BufferedImage buffImage;
         try {
             byte [] newData ;
@@ -117,7 +116,6 @@ public class ImagesCreator {
      * @param imageName nazwa obrazu
      */
     public static void createGreyPixelImage(ArrayList<Map<String,Double>> prop , int height, int width, String imageName){
-        //byte [][] daneTestowe = new byte[][]{{1, 2, 3, 4, 5}, {2, 3, 1, 4, 1}, {5, 2, 2, 3, 3}, {3, 1, 4, 4, 5}, {1, 5, 4, 2, 2}};
         System.out.println("Width: "+(width-Constans.QUADRATIC_SIZE));
         System.out.println("Height: "+(height-Constans.QUADRATIC_SIZE));
 

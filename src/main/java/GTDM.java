@@ -235,12 +235,7 @@ public class GTDM {
             for (int n = -d; n <= d; n++) {
                 if (m == 0 && n == 0)
                     continue;
-//                if (k + m < 0 || k + m >= height)
-//                    continue;
-//                if (l + n < 0 || l + n >= width)
-//                    continue;
                 suma += inputDataMatrix.get(k + m, l + n);
-                int pla=2;
             }
         }
         return suma / (Math.pow(2 * d + 1, 2) - 1);
@@ -424,7 +419,7 @@ public class GTDM {
      */
     private void calculateS(ArrayList<Double> s1, ArrayList<Double> s2, ArrayList<Double> s3) {
         for (int i = 0; i < Constans.PIXEL_NUMBER ; i++){
-            s.set(i, (s1.get(i)+s2.get(i)+s3.get(i))/3.0);//s(i)= SIGMA |i-A|
+            s.set(i, (s1.get(i)+s2.get(i)+s3.get(i))/3.0);
         }
     }
 
@@ -470,7 +465,7 @@ public class GTDM {
                     iNumber = 0.0;
                 iNumber += 1;
                 p.set((int) inputDataMatrix.get(k, l), iNumber);
-            }//((int) inputDataMatrix.get(k, l))==83 && k>2
+            }
         }
         pRaw = new ArrayList<>(p);
         originRawP = new ArrayList<>(p);
@@ -538,7 +533,7 @@ public class GTDM {
     private void computeP(ArrayList<Double> p1, ArrayList<Double> p2, ArrayList<Double> p3) {
         int i=0;
         for (i = 0; i <  Constans.PIXEL_NUMBER ; i++){
-            p.set(i, (p1.get(i)+p2.get(i)+p3.get(i))/3.0);//s(i)= SIGMA |i-A|
+            p.set(i, (p1.get(i)+p2.get(i)+p3.get(i))/3.0);
         }
     }
 

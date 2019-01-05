@@ -107,7 +107,7 @@ public class Model {
      */
     public Long createTask(ArrayList<ImageMatrix> list) {
 
-        ArrayList<Map<String, Double>> properties = new ArrayList<>();//final props all to write image
+        ArrayList<Map<String, Double>> properties = new ArrayList<>();
         ArrayList<MatrixCommon> matrixesA = new ArrayList<>();
         GTDM gdtmNowe = null;
         ArrayList<GTDM> listaGDTMOWNext = new ArrayList<>();
