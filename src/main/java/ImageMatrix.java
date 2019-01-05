@@ -2,9 +2,10 @@ import java.awt.image.BufferedImage;
 import java.awt.image.DataBuffer;
 
 /**
+ *
+ * Klasa ta jest macierzą przechowującą dane o obrazie
  * @author Kamil Sowa
  * @version 1.0
- * Klasa ta jest macierzą przechowującą dane o obrazie
  *
  */
 public class ImageMatrix implements Matrix {
@@ -176,7 +177,7 @@ public class ImageMatrix implements Matrix {
 
     /**
      * UStawienie koloru
-     * @param color
+     * @param color kolor
      */
     public void setColor(COLOR color) {
         this.color = color;
@@ -253,6 +254,7 @@ public class ImageMatrix implements Matrix {
     }
     /**
      * Akcesor zmiennej bufferedImage
+     * @return zmienna bufferedImage
      */
     public BufferedImage getBufferedImage() {
         return bufferedImage;

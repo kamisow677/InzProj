@@ -10,9 +10,10 @@ import java.util.OptionalDouble;
 import java.util.stream.Collectors;
 
 /**
+ *
+ * Klasa ta służy do tworzenia obrazów
  * @author Kamil Sowa
  * @version 1.0
- * Klasa ta służy do tworzenia obrazów
  *
  */
 public class ImagesCreator {

@@ -12,9 +12,9 @@ import java.util.concurrent.Future;
 import java.util.function.Consumer;
 
 /**
+ * Główna klasa programu będąca kontrolerem. Sprawuje łączność między View, a Model
  * @author Kamil Sowa
  * @version 1.0
- * Główna klasa programu będąca kontrolerem. Sprawuje łączność między View, a Model
  *
  */
 public class Controller {
@@ -101,6 +101,7 @@ public class Controller {
 
     /**
      * Sprawdzenie czy obraz jest w skali szarości
+     * @param buffImage dane obrazu
      * @return true jeśli obraz jest w skali szarości
      */
     private boolean isGrey(BufferedImage buffImage){
@@ -113,6 +114,7 @@ public class Controller {
     /**
      * Generuje listę ścieżek do obrazów znajdujących się w folderze
      * @param folder folder z obrazami
+     * @return zwraca true jeśli w folderze są obrazy
      */
     public boolean listFilesForFolder(final File folder) {
         if (folder.listFiles() == null){

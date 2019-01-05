@@ -2,9 +2,10 @@ import java.util.ArrayList;
 import java.util.Map;
 
 /**
+ *
+ * Klasa do przechowywaia nazwy teksury jej wartości i pozycji w algorytmie usuwania skrajnych wartości
  * @author Kamil Sowa
  * @version 1.0
- * Klasa do przechowywaia nazwy teksury jej wartości i pozycji w algorytmie usuwania skrajnych wartości
  *
  */
 public class Prop {

@@ -4,9 +4,10 @@ import java.util.HashMap;
 import java.util.Scanner;
 
 /**
+ * Klasa ta służy do fabrykacji specyficznego zestawu
+ * cech tekstur zbudowanego na podstawie innego zestawu w opraciu o klasy TexturalProperties
  * @author Kamil Sowa
  * @version 1.0
- * Klasa ta służy do fabrykacji specyficznego zestawu cech tekstur zbudowanego na podstawie innego zestawu w opraciu o klasy TexturalProperties
  *
  */
 public class Transformer {

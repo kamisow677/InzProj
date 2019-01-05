@@ -10,9 +10,10 @@ import java.util.concurrent.Future;
 import java.util.function.Consumer;
 
 /**
+ *
+ * Klasa będąca modelem. Odpowiedzialna za sterowanie algorytmem wyliczającym cechy struktury oraz mapy cech
  * @author Kamil Sowa
  * @version 1.0
- * Klasa będąca modelem. Odpowiedzialna za sterowanie algorytmem wyliczającym cechy struktury oraz mapy cech
  *
  */
 public class Model {
@@ -91,6 +92,7 @@ public class Model {
 
     /**
      * Sprawdzenie czy obraz jest w skali szarości
+     * @param buffImage dane obrazu
      * @return true jeśli obraz jest w skali szarości
      */
     private boolean isGrey(BufferedImage buffImage){
@@ -103,9 +105,8 @@ public class Model {
     /**
      * Tworzy zadania do wykonania. Dzieli obraz na części i rozdziela je do przetwarzania
      * @param list lista macierzy obrazów do przetworzenia
-     * @return
      */
-    public Long createTask(ArrayList<ImageMatrix> list) {
+    public void createTask(ArrayList<ImageMatrix> list) {
 
         ArrayList<Map<String, Double>> properties = new ArrayList<>();
         ArrayList<MatrixCommon> matrixesA = new ArrayList<>();
@@ -181,7 +182,6 @@ public class Model {
         catch (Exception ex){
             System.out.println(ex.toString());
         }
-        return null;
     }
 
     /**

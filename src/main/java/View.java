@@ -9,9 +9,9 @@ import org.scijava.plugin.Plugin;
 import org.scijava.ui.UIService;
 
 /**
+ * Klasa ta służy do fabrykacji specyficznego zestawu cech tekstur zbudowanego na podstawie innego zestawu w opraciu o klasy TexturalProperties
  * @author Kamil Sowa
  * @version 1.0
- * Klasa ta służy do fabrykacji specyficznego zestawu cech tekstur zbudowanego na podstawie innego zestawu w opraciu o klasy TexturalProperties
  */
 
 @Plugin(type = Command.class, menuPath = "Plugins>Generowanie map cech")
@@ -111,8 +111,8 @@ public class View implements Command {
 
     /**
      * Metoda main wtyczki
-     * @param args
-     * @throws Exception
+     * @param args argumenty
+     * @throws Exception wyjątek
      */
     public static void main(final String... args) throws Exception {
         final ImageJ ij = new ImageJ();

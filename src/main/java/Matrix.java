@@ -1,9 +1,10 @@
 import java.awt.image.DataBuffer;
 
 /**
+ *
+ * Interfejs macierzy
  * @author Kamil Sowa
  * @version 1.0
- * Interferj macierzy
  *
  */
 public interface Matrix {
@@ -41,10 +42,12 @@ public interface Matrix {
     String getImageName();
     /**
      * Akcesor zmiennej startWidth
+     * @return zmienna startWidth
      */
     int getStartWidth();
     /**
      * Akcesor zmiennej startHeight
+     * @return zmienna startHeight
      */
     int getStartHeight();
     /**

@@ -1,8 +1,9 @@
 
 /**
+ *
+ * Zwykłą macierz z danymi
  * @author Kamil Sowa
  * @version 1.0
- * Zwykłą macierz z danymi
  *
  */
 public class MatrixCommon implements Matrix {
@@ -106,7 +107,7 @@ public class MatrixCommon implements Matrix {
      *
      * @param i wiersz piksela
      * @param j kolumna piksela
-     * @return
+     * @return wartość piksela
      */
     @Override
     public double get(int i, int j) {

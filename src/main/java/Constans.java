@@ -1,7 +1,7 @@
 /**
+ * Klasa ze stałymi
  * @author Kamil Sowa
  * @version 1.0
- * Klasa ze stałymi
  */
 public class Constans {
     /**
@@ -37,11 +37,11 @@ public class Constans {
      */
     static String STRENGTH ="Sila";
     /**
-     * Łańcuch przechowuje ścieżkę do folderu przechowującego dane wejściowe
+     * Lańcuch przechowuje ścieżkę do folderu przechowującego dane wejściowe
      */
     static String FOLDER_PATH = "C:\\Users\\Kamil Sowa\\Desktop\\obrazki21\\";
     /**
-     * Łańcuch przechowuje ścieżkę do folderu przechowującego wyniki pracy wtyczki
+     * Lańcuch przechowuje ścieżkę do folderu przechowującego wyniki pracy wtyczki
      */
     static String SAVE_PATH = "C:\\Users\\Kamil Sowa\\Desktop\\obrazki21\\Results\\";
     /**

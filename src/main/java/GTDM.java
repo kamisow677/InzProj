@@ -2,10 +2,10 @@ import java.io.*;
 import java.util.ArrayList;
 
 /**
- * @author Kamil Sowa
- * @version 1.0
  * Klasa ta jest odpowiedzialna za obliczanie macierzy różnic szarości
  * Oprócz tego wylicza wektor prawdopodobieństwa występowania piksela w obrazie lub jego kwadratowym regionie
+ * @author Kamil Sowa
+ * @version 1.0
  */
 public class GTDM {
     /**
@@ -62,14 +62,14 @@ public class GTDM {
     private double n2;
     /**
      * Akcesor zmiennej d
-     * @return
+     * @return zmienna d
      */
     public  int getD() {
         return d;
     }
     /**
      * Mutator zmiennej d
-     * @return
+     * @param d zmienna szerokość regionu peryferyjnego
      */
     public  void setD(int d) {
         this.d = d;
@@ -91,6 +91,7 @@ public class GTDM {
     public ArrayList<Double> getS() { return s; }
     /**
      * Mutator zmiennej s
+     * @param s macierz różnic poziomów szarości
      */
     public void setS(ArrayList<Double> s) {this.s = s; }
     /**
@@ -100,6 +101,7 @@ public class GTDM {
     public ArrayList<Double> getP() { return p;}
     /**
      * Mutator zmiennej p
+     * @param p wektor prawd. wystąpienia piksela
      */
     public void setP(ArrayList<Double> p) {this.p = p; }
     /**
@@ -387,6 +389,9 @@ public class GTDM {
 
     /**
      * Obliczanie GTDM dla całego regionu lub obrazu na podstawie trzech innych gdtm jako średnia
+     * @param s1 GTDM pierwszego koloru
+     * @param s2 GTDM drugiego koloru
+     * @param s3 GTDM trzeciego koloru
      */
     private void calculateS(ArrayList<Double> s1, ArrayList<Double> s2, ArrayList<Double> s3) {
         for (int i = 0; i < Constans.PIXEL_NUMBER ; i++){
@@ -500,6 +505,9 @@ public class GTDM {
 
     /**
      * Obliczanie wektora prawdopodobieństwa na podstwie trzech innych
+     * @param p1 wektor prawdopodobieństwa wystąpienia piksela koloru pierwszego
+     * @param p2 wektor prawdopodobieństwa wystąpienia piksela koloru drugiego
+     * @param p3 wektor prawdopodobieństwa wystąpienia piksela koloru trzeciego
      */
     private void computeP(ArrayList<Double> p1, ArrayList<Double> p2, ArrayList<Double> p3) {
         int i=0;
@@ -510,6 +518,7 @@ public class GTDM {
 
     /**
      * Zapisanie GTDM do pliku .csv
+     * @param part dodatkowy opis pliku
      */
     public  void saveToCSV(String part) {
         PrintWriter w = null;
@@ -536,6 +545,8 @@ public class GTDM {
 
     /**
      * Zwraca nazwę obrazu wraz z rozszerzeniem z pełnej ścieżki
+     * @param path ścieżka
+     * @return nazwa pliku
      */
     static String nameFromPath(String path){
         return path.substring(path.lastIndexOf("\\"));

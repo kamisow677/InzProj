@@ -5,9 +5,10 @@ import java.io.UnsupportedEncodingException;
 import java.util.*;
 
 /**
+ *
+ * Klasa obliczająca 5 parametrów metody
  * @author Kamil Sowa
  * @version 1.0
- * Klasa obliczająca 5 parametrów metody
  *
  */
 public class TexturalProperties {
@@ -157,7 +158,7 @@ public class TexturalProperties {
 
     /**
      * Opis obiektu klasy
-     * @return Łańcuch z opisem obiektu klasy
+     * @return Lańcuch z opisem obiektu klasy
      */
     @Override
     public String toString(){
@@ -174,14 +175,14 @@ public class TexturalProperties {
     }
     /**
      * Akcesor zmiennej coarness
-     * @return
+     * @return zmienna coarness
      */
     public Double getCoarness() {
         return coarness;
     }
     /**
      * Akcesor zmiennej contrast
-     * @return zmienną
+     * @return zmienna contrast
      */
     public Double getContrast() {
         return contrast;
